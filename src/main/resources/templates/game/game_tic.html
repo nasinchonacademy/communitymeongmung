@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제목 입력란</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 부트스트랩 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- 부트스트랩 아이콘 cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!--기본 css-->
+    <link th:href="@{/css/basic.css}" rel="stylesheet">
+</head>
+<script>
+
+</script>
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .game{
+        width: 1000px;
+        height: 600px;
+        border: 1px solid #6bb08b;
+        margin: 0 auto 30px;
+        border-radius: 16px;
+    }
+
+    .gameDetail {
+        width: 1000px;
+        height: 600px;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+
+    .gameImage {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+    }
+
+</style>
+<body>
+<!-- 헤더 영역 -->
+<th:block th:replace="/fragments/nav :: header"></th:block>
+
+<!-- SNB 영역 -->
+<th:block th:replace="/fragments/nav :: navMenu"></th:block>
+
+<!-- 메인 컨텐츠 영역 -->
+<div class="game">
+    <p>틱택톡 돌리기 게임영역</p>
+</div>
+
+<div class="gameDetail">
+    <!--    @{../image/game/rollet.png}-->
+    <img th:src="@{../image/game/ttt.png}" class="gameImage" alt="gameImage">
+</div>
+
+<!-- 푸터 영역 -->
+<th:block th:replace="/fragments/nav :: footer"></th:block>
+
+
+<!-- 푸터 영역 -->
+<th:block th:replace="/fragments/nav :: footer"></th:block>
+</body>
+</html>

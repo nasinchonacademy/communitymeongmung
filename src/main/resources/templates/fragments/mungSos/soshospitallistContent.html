@@ -1,0 +1,308 @@
+<main class="content" th:fragment="content1" id="sosPage">
+    <div id="content">
+        <div>
+            <div class="vatcard">
+                <h1>SOS 상담을 통해 언제 어디서나 수의사에게 물어보세요</h1>
+                <div class="vat_card">
+                    <a th:href="@{/soshospitallist/sosqnaboard}">
+                        <h2>알러지 증상일까요</h2>
+                        <h3>점점 피부가 빨갛게 붓고 오돌토돌 알러지같이 ...</h3>
+                        <h4>수의사 답변 확인하기</h4>
+                    </a>
+                    <a th:href="@{/#}" class="text_align">
+                        <h2>계곡 다녀온 후 열이 나요 ㅠ</h2>
+                        <h3>지난 주 토요일 강아지와 계곡에 다녀왔는데 ...</h3>
+                        <h4>수의사 답변 확인하기</h4>
+                    </a>
+                    <a th:href="@{/#}">
+                        <h2>강아지가 미용을 하고 난 후 걷지 못해요</h2>
+                        <h3>미용을 하고 난 후 산책을 가면 몇 보 걷다가 주저 ...</h3>
+                        <h4>수의사 답변 확인하기</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="vatmap">
+            <style>
+                .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+                .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+                .map_wrap {position:relative;width:100%;height:500px;}
+                #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+                .bg_white {background:#fff;}
+                #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+                #menu_wrap .option{text-align: center;}
+                #menu_wrap .option p {margin:10px 0;}
+                #menu_wrap .option button {margin-left:5px;}
+                #placesList li {list-style: none;}
+                #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+                #placesList .item span {display: block;margin-top:4px;}
+                #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+                #placesList .item .info{padding:10px 0 10px 55px;}
+                #placesList .info .gray {color:#8a8a8a;}
+                #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+                #placesList .info .tel {color:#009900;}
+                #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+                #placesList .item .marker_1 {background-position: 0 -10px;}
+                #placesList .item .marker_2 {background-position: 0 -56px;}
+                #placesList .item .marker_3 {background-position: 0 -102px}
+                #placesList .item .marker_4 {background-position: 0 -148px;}
+                #placesList .item .marker_5 {background-position: 0 -194px;}
+                #placesList .item .marker_6 {background-position: 0 -240px;}
+                #placesList .item .marker_7 {background-position: 0 -286px;}
+                #placesList .item .marker_8 {background-position: 0 -332px;}
+                #placesList .item .marker_9 {background-position: 0 -378px;}
+                #placesList .item .marker_10 {background-position: 0 -423px;}
+                #placesList .item .marker_11 {background-position: 0 -470px;}
+                #placesList .item .marker_12 {background-position: 0 -516px;}
+                #placesList .item .marker_13 {background-position: 0 -562px;}
+                #placesList .item .marker_14 {background-position: 0 -608px;}
+                #placesList .item .marker_15 {background-position: 0 -654px;}
+                #pagination {margin:10px auto;text-align: center;}
+                #pagination a {display:inline-block;margin-right:10px;}
+                #pagination .on {font-weight: bold; cursor: default;color:#777;}
+            </style>
+
+            <h1>병원정보가 필요할 땐 동물병원 찾아보기</h1>
+            <div class="map_wrap">
+                <div id="map" style="width:1000px;height:100%;position:relative;overflow:hidden;"></div>
+                <div id="menu_wrap" class="bg_white">
+                    <div class="option">
+                        <div>
+                            <form onsubmit="searchPlaces(); return false;">
+                                키워드 : <input type="text" placeholder="검색어를 입력하세요" id="keyword" size="15">
+                                <button type="button" onclick="searchPlaces()">검색하기</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                    <ul id="placesList"></ul>
+                    <div id="pagination"></div>
+                </div>
+            </div>
+
+            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=66dcbcfcfefe76b698e9151d6ae07293"></script>
+            <script>
+                var map;
+                var markers = [];
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // DOMContentLoaded 이벤트가 발생하면 loadMarkersFromCsv 함수를 호출
+                    loadMarkersFromCsv();
+                });
+
+                function loadMarkersFromCsv() {
+                    // AJAX 요청으로 CSV 데이터를 가져옴
+                    fetch('/read-csv')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            initializeMap(data);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching CSV data:', error);
+                            alert('데이터를 불러오는데 문제가 발생했습니다. 다시 시도해주세요.');
+                        });
+                }
+
+                function initializeMap(places) {
+                    try {
+                        var mapContainer = document.getElementById('map'),
+                            mapOption = {
+                                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                                level: 3
+                            };
+
+                        map = new kakao.maps.Map(mapContainer, mapOption);
+
+                        // 초기 로드 시 placesList 비우기
+                        var listEl = document.getElementById('placesList');
+                        listEl.innerHTML = '';
+
+                        var bounds = new kakao.maps.LatLngBounds();
+
+                        places.forEach((place, index) => {
+                            var placePosition = new kakao.maps.LatLng(place.lat, place.lng),
+                                marker = addMarker(placePosition, index, place.title);
+
+                            bounds.extend(placePosition);
+                        });
+
+                        map.setBounds(bounds);
+                    } catch (error) {
+                        console.error('Error initializing map:', error);
+                        alert('지도를 초기화하는데 문제가 발생했습니다.');
+                    }
+                }
+
+                function addMarker(position, idx, title) {
+                    var marker = new kakao.maps.Marker({
+                        position: position,
+                        map: map
+                    });
+
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: '<div style="padding:5px;z-index:1;">' + title + '</div>'
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseover', function() {
+                        infowindow.open(map, marker);
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseout', function() {
+                        infowindow.close();
+                    });
+
+                    markers.push(marker);
+                    return marker;
+                }
+
+                function searchPlaces() {
+                    var keyword = document.getElementById('keyword').value.toLowerCase();
+
+                    if (keyword.trim() !== '') {
+                        fetch('/read-csv')
+                            .then(response => response.json())
+                            .then(data => {
+                                var filteredPlaces = data.filter(place => place.title.toLowerCase().includes(keyword));
+                                updateMarkers(filteredPlaces);  // 필터링된 마커만 표시
+                            })
+                            .catch(error => console.error('Error fetching CSV data:', error));
+                    } else {
+                        alert('검색어를 입력하세요.');
+                    }
+                }
+
+                function updateMarkers(places) {
+                    markers.forEach(marker => marker.setMap(null));
+                    markers = [];
+
+                    var bounds = new kakao.maps.LatLngBounds();
+                    var listEl = document.getElementById('placesList');
+                    listEl.innerHTML = '';  // 목록 초기화
+
+                    places.forEach((place, index) => {
+                        var placePosition = new kakao.maps.LatLng(place.lat, place.lng),
+                            marker = addMarker(placePosition, index, place.title);
+
+                        bounds.extend(placePosition);
+
+                        var itemEl = document.createElement('li');
+                        itemEl.textContent = place.title;
+                        listEl.appendChild(itemEl);
+
+                        itemEl.onclick = function() {
+                            map.panTo(placePosition);
+                            kakao.maps.event.trigger(marker, 'mouseover');
+                        };
+                    });
+
+                    map.setBounds(bounds);
+                }
+            </script>
+        </div>
+    </div>
+</main>
+
+
+<!------------------------------------------->
+
+<main class="content2" th:fragment="content2" id="sosPage">
+    <div id="content2">
+        <div>
+            <form class="search-box" action="" method="get">
+                <input class="search-txt" type="text" name="" placeholder="검색">
+            </form>
+        </div>
+        <div class="vatQuest">
+            <table border="1">
+                <colgroup>
+                    <col span="1" class="col1" />
+                    <col span="2" class="col2" />
+                    <col span="3" class="col3" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td rowspan="bb2" class="vatpicture">
+                        <div>
+                            <a href="#"><!--<img>--></a>
+                        </div>
+                    </td>
+                    <td colspan="4" >
+                        <div class="vet_title" >
+                            <a th:href="@{/soshospitallist/sosqnaboard}" class="vattitle">알러지 증상일까요</a>
+                            <a href="#" class="vatdate">작성일 : 2222.22.22</a>
+                        </div>
+                    </td>
+                    <td><a th:href="@{/soshospitallist/sosqnaboard}" class="vatreply">수의사 답변 확인하기</a></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="bb2" class="vatpicture">
+                        <div>
+                            <a href="#"><!--<img>--></a>
+                        </div>
+                    </td>
+                    <td colspan="4" >
+                        <div class="vet_title" >
+                            <a href="#" class="vattitle">알러지 증상일까요</a>
+                            <a href="#" class="vatdate">작성일 : 2222.22.22</a>
+                        </div>
+                    </td>
+                    <td><a href="#" class="vatreply">수의사 답변 확인하기</a></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="bb2" class="vatpicture">
+                        <div>
+                            <a href="#"><!--<img>--></a>
+                        </div>
+                    </td>
+                    <td colspan="4" >
+                        <div class="vet_title" >
+                            <a href="#" class="vattitle">알러지 증상일까요</a>
+                            <a href="#" class="vatdate">작성일 : 2222.22.22</a>
+                        </div>
+                    </td>
+                    <td><a href="#" class="vatreply">수의사 답변 확인하기</a></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="bb2" class="vatpicture">
+                        <div>
+                            <a href="#"><!--<img>--></a>
+                        </div>
+                    </td>
+                    <td colspan="4" >
+                        <div class="vet_title" >
+                            <a href="#" class="vattitle">알러지 증상일까요</a>
+                            <a href="#" class="vatdate">작성일 : 2222.22.22</a>
+                        </div>
+                    </td>
+                    <td><a href="#" class="vatreply">수의사 답변 확인하기</a></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="bb2" class="vatpicture">
+                        <div>
+                            <a href="#"><!--<img>--></a>
+                        </div>
+                    </td>
+                    <td colspan="4" >
+                        <div class="vet_title" >
+                            <a href="#" class="vattitle">알러지 증상일까요</a>
+                            <a href="#" class="vatdate">작성일 : 2222.22.22</a>
+                        </div>
+                    </td>
+                    <td><a href="#" class="vatreply">수의사 답변 확인하기</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="qna_write">
+            <a th:href="@{/soshospitallist/soswirte}">글쓰기</a>
+        </div>
+    </div>
+</main>

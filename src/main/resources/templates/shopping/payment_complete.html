@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제목 입력란</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 부트스트랩 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- 부트스트랩 아이콘 cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!--기본 css-->
+    <link th:href="@{css/basic.css}" rel="stylesheet">
+</head>
+<style>
+    .container{
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    h5 {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .payProduct {
+        text-align: center;
+    }
+
+    .point {
+        text-align: center;
+    }
+
+    .allButton {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    button {
+        padding: 10px;
+        border-radius: 7px;
+        border: 1px solid #ffffff;
+        margin: 5px;
+        width: 190px;
+    }
+
+    .order-massage {
+        margin-top: 40px;
+    }
+
+</style>
+<script>
+
+</script>
+<body>
+<!-- 헤더 영역 -->
+<th:block th:replace="fragments/nav :: header"></th:block>
+
+<!-- SNB 영역 -->
+<th:block th:replace="fragments/nav :: navMenu"></th:block>
+
+<!-- 메인 컨텐츠 영역 -->
+<h5 class="order-massage">주문이 완료되었습니다</h5>
+<div class="container">
+    <h5>배송 정보</h5>
+    <div>
+        <div class="payProduct">
+            상품명 : 행소행댕 멸균 강아지우유 10개 100ml<br>
+            받는 사람 이름 : 강유나<br>
+            연락처 : 01080202057<br>
+            배송지 :서울특별시 공항대로 24가길 현대아이파크<br>
+            요청사항 : 없음
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h5>결제 포인트 정보</h5>
+    <div>
+        <div class="point">현재 보유 중인 젤리: 0 개</div>
+    </div>
+</div>
+
+<div class="allButton">
+    <a th:href="@{/meongmung}"><button class="home-button" id="homeButton">HOME</button></a>
+    <a th:href="@{/get_order_list}"><button class="buy-button" id="buyButton">주문내역 확인하기</button></a>
+    <a th:href="@{/productMain}"><button class="cart-button" id="cartButton">계속 쇼핑하기</button></a>
+</div>
+
+<!-- 푸터 영역 -->
+<th:block th:replace="fragments/nav :: footer"></th:block>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <!--<link th:href="@{css/product/productMainStyle.css}" rel="stylesheet">-->
+    <!--<link th:href="@{css/basic.css}" rel="stylesheet">-->
+    <!--<script th:src="@{js/modalscript.js}"></script>-->
+</head>
+
+<body>
+<div class="container" th:fragment="content">
+    <div class="content1">
+        <div class="block1-1">
+            <img th:src="@{../image/product/banner1.png}" alt="상품" id="banner01">
+        </div>
+
+        <div class="block1-2">
+            <div class="intro-text">
+                <h5>우리 멍뭉이들을 위해 준비한 상품이에요</h5>
+            </div>
+            <div class="row row-cols-1 row-cols-md-3 g-3" >
+                <div class="col">
+                    <button type="button" class="cardbtn" data-product-id="1">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage1.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">펫생각</span>
+                                <h6 class="card-title">행소행댕 멸균 강아지우유 10개 100ml</h6>
+                                <p class="card-text">
+                                    <span id="old-price">21,000원</span>
+                                <div id="price"><span id="discount">34%</span>&nbsp;13,800원</div>
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="cardbtn">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage3.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">펫생각</span>
+                                <h6 class="card-title">미니말랑 자색고구마 강아지 간식</h6>
+                                <p class="card-text">
+                                    <span id="old-price">13,500원</span>
+                                <div id="price"><span id="discount">27%</span>&nbsp;9,800원</div>
+                                <!-- <p id="description">설명</p> -->
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="cardbtn">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage4.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">펫생각</span>
+                                <h6 class="card-title">하루조이 타먹는 비타민 4개입</h6>
+                                <p class="card-text">
+                                    <span id="old-price">22,000원</span>
+                                <div id="price"><span id="discount">32%</span>&nbsp;14,800원</div>
+                                <!-- <p id="description">설명</p> -->
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="cardbtn">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage5.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">개과천선</span>
+                                <h6 class="card-title">베리빅 강아지 이동가방 카시트</h6>
+                                <p class="card-text">
+                                    <span id="old-price">150,000원</span>
+                                <div id="price"><span id="discount">54%</span>&nbsp;59,000원</div>
+                                <!-- <p id="description">설명</p> -->
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="cardbtn">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage2.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">위드어스</span>
+                                <h6 class="card-title">담다 푸들 라텍스토이</h6>
+                                <p class="card-text">
+                                    <span id="old-price">14,000원</span>
+                                <div id="price"><span id="discount">28%</span>&nbsp;10,000원</div>
+                                <!-- <p id="description">설명</p> -->
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="cardbtn">
+                        <div class="card h-100" id="product-card">
+                            <img th:src="@{../image/product/productImage6.png}" class="card-img-top" alt="상품">
+                            <div class="card-body">
+                                <span id="brand">개과천선</span>
+                                <h6 class="card-title">크림 강아지 이동가방</h6>
+                                <p class="card-text">
+                                    <span id="old-price">250,000원</span>
+                                <div id="price"><span id="discount">60%</span>&nbsp;99,000원</div>
+                                <!-- <p id="description">설명</p> -->
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 모달 창 -->
+        <div id="modalWrap">
+            <div id="modalBody">
+                <span id="closeBtn">&times;</span>
+                <div id="modalContent">
+                    <!-- 여기에 제품 상세 정보가 표시됩니다. -->
+                    <h3 id="modalProductTitle">제품명</h3>
+                    <p id="modalProductPrice">가격</p>
+                    <img id="modalProductImage" src="" alt="상품 이미지">
+                    <p id="modalProductDescription">제품 설명</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="block1-3">
+            <nav aria-label="Page navigation example" id="paging-bar">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript 코드
+    const buttons = document.querySelectorAll(".cardbtn");
+    const modal = document.getElementById("modalWrap");
+    const closeBtn = document.getElementById("closeBtn");
+
+    // 모달 창 요소
+    const modalTitle = document.getElementById("modalProductTitle");
+    const modalPrice = document.getElementById("modalProductPrice");
+    const modalImage = document.getElementById("modalProductImage");
+    const modalDescription = document.getElementById("modalProductDescription");
+
+    // 버튼 클릭 이벤트 리스너
+    buttons.forEach((btn) => {
+        btn.onclick = function () {
+            // 여기서 제품 ID를 가져옵니다.
+            const productId = this.getAttribute("data-product-id");
+
+            // 제품 상세 정보를 로드하는 함수 호출
+            loadProductDetails(productId);
+        };
+    });
+
+    // 모달 닫기 버튼 클릭 시
+    closeBtn.onclick = function () {
+        modal.style.display = "none";
+    };
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    // 제품 상세 정보를 로드하는 함수
+    function loadProductDetails(productId) {
+        // 여기서 AJAX 또는 Fetch API를 사용해 서버에서 제품 정보를 가져올 수 있습니다.
+        // 지금은 예시로 하드코딩된 데이터를 사용합니다.
+        const productDetails = {
+            1: {
+                title: "행소행댕 멸균 강아지우유 10개 100ml",
+                price: "13,800원",
+                image: "../image/product/productImage1.png",
+                description: "멸균 강아지우유는 건강에 좋은 성분이 포함되어 있습니다."
+            },
+            2: {
+                title: "미니말랑 자색고구마 강아지 간식",
+                price: "9,800원",
+                image: "../image/product/productImage3.png",
+                description: "자색고구마 간식은 강아지의 영양을 고려하여 만들어졌습니다."
+            },
+            // 더 많은 제품 추가 가능
+        };
+
+        // 가져온 데이터를 모달에 표시
+        const details = productDetails[productId];
+        modalTitle.textContent = details.title;
+        modalPrice.textContent = details.price;
+        modalImage.src = details.image;
+        modalDescription.textContent = details.description;
+
+        // 모달을 보이게 함
+        modal.style.display = "block";
+    }
+</script>
+
+<style>
+    /* CSS 코드 (기존에 주신 CSS 포함) */
+
+    #modalWrap {
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+    }
+
+    #modalBody {
+        width: 500px;
+        height: auto;
+        padding: 30px 30px;
+        margin: 0 auto;
+        border: 1px solid #777;
+        background-color: #fff;
+    }
+
+    #closeBtn {
+        float: right;
+        font-weight: bold;
+        color: #777;
+        font-size: 25px;
+        cursor: pointer;
+    }
+</style>
+</body>

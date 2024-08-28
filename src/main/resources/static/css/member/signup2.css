@@ -1,0 +1,139 @@
+
+.container {
+    max-height: 1000px;
+    min-width: 1000px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    display: block;
+    text-align: left;
+    float: left;
+    color: #666;
+    margin-bottom:20px;
+    padding-right: 430px;
+}
+
+.container img {
+    display: block;
+    width: 140px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    margin: 0 auto;
+    clear: both;
+
+}
+
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+    flex-direction: column;
+    align-items: center;
+    clear: both;
+
+}
+.form-group label {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+.form-group input[type="text"],
+.form-group input[type="date"] {
+    display:inline-block;
+    width: 550px;
+    padding: 10px;
+    border: 1px solid #a4e4be;
+    border-radius: 15px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+.form-group input[type="file"] {
+    display: none;
+}
+
+.file-name{
+    text-align: center;
+}
+
+.btn {
+    background-color: #57a885;
+    border: 1px solid #57a885;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    width:  275px;
+    font-size: 16px;
+    float: right;
+    margin-top: 30px;
+    margin-right: 50px;
+
+}
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+.btn-file {
+    padding: 10px 20px;
+    background-color: #57a885;
+    color: #fdfdfd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin-top: 30px;
+    margin: 0 auto;
+}
+.file-name {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #777;
+}
+
+#file-label{
+    margin-top: 20px;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 30px;
+}
+
+#nickname{
+    width: 400px;
+    margin-right: 5px;
+}
+
+
+
+.container .duplicate-check {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 3px;
+    border: 1px solid #32b16c;
+    border-radius: 15px;
+    color: #32b16c;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+
+}
+
+.back-btn {
+    background-color: #fffefe;
+    color: #1ae31a;
+    border: 1px solid #32b16c;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 275px;
+    font-size: 16px;
+    margin-right: 340px;
+    margin-top: -46.5px;
+}

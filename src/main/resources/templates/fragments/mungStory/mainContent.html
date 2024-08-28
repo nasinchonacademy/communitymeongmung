@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="content(dataList)">
+    <div class="content-section">
+
+        <div>
+            <form class="search-box" action="" method="get">
+                <input class="search-txt" type="text" name="search" placeholder="검색">
+            </form>
+        </div>
+
+        <table border="1">
+            <colgroup>
+                <col span="1" class="col1" />
+                <col span="2" class="col2" />
+                <col span="3" class="col3" />
+            </colgroup>
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>조회수</th>
+                <th>좋아요</th>
+                <th>댓글수</th>
+                <th>작성자</th>
+                <th>카테고리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="data : ${result.dtoList}">
+                <td class="vatpicture">
+                    <div>
+                        <a th:href="@{/mungstory/storylist/{seq}(seq=${data.seq})}">
+                            <span th:text="${data.title}">제목</span>
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <!--<span th:text="${#dates.format(data.regdate, 'yyyy-MM-dd')}">작성일</span>-->
+                </td>
+                <td>
+                    <span th:text="${data.viewcount}">조회수</span>
+                </td>
+                <td>
+                    <span th:text="${data.likecount}">좋아요</span>
+                </td>
+                <td>
+                    <span th:text="${data.commentcount}">댓글수</span>
+                </td>
+                <td>
+
+                </td><!--<span th:text="${data.nickname}">작성자</span>-->
+                <td>
+                    <span th:text="${data.category}">카테고리</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <ul class="pagination h-100 justify-content-center align-items-center">
+            <!--th:if="${result.prev} true일 때만 화면에 보이게-->
+            <li class="page-item" th:if="${result.prev}">
+                <!--tabindex -> 포커싱 처리되지 않게 해준다. (1페이지는 포커싱이 필요없으므로)-->
+                <!--${result.start - 1} 현재 블록에서 -1 을 해라-->
+                <a class="page-link" th:href="@{/mungstory(page=${result.start - 1},
+                type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
+            </li>
+            <!--현재 보여지는 페이지번호는 진한 파란색으로 보이게 처리-->
+            <li th:class=" 'page-item ' + ${result.page == page?'active':''}" th:each="page : ${result.pageList}">
+                <a class="page-link" th:href="@{/mungstory(page=${page})}">[[${page}]]</a>
+            </li>
+            <li class="page-item" th:if="${result.next}">
+                <a class="page-link" th:href="@{/mungstory(page=${result.end + 1},
+                type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</th:block>
+</body>
+</html>

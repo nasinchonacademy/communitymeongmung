@@ -1,0 +1,119 @@
+.block1-2 {
+    /* background-color: #b3e5fc; */
+    margin-bottom: 30px;
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
+}
+
+#product-card {
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+
+}
+
+#brand {
+    color:#989898;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+
+#old-price {
+    color:#989898;
+    text-decoration:line-through;
+    font-size: 13px;
+}
+
+#discount {
+    font-weight: bold;
+    color: tomato;
+}
+
+#banner01 {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
+}
+
+.block1-2 {
+    padding: 30px;
+}
+
+.block1-3 {
+    height: 100px;
+}
+
+.intro-text {
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.cardbtn {
+    border: 0px;
+    background-color: #ffffff;
+}
+
+
+
+#product-card {
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+
+}
+
+#brand {
+    color:#989898;
+    font-weight: bold;
+}
+
+#old-price {
+    color:#989898;
+    text-decoration:line-through;
+}
+
+#discount {
+    font-weight: bold;
+    color: tomato;
+}
+
+#banner01 {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
+}
+
+.container {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#modalWrap {
+    position: fixed; /* 화면에 고정 */
+    z-index: 50; /* 상위에 위치 */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* 반투명한 배경색 */
+    display: none; /* 초기에는 숨김 */
+}
+
+#modalBody {
+    width: 500px;
+    height: 300px;
+    padding: 30px 30px;
+    margin: 0 auto;
+    border: 1px solid #777;
+    background-color: #fff;
+}
+
+#closeBtn {
+    float: right;
+    font-weight: bold;
+    color: #777;
+    font-size: 25px;
+    cursor: pointer;
+}

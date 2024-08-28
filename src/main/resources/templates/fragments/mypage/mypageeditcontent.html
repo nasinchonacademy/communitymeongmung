@@ -1,0 +1,35 @@
+<div class="container">
+    <form th:action="@{/mypageedit}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()" >
+        <h2>프로필 사진 변경</h2>
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+        <div class="form-group" id="profilePic">
+            <label for="profilePhoto" id="file-label">사진첨부</label>
+            <img id="profileImage" th:src="@{${#strings.isEmpty(user.profilePhoto) ? '/image/tool/profilelogo.PNG' : '/profiles/' + user.profilePhoto}}" alt="프로필 이미지">
+            <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" onchange="loadFile(event)">
+            <button type="button" class="btn-file" onclick="document.getElementById('profilePhoto').click()">사진첨부</button>
+            <div class="file-name" id="fileName">파일이 선택되지 않았습니다</div>
+        </div>
+        <h2>내 정보 수정</h2>
+        <div class="form-group">
+            <label for="nickname">닉네임 변경</label>
+            <input type="text" id="nickname" name="nickname" th:value="${user.nickname}" >
+            <a href="#" class="duplicate-check" onclick="checkDuplicateNickname()">중복확인</a>
+        </div>
+        <div class="form-group">
+            <label for="dogbreed">강아지 종 변경</label>
+            <input type="text" id="dogbreed" name="dogbreed" maxlength="10" th:value="${user.dogbreed}">
+        </div>
+        <div class="form-group">
+            <label for="dogname">강아지 이름 변경</label>
+            <input type="text" id="dogname" name="dogname" maxlength="20" th:value="${user.dogname}">
+        </div>
+
+        <div class="form-group">
+            <label for="dogbirthday">강아지 생년월일 변경</label>
+            <input type="date" id="dogbirthday" name="dogbirthday" th:value="${#dates.format(user.dogbirthday, 'yyyy-MM-dd')}">
+        </div>
+
+        <button type="submit" class="complete-btn">완료</button>
+    </form>
+    <button class="back-btn" onclick="history.back();">뒤로가기</button>
+</div>

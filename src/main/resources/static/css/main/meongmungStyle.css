@@ -1,0 +1,49 @@
+.content {
+    display: flex;
+    min-width: 1000px;
+    justify-content: center;
+    align-items: center;
+}
+
+.content h6 {
+    margin-right: auto;
+}
+
+.content section{
+    min-width: 1001px;
+    max-width: 1001px;
+}
+
+.bn {
+    max-width: 1001px;
+    max-height: 199px;
+}
+
+#jelly1, #jelly2 {
+    margin-right: 46px;
+}
+
+#jelly1, #jelly2, #jelly3 {
+    border-radius: 5%;
+}
+
+/* Blocks */
+.block1-1, .block1-2, .block1-3 {
+    /* background-color: #b3e5fc; */
+    margin-bottom: 30px;
+    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
+}
+
+.block1-1 {
+    height: 300px;
+}
+
+.block1-2 {
+    height: 200px;
+}
+
+.block1-3 {
+    height: 250px;
+}

@@ -1,0 +1,161 @@
+/* ----------------카드 구역---------------- */
+.vat_card {
+    text-align: center;
+}
+
+.vat_card a {
+    display: inline-block;
+    position: relative;
+    width: 289.5px;
+    height: 380px;
+    text-decoration: none;
+    background-color: #E7F9F1;
+    color: black;
+    border-radius: 30px;
+}
+
+.vat_card h2 {
+    position: absolute;
+    top: 6.2%;
+    color: black;
+    width: 230px;
+    padding: 5px;
+    font-size: 17px;
+    text-align: left;
+    font-weight: 1000;
+}
+
+.vat_card h3 {
+    position: absolute;
+    top: 29.2%;
+    color: black;
+    width: 230px;
+    padding: 5px;
+    font-size: 17px;
+    text-align: left;
+}
+
+.vat_card h2, h3 {
+    margin-left: 1.8rem;
+}
+
+.vat_card h4 {
+    position: absolute;
+    color: black;
+    margin-left: 124px;
+    font-size: 14px;
+    bottom: 14px;
+}
+
+.vatcard {
+    margin: 0px auto;
+    width: 1000px;
+}
+
+.vatcard h1 {
+    font-size: 21px;
+    font-weight: 1000;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.text_align {
+    margin-left: 60px;
+    margin-right: 60px;
+}
+
+.vatmap {
+    margin: 0px auto;
+    width: 1000px;
+}
+
+.vatmap h1 {
+    font-size: 21px;
+    font-weight: 1000;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/*================ content2 ===============*/
+
+.content2 {
+    position : relative;
+    width: 1000px;
+    margin: 0px auto;
+}
+
+.search-box {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+table {
+    caption-side: bottom;
+    width: 1000px;
+    border-collapse: separate;
+    border-spacing: 0px 50px;
+    border: none;
+}
+
+.vatQuest {
+    flex-direction: column;
+}
+
+.cname {
+    font-size : 30px;
+}
+
+.cdate {
+    font-size : 30px;
+}
+
+.cans {
+    font-size : 30px;
+}
+
+tbody tr {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.vatreply{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.vatpicture {
+    background: yellow;
+    width: 100px;
+}
+
+.vatdate{
+    background-color : black;
+
+}
+
+.vet_title{
+    margin-left: 25px;
+}
+
+.vattitle {
+    display: block;
+}
+
+.vatpicture div {
+    background-color: black;
+    border-radius: 6px;
+    padding: 21px;
+    margin: 3px;
+}
+
+.search-txt {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    border-radius: 6px;
+    border: 2px solid #6BC7A0;
+}

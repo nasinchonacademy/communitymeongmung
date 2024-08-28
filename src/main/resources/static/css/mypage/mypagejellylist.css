@@ -1,0 +1,144 @@
+
+
+.jellylist_container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    width: 600px;
+    border: 0.5px solid #cdcdcd;
+    border-radius: 30px;
+    margin-top: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.jelly_item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.jelly_image{
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    display: inline;
+    float: left;
+    margin-right: 80px;
+}
+
+.jelly_text{
+    padding-top: 70px;
+    font-size: 10px;
+    color: darkgrey;
+    display: block;
+}
+
+.jelly_left{
+    display: inline;
+    margin-bottom: 50px;
+    height: 100px;
+    margin-left: -70px;
+    margin-right: 60px;
+}
+
+.jelly_link{
+    text-decoration: none;
+    color: #00c292;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.jelly_link span{
+    color: black;
+}
+
+
+.progress-circle {
+    width: 65px;
+    height: 65px;
+    background: conic-gradient(
+            #00c292 0% 0%,  /* 시작과 끝의 진행률 */
+            #e0e0e0 0% 100% /* 회색으로 남은 부분 */
+    );
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: black;
+    float: inline-end;
+    margin-left: 90px;
+}
+
+.progress-circle::before {
+    content: attr(data-progress) '%';
+    position: absolute;
+    font-size: 14px;
+}
+
+.jellylist{
+    display: flex;
+    flex-direction: column;
+}
+
+.get_jelly_list{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    background-color: #fff;
+    max-width: 600px;
+    width: 100%;
+}
+
+.order-massage{
+    text-align: left;
+}
+
+.jelly_getlist{
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+    display: inline;
+
+}
+
+.jelly_getlist h5 {
+    text-align: left;
+
+}
+
+.payProduct li{
+    padding-left: 70px;
+    font-family: "Franklin Gothic Book"
+}
+
+.jellyinfo a{
+    background: #99d6b5;
+    width: 50px;
+    height: 50px;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+   justify-content: center;
+    text-align: center;
+    margin-left: 250px;
+    font-weight: bold;
+    color: white;
+}
+
+.jellyinfo{
+    border-radius: 10px;
+    border: 0.5px solid #cdcdcd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    display: inline-flex;
+}

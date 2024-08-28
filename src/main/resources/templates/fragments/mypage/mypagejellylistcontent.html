@@ -1,0 +1,47 @@
+<div class="jellylist">
+    <div class="jellylist_container">
+        <div class="jelly_item">
+            <img th:src="@{/image/mypage/rcp.jfif}" class="jelly_image">
+            <div class="jelly_left">
+                <div class="jelly_text">'가위바위보'하고~</div>
+                <a href="/game_list/rsp" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
+            </div>
+            <div class="jelly_right">
+                <div class="progress-circle" data-progress="0"></div>
+            </div>
+        </div>
+
+        <div class="jelly_item">
+            <img th:src="@{/image/mypage/tictaktok.png}" class="jelly_image">
+            <div class="jelly_left">
+                <div class="jelly_text">'tic-tak-tok'하고~</div>
+                <a href="/game_list/tic" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
+            </div>
+            <div class="jelly_right">
+                <div class="progress-circle" data-progress="0"></div>
+            </div>
+        </div>
+
+        <div class="jelly_item">
+            <img th:src="@{/image/mypage/rullet.jfif}" class="jelly_image">
+            <div class="jelly_left">
+                <div class="jelly_text">'룰렛'돌리고~</div>
+                <a href="/game_list/rollet" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
+            </div>
+            <div class="jelly_right">
+                <div class="progress-circle" data-progress="0"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="get_jelly_list">
+        <h3 class="order-massage">받은 젤리 내역</h3>
+        <div class="jellyinfo" th:each="gamepoints : ${gamePoints}">
+            <ul >
+                <li th:text="${gamepoints.gameType}"></li>
+                <li  th:text="${#dates.format(gamepoints.timePlayed, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></li>
+            </ul>
+            <a th:text="'+'+${gamepoints.point}"></a>
+        </div>
+    </div>
+</div>

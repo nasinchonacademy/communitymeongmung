@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <!-- 제이쿼리 cdn -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 부트스트랩 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- 부트스트랩 아이콘 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link th:href="@{css/mypage/mypageedit.css}" rel="stylesheet">
+    <link th:href="@{css/basic.css}" rel="stylesheet">
+    <link th:href="@{css/mypage/mypageNavStyle.css}" rel="stylesheet">
+    <script th:src="@{js/mypageclick.js}"></script>
+</head>
+<body>
+<!-- 헤더 영역 -->
+<th:block th:replace="fragments/nav :: header"></th:block>
+
+<!-- SNB 영역 -->
+<th:block th:replace="fragments/nav :: navMenu"></th:block>
+
+<!--메인 컨텐츠 nav-->
+<th:block th:replace="fragments/mypage/mypageNav :: sosNav"></th:block>
+
+<!-- 메인 컨텐츠 영역 -->
+<th:block th:replace="fragments/mypage/mypageeditcontent"></th:block>
+
+<!-- 푸터 영역 -->
+<th:block th:replace="fragments/nav :: footer"></th:block>
+
+<!-- 스크립트 -->
+<script th:inline="javascript">
+    let isNicknameChecked = false;
+    const originalNickname = /*[[${user.nickname}]]*/ '';  // 기존 닉네임을 저장
+
+    function checkDuplicateNickname() {
+        const nickname = document.getElementById('nickname').value;
+
+        // 입력된 닉네임이 기존 닉네임과 동일한지 확인
+        if (nickname === originalNickname) {
+            alert('현재 사용 중인 닉네임입니다.');
+            isNicknameChecked = true; // 동일하다면 중복 확인이 필요 없으므로 true로 설정
+            return;
+        }
+
+        fetch(`/api/check-duplicate/nickname?nickname=${nickname}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    alert('이미 사용 중인 닉네임입니다.');
+                    isNicknameChecked = false; // 중복이면 false
+                } else {
+                    alert('사용 가능한 닉네임입니다.');
+                    isNicknameChecked = true; // 중복이 아니면 true
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // 닉네임 필드에 입력이 발생할 때 중복 확인 상태를 초기화
+    document.getElementById('nickname').oninput = function () {
+        isNicknameChecked = false;
+    }
+
+    function validateForm() {
+        const nickname = document.getElementById('nickname').value;
+
+        if (nickname.length < 1 || nickname.length > 10) {
+            alert('닉네임은 10글자 이내이어야 합니다.');
+            return false;
+        }
+
+        if (!isNicknameChecked) {
+            alert('닉네임 중복 확인을 해주세요.');
+            return false;
+        }
+
+        return true;
+    }
+
+    var loadFile = function (event) {
+        var image = document.getElementById('profileImage');
+        var fileName = document.getElementById('fileName');
+        var file = event.target.files[0];
+
+        if (file) {
+            image.src = URL.createObjectURL(file);
+            fileName.textContent = file.name;
+        } else {
+            image.src = /*[[@{/image/tool/profilelogo.PNG}]]*/ '';  // 이 부분을 Thymeleaf 변수로 처리
+            fileName.textContent = '파일이 선택되지 않았습니다';
+        }
+    };
+
+</script>
+
+</body>
+</html>

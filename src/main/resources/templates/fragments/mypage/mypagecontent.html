@@ -1,0 +1,47 @@
+<div class="header_point">
+  <div class="points">
+    <a href="/mypagejellylist" class="button_getjellylist" type="button">보유 젤리: <span th:text="${jelly}+ ' 개  &gt;'">500</span> </a>
+    <a type="button" class="button_orderlist">주문내역 확인하기 &gt;</a>
+  </div>
+  <div class="button-background"></div>
+</div>
+
+
+<div class="container">
+
+  <div class="liked_story">
+    <h2>좋아요 누른 게시물</h2>
+    <ul th:if="${likedStories != null}">
+      <li th:each="story : ${likedStories}" class="liked_content">
+        <h3 th:text="${story.title}"></h3>
+        <p th:text="${story.content}"></p>
+        <img th:src="${story.picture ?: '/image/tool/profilelogo.PNG'}" >
+      </li>
+      <li th:if="${#lists.isEmpty(likedStories)}">좋아요 한 게시물이 없습니다.</li>
+    </ul>
+  </div>
+  <div class="written_stories">
+    <h2>내가 쓴 글</h2>
+    <ul th:if="${writtenStories != null}">
+      <li th:each="story : ${writtenStories}" class="written_content">
+        <h3 th:text="${story.title ?: '제목 없음'}">제목 없음</h3>
+        <a th:href="@{'/story/edit/' + ${story.seq}}">수정하기</a>
+        <a th:href="@{'/story/delete/' + ${story.seq}}">삭제하기</a>
+      </li>
+      <li th:if="${#lists.isEmpty(writtenStories)}">작성된 글이 없습니다.</li>
+    </ul>
+  </div>
+
+  <div class="cart">
+    <h2>장바구니 확인!</h2>
+    <div>
+      <img src="https://via.placeholder.com/150" alt="장바구니 상품 1">
+      <button>→</button>
+    </div>
+    <h2>찜한 물건 확인하기</h2>
+    <div>
+      <img src="https://via.placeholder.com/150" alt="찜한 상품 1">
+      <button>→</button>
+    </div>
+  </div>
+</div>

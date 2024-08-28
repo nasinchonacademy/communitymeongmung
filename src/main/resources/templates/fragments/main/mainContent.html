@@ -1,0 +1,55 @@
+<main class="content" th:fragment="content">
+    <section>
+        <div class="bn">
+            <!--<a href="#"><img id="bn" th:src="@{/image/배너1.png}" alt="배너1"></a>-->
+            <div id="carouselExample" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="5000">
+                        <a href="#">
+                        <img src="/image/main/bn1.png" class="d-block w-100" alt="...">
+                        </a>
+                    </div>
+                    <div class="carousel-item" data-bs-interval="5000">
+                        <a href="#">
+                        <img src="/image/main/bn2.png" class="d-block w-100" alt="...">
+                        </a>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="jellyboard">
+            <br>
+            <h6>퀘스트로 젤리부자 되러 가기!!</h6>
+            <a href="#"><img id="jelly1" th:src="@{/image/main/card.png}" alt="젤리1"></a>
+            <a href="#"><img id="jelly2" th:src="@{/image/main/card.png}" alt="젤리2"></a>
+            <a href="#"><img id="jelly3" th:src="@{/image/main/card.png}" alt="젤리3"></a>
+        </div>
+        <div class="mungStroy">
+            <br>
+            <h6>이번 주 놓치기 아쉬운 멍스토리!!</h6>
+            <a href="#"><img id="mungStroy-1" th:src="@{/image/main/mung1.png}" alt="멍스토리1"></a>
+            <a href="#"><img id="mungStroy-2" th:src="@{/image/main/mung2.png}" alt="멍스토리2"></a>
+            <a href="#"><img id="mungStroy-3" th:src="@{/image/main/mung3.png}" alt="멍스토리3"></a>
+            <a href="#"><img id="mungStroy-4" th:src="@{/image/main/mung4.png}" alt="멍스토리4"></a>
+            <a href="#"><img id="mungStroy-5" th:src="@{/image/main/mung5.png}" alt="멍스토리5"></a>
+        </div>
+        <div class="dogMoll">
+            <br>
+            <h6>인기있는 강아지 간식!!</h6>
+            <a href="#">
+                <img id="card" th:src="@{/image/main/contentCard.png}" alt="카드">
+            </a>
+        </div>
+
+    </section>
+</main>
