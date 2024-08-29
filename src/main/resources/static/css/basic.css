@@ -89,11 +89,9 @@ body {
 }
 
 /* List Styles */
-li {
-    list-style-type: none;
-}
 
 .menu .menuWrap > li {
+    list-style-type: none;
     width: 100%;
     line-height: 40px;
     background-color: #ffffff;
@@ -122,12 +120,15 @@ li {
     line-height: 40px;
     background-color: #ffffff;
     margin-bottom: 5px;
+    list-style-type: none;
+
 }
 
 
 .menu .menuWrap > li:hover {
     background-color: #ffffff;
     transition-duration: 0.5s;
+
 }
 
 .menu .menuWrap > li:hover .submenu {
@@ -173,7 +174,7 @@ li {
 
 .footerWrap #lia ul li {
     display: inline-block;
-
+    list-style-type: none;
     margin-right: 20px; /* 각 항목 사이의 간격 설정 */
 }
 
@@ -196,6 +197,8 @@ li {
 .footerWrap .social-links ul li {
     padding: 0;
     margin-left: 15px;
+    list-style-type: none;
+
 }
 
 /* Additional Styles */

@@ -13,8 +13,6 @@ import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.service.MeongStoryService;
 
-import java.util.Collections;
-
 @Controller
 @RequestMapping("/mungstory")
 @RequiredArgsConstructor
@@ -25,40 +23,82 @@ public class MungStoryController {
 
     // 기본적으로 초기 데이터를 로드하여 전달
     @GetMapping
-    public String meongStory(Model model, PageRequestDTO pageRequestDTO) {
-        PageResultDTO<MeongStoryDTO, MeongStory> result = service.getAllItems(pageRequestDTO);
-        PageResultDTO<MeongStoryDTO, MeongStory> resultPaged = service.getList(pageRequestDTO);
+    public String meongStory(@RequestParam(value = "page", defaultValue = "1") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             @RequestParam(value = "type", required = false) String type,
+                             @RequestParam(value = "keyword", required = false) String keyword,
+                             @RequestParam(value = "current", defaultValue = "1") int current,
+                             PageRequestDTO pageRequestDTO, Model model) {
 
+        // 로그로 파라미터 값을 확인
+        log.info("Received page: {}, size: {}, type: {}, keyword: {}, current: {}", page, size, type, keyword, current);
+
+        // pageRequestDTO에 페이지 정보, 크기, 타입, 키워드를 설정
+        pageRequestDTO.setPage(page);
+        pageRequestDTO.setSize(size);
+        pageRequestDTO.setType(type);
+        pageRequestDTO.setKeyword(keyword);
+
+        PageResultDTO<MeongStoryDTO, MeongStory> result;
+
+        // current 값에 따라 다른 서비스 메서드를 호출
+        switch (current) {
+            case 1:
+                result = service.getAllItems(pageRequestDTO); // 검색어를 활용한 검색 로직 포함
+                break;
+            case 2:
+                result = service.getPetFriendlyLocations(pageRequestDTO); // 검색어를 활용한 검색 로직 포함
+                break;
+            case 3:
+                result = service.getDailyItems(pageRequestDTO); // 검색어를 활용한 검색 로직 포함
+                break;
+            default:
+                result = new PageResultDTO<>(Page.empty(pageRequestDTO.getPageable()), this::entityToDto);
+                break;
+        }
+
+
+
+        // 로그로 결과 확인
+        log.info("Result: {}", result);
+
+        // 모델에 결과 및 현재 페이지, 검색어를 설정
         model.addAttribute("result", result);
-        model.addAttribute("resultPaged", resultPaged);
-        model.addAttribute("current", "1"); // 기본적으로 '1'을 설정
+        model.addAttribute("current", current);
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
+
+
         return "mungStoryHtml/storyboard";
     }
 
-    // 수정된 메서드 (dataList를 사용하지 않음)
+
+    // AJAX 요청을 처리하는 메서드
     @GetMapping("/mungstoryAll")
-    public String mungstoryAll(@RequestParam String current, Model model, PageRequestDTO pageRequestDTO) {
-        log.info("list........." + pageRequestDTO);
+    public String mungstoryAll(@RequestParam("current") int current,
+                               @RequestParam("page") int page,
+                               PageRequestDTO pageRequestDTO, Model model) {
+
+        pageRequestDTO.setPage(page);
 
         PageResultDTO<MeongStoryDTO, MeongStory> result;
 
         switch (current) {
-            case "1":
+            case 1:
                 result = service.getList(pageRequestDTO);
                 break;
-            case "2":
+            case 2:
                 result = service.getPetFriendlyLocations(pageRequestDTO);
                 break;
-            case "3":
+            case 3:
                 result = service.getDailyItems(pageRequestDTO);
                 break;
             default:
-                // Empty Page with a transformation function
                 result = new PageResultDTO<>(Page.empty(pageRequestDTO.getPageable()), this::entityToDto);
                 break;
         }
 
         model.addAttribute("result", result);
+        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
 
         return "fragments/mungStory/mainContent :: content";
     }
@@ -89,8 +129,7 @@ public class MungStoryController {
                 .build();
     }
 
-/*    @PostMapping("/modify") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
-    // RedirectAttributes redirectAttributes 뷰 페이지에 전달, 일회성
+    @PostMapping("/modify") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
     public String modify(MeongStoryDTO dto , @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                          RedirectAttributes redirectAttributes){
 
@@ -105,8 +144,6 @@ public class MungStoryController {
 
         redirectAttributes.addAttribute("seq",dto.getSeq());
 
-
-
         return "redirect:/guestbook/read";
-    }*/
+    }
 }

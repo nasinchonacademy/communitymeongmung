@@ -45,19 +45,60 @@ public class MeongStoryServiceImpl implements MeongStoryService {
 
     @Override
     public PageResultDTO<MeongStoryDTO, MeongStory> getPetFriendlyLocations(PageRequestDTO requestDTO) {
+
+        String keyword = requestDTO.getKeyword();
+        boolean isSubmitted = requestDTO.isSubmitted();
+
         Pageable pageable = requestDTO.getPageable(Sort.by("seq").descending());
+
+        // 'Category1'에 해당하는 결과를 검색
         Page<MeongStory> result = meongStoryRepository.findByCategory("Category1", pageable);
+        // 키워드가 존재하거나, submit이 발생한 경우 추가 검색 수행
+
+        if (isSubmitted && (keyword == null || keyword.isEmpty())) {
+            // 키워드가 없는 경우 기본 검색을 유지
+            result = meongStoryRepository.findByCategory("Category1", pageable);
+        } else if (keyword != null && !keyword.isEmpty()) {
+            // 키워드가 있는 경우, 키워드로 검색 수행
+            result = meongStoryRepository.searchPetFriendlyLocationsByKeyword(keyword, pageable);
+        }
+
+        // 엔티티를 DTO로 변환하는 함수
         Function<MeongStory, MeongStoryDTO> fn = this::entityToDto;
+
+        // PageResultDTO로 결과 반환
         return new PageResultDTO<>(result, fn);
     }
 
+
     @Override
     public PageResultDTO<MeongStoryDTO, MeongStory> getDailyItems(PageRequestDTO requestDTO) {
+
+        String keyword = requestDTO.getKeyword();
+        boolean isSubmitted = requestDTO.isSubmitted();
+
         Pageable pageable = requestDTO.getPageable(Sort.by("seq").descending());
+
+        // 검색 결과를 담을 변수 선언
         Page<MeongStory> result = meongStoryRepository.findByCategory("Category2", pageable);
+
+        // 키워드가 존재하거나, submit이 발생한 경우 추가 검색 수행
+        if (isSubmitted && (keyword == null || keyword.isEmpty())) {
+            // 키워드가 없는 경우 기본 검색을 유지
+            result = meongStoryRepository.findByCategory("Category2", pageable);
+        } else if (keyword != null && !keyword.isEmpty()) {
+            // 키워드가 있는 경우, 키워드로 검색 수행
+            result = meongStoryRepository.searchDailyItemsByKeyword(keyword, pageable);
+        }
+
+        // 엔티티를 DTO로 변환하는 함수 적용
         Function<MeongStory, MeongStoryDTO> fn = this::entityToDto;
+
+        // 결과를 PageResultDTO로 반환
         return new PageResultDTO<>(result, fn);
     }
+
+
 
     @Override
     public MeongStoryDTO read(Long seq) {
@@ -121,7 +162,26 @@ public class MeongStoryServiceImpl implements MeongStoryService {
     @Override
     public PageResultDTO<MeongStoryDTO, MeongStory> getAllItems(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable(Sort.by("seq").descending());
-        Page<MeongStory> result = meongStoryRepository.findAll(pageable);
+        Page<MeongStory> result;
+
+        String keyword = requestDTO.getKeyword();
+        String category = requestDTO.getCategory();
+        String type = requestDTO.getType();
+
+        if (category != null && !category.isEmpty()) {
+            // 카테고리가 설정된 경우 카테고리와 키워드로 검색
+            log.info("Searching in Category {} with keyword: {}", category, keyword);
+            result = meongStoryRepository.searchByKeywordAndCategory(keyword, category, pageable);
+        } else if (type != null && "tcw".equals(type) && keyword != null && !keyword.isEmpty()) {
+            // 카테고리가 없고 키워드로만 검색하는 경우
+            log.info("Executing search by keyword: {}", keyword);
+            result = meongStoryRepository.searchByKeyword(keyword, pageable);
+        } else {
+            // 모든 항목 검색
+            log.info("Executing findAll");
+            result = meongStoryRepository.findAll(pageable);
+        }
+
         Function<MeongStory, MeongStoryDTO> fn = this::entityToDto;
         return new PageResultDTO<>(result, fn);
     }
