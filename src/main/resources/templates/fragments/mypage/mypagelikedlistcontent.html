@@ -1,0 +1,55 @@
+<div class="container mt-4">
+    <!-- 검색 기능 -->
+    <form th:action="@{/search}" method="get" class="search-bar d-flex mb-4">
+        <input type="text" name="query" class="form-control custom-search-input" placeholder="검색어를 입력하세요">
+        <button type="submit" class="btn custom-search-button">검색</button>
+    </form>
+
+    <!-- 글 목록 테이블 -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+            <tr>
+                <th scope="col" width="15%">사진</th>
+                <th scope="col" width="50%">제목</th>
+                <th scope="col" width="15%">작성일</th>
+                <th scope="col" width="10%">조회수</th>
+                <th scope="col" width="10%">좋아요 수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 타임리프 반복문으로 meongstory 데이터 출력 -->
+            <tr th:each="story : ${likedStories}">
+                <td>
+                    <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" class="img-fluid rounded">
+                </td>
+                <td>
+                    <a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}" class="text-decoration-none text-dark"></a>
+                </td>
+                <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${story.viewcount}" class="story_count"></td>
+                <td th:text="${story.likecount}" class="story_count"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link active" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">다음 페이지 &gt;</a></li>
+        </ul>
+    </nav>
+
+    <!-- 글쓰기 버튼 -->
+    <div class="text-end mt-4">
+        <a th:href="@{/write}">
+            <button class="btn btn-success">글쓰기</button>
+        </a>
+    </div>
+</div>
