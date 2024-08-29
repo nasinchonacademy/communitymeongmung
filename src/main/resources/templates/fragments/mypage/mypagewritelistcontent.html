@@ -1,0 +1,47 @@
+<div class="container">
+    <!-- 검색 기능 -->
+    <form th:action="@{/search}" method="get" class="search-bar">
+        <input type="text" name="query" placeholder="검색어를 입력하세요">
+        <button type="submit">검색</button>
+    </form>
+
+    <!-- 글 목록 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th width="15%">사진</th>
+            <th width="50%">제목</th>
+            <th width="15%">작성일</th>
+            <th width="10%">조회수</th>
+            <th width="10%">좋아요 수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 타임리프 반복문으로 meongstory 데이터 출력 -->
+        <tr th:each="story : ${writtenStories}">
+            <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:40%; height: auto;"></td>
+            <td><a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}" >글 제목</a></td> <!-- 제목 -->
+            <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}">작성일</td>
+            <td th:text="${story.viewcount}" class="story_count"></td>
+            <td th:text="${story.likecount}" class="story_count"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">다음 페이지 &gt;</a>
+    </div>
+
+    <!-- 글쓰기 버튼 -->
+    <div class="write-btn">
+        <a th:href="@{/write}">
+            <button>글쓰기</button>
+        </a>
+    </div>
+</div>
