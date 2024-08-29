@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.zerock.projectmeongmung.dto.MeongStoryDTO;
 import org.zerock.projectmeongmung.entity.GamePoints;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.User;
@@ -19,9 +21,8 @@ import org.zerock.projectmeongmung.service.UserService;
 import org.zerock.projectmeongmung.service.gameService;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MyPageController {
@@ -43,7 +44,11 @@ public class MyPageController {
 
         // 좋아요한 스토리 가져오기
         List<MeongStory> likedStories = myPageService.getLikedStories(user);
-        model.addAttribute("likedStories", likedStories);
+
+        // 3개씩 그룹화하여 새로운 리스트 생성
+        List<List<MeongStory>> partitionedStories = partitionList(likedStories, 3);
+
+        model.addAttribute("partitionedStories", partitionedStories);
 
         // 젤리 포인트 가져오기
         int jelly = user.getJellypoint();
@@ -53,8 +58,31 @@ public class MyPageController {
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
         model.addAttribute("writtenStories", writtenStories);
 
+
+
         return "mypage/mypage";
     }
+
+    private List<List<MeongStory>> partitionList(List<MeongStory> list, int partitionSize) {
+        List<List<MeongStory>> partitions = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += partitionSize) {
+            partitions.add(list.subList(i, Math.min(i + partitionSize, list.size())));
+        }
+        return partitions;
+    }
+
+//    @GetMapping("/api/stories")
+//    @ResponseBody
+//    public List<MeongStoryDTO> getStories(Authentication authentication) {
+//        String username = authentication.getName();
+//        User user = userDetailService.loadUserByUsername(username);
+//        List<MeongStory> stories = myPageService.getWrittenStories(user);
+//
+//        // MeongStory를 MeongStoryDTO로 변환
+//        return stories.stream()
+//                .map(MeongStoryDTO::fromEntity) // or use the lambda expression method
+//                .collect(Collectors.toList());
+//    }
 
     // 사용자 정보 수정 페이지를 표시하는 메서드
     @GetMapping("/mypageedit")
@@ -130,15 +158,30 @@ public class MyPageController {
 
     }
 
-    @GetMapping("/")
-    public String showProfilePage(Model model,Authentication authentication) {
+    @GetMapping("/mypapeWritelist")
+    public String showWritelistPage(Model model,Authentication authentication) {
         String username = authentication.getName();
         User user = userDetailService.loadUserByUsername(username);
-        model.addAttribute("user", user);
 
-        return "profile";
+        List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
+        model.addAttribute("writtenStories", writtenStories);
+
+        return "mypage/mypageWritelist";
 
     }
+
+    @GetMapping("/mypagelikedlist")
+    public String showLikedlistPage(Model model,Authentication authentication) {
+        String username = authentication.getName();
+        User user = userDetailService.loadUserByUsername(username);
+
+        List<MeongStory> likedStories = myPageService.getLikedStories(user);
+        model.addAttribute("likedStories", likedStories);;
+
+        return "mypage/mypagelikedlist";
+    }
+
+
 
 
 
