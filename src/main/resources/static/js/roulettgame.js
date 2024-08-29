@@ -16,7 +16,7 @@ var rouletter = {
         return this.rewards[index];
     },
 
-    randomAngleWithinSection: function() {
+    randomAngleWithinSection: function () {
         // 45도 단위로 시작점 설정
         var baseAngle = this.random() * 45;
         // 섹션 내에서 랜덤한 0 ~ 44도 추가
@@ -72,3 +72,4 @@ document.addEventListener('click', function (e) {
         rouletter.start();
     }
 });
+
