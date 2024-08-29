@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +15,24 @@
     <!--기본 css-->
     <link th:href="@{/css/basic.css}" rel="stylesheet">
 </head>
-<script>
 
-</script>
 <style>
-
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    .game{
+    .game {
         width: 1000px;
         height: 600px;
         border: 1px solid #6bb08b;
         margin: 0 auto 30px;
         border-radius: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
     .gameDetail {
@@ -47,7 +49,30 @@
         border-radius: 16px;
     }
 
+    #ttt-container{
+        text-align: center;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    td {
+        border: 1px solid black;
+        width: 120px;
+        height: 120px;
+        text-align: center;
+        font-size: 40px;
+    }
+
+    .result-message {
+        font-size: 24px;
+        text-align: center;
+        margin-top: 30px;
+    }
+
 </style>
+
 <body>
 <!-- 헤더 영역 -->
 <th:block th:replace="/fragments/nav :: header"></th:block>
@@ -57,19 +82,167 @@
 
 <!-- 메인 컨텐츠 영역 -->
 <div class="game">
-    <p>틱택톡 돌리기 게임영역</p>
+    <div id="ttt-container"></div>
 </div>
 
 <div class="gameDetail">
-    <!--    @{../image/game/rollet.png}-->
     <img th:src="@{../image/game/ttt.png}" class="gameImage" alt="gameImage">
 </div>
 
 <!-- 푸터 영역 -->
 <th:block th:replace="/fragments/nav :: footer"></th:block>
 
+<script>
+    const { body } = document;
+    const $table = document.createElement('table');
+    const $result = document.createElement('div');
+    const rows = [];
+    let turn = 'O';
 
-<!-- 푸터 영역 -->
-<th:block th:replace="/fragments/nav :: footer"></th:block>
+    $result.classList.add('result-message');
+
+    const checkWinner = () => {
+        for (let i = 0; i < 3; i++) {
+            if (
+                rows[i][0].textContent === turn &&
+                rows[i][1].textContent === turn &&
+                rows[i][2].textContent === turn
+            ) {
+                return true;
+            }
+            if (
+                rows[0][i].textContent === turn &&
+                rows[1][i].textContent === turn &&
+                rows[2][i].textContent === turn
+            ) {
+                return true;
+            }
+        }
+        if (
+            rows[0][0].textContent === turn &&
+            rows[1][1].textContent === turn &&
+            rows[2][2].textContent === turn
+        ) {
+            return true;
+        }
+        if (
+            rows[0][2].textContent === turn &&
+            rows[1][1].textContent === turn &&
+            rows[2][0].textContent === turn
+        ) {
+            return true;
+        }
+        return false;
+    };
+
+    const checkDraw = () => {
+        return rows.flat().every(cell => cell.textContent);
+    };
+
+    const findWinningMove = (player) => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (!rows[i][j].textContent) {
+                    rows[i][j].textContent = player;
+                    if (checkWinner()) {
+                        rows[i][j].textContent = '';
+                        return rows[i][j];
+                    }
+                    rows[i][j].textContent = '';
+                }
+            }
+        }
+        return null;
+    };
+
+    const aiMove = () => {
+        let move = findWinningMove('X'); // 컴퓨터가 이기는 수
+
+        if (!move) {
+            move = findWinningMove('O'); // 유저가 이기는 수
+        }
+        if (!move && !rows[1][1].textContent) {
+            move = rows[1][1]; // 중앙 차지
+        }
+        if (!move) {
+            const corners = [rows[0][0], rows[0][2], rows[2][0], rows[2][2]].filter(cell => !cell.textContent);
+            if (corners.length > 0) {
+                move = corners[Math.floor(Math.random() * corners.length)]; // 코너 차지
+            }
+        }
+        if (!move) {
+            const emptyCells = rows.flat().filter(cell => !cell.textContent);
+            move = emptyCells[Math.floor(Math.random() * emptyCells.length)]; // 남은 자리 랜덤 선택
+        }
+
+        move.textContent = 'X';
+        turn = 'X';
+        if (checkWinner()) {
+            $result.textContent = `아쉽네요. 다음 기회에 또 도전해보세요!`;
+            $table.removeEventListener('click', callback);
+            savePlayTime();
+        } else if (checkDraw()) {
+            $result.textContent = `무승부입니다!`;
+            savePlayTime();
+        } else {
+            turn = 'O';
+        }
+    };
+
+    const savePlayTime = () => {
+        localStorage.setItem('lastPlayedttt', Date.now());
+    }
+
+    const canPlayToday = () => {
+        const lastPlayed = localStorage.getItem('lastPlayedttt');
+        if (!lastPlayed) return true;
+        const lastPlayedDate = new Date(parseInt(lastPlayed));
+        const today = new Date();
+        return today.toDateString() != lastPlayedDate.toDateString();
+    }
+
+    const callback = (event) => {
+        if (event.target.textContent !== '') {
+            return;
+        }
+        if (turn === 'O') {
+            event.target.textContent = 'O';
+            if (checkWinner()) {
+                $result.textContent = `축하합니다. 젤리 50개를 획득했어요!`;
+                $table.removeEventListener('click', callback);
+                savePlayTime();
+            } else if (checkDraw()) {
+                $result.textContent = `무승부입니다!`;
+                savePlayTime();
+            } else {
+                turn = 'X';
+                setTimeout(aiMove, 500);
+            }
+        }
+    };
+
+    if (canPlayToday()) {
+        for (let i = 0; i < 3; i++) {
+            const $tr = document.createElement('tr');
+            const cells = [];
+            for (let j = 0; j < 3; j++) {
+                const $td = document.createElement('td');
+                cells.push($td);
+                $tr.append($td);
+            }
+            rows.push(cells);
+            $table.append($tr);
+        }
+
+        $table.addEventListener('click', callback);
+        document.getElementById('ttt-container').append($table);
+        document.getElementById('ttt-container').append($result);
+
+    } else {
+        $result.textContent = "내일 다시 만나요 ૮ ฅ•ᴥ•აฅ";
+        document.getElementById('ttt-container').append($result);
+    }
+</script>
 </body>
+
 </html>
