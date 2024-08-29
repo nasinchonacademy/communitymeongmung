@@ -2,6 +2,8 @@ package org.zerock.projectmeongmung.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.zerock.projectmeongmung.entity.MeongStory;
+
 import java.time.LocalDateTime;
 
 @Builder
@@ -40,5 +42,23 @@ public class MeongStoryDTO {
         this.category = category;
         this.uid = uid;
         this.nickname = nickname;
+    }
+
+    public static MeongStoryDTO fromEntity(MeongStory story) {
+        return MeongStoryDTO.builder()
+                .seq(story.getSeq())
+                .title(story.getTitle())
+                .likecount(story.getLikecount())
+                .content(story.getContent())
+                .regdate(story.getRegdate())
+                .modified(story.getModified())
+                .picture(story.getPicture())
+                .commentcount(story.getCommentcount())
+                .viewcount(story.getViewcount())
+                .deleted(story.getDeleted())
+                .category(story.getCategory())
+                .uid(story.getUser().getUid())
+                .nickname(story.getUser().getNickname())
+                .build();
     }
 }

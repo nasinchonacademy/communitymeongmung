@@ -12,8 +12,9 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    max-height: 1200px;
-    width: 1200px;
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto;    /* 화면 중앙에 배치 */
+    padding: 20px;     /* 패딩 설정 */
 }
 
 
@@ -78,6 +79,7 @@
     padding: 10px 20px;
     cursor: pointer;
     font-size: 16px;
+    display: inline;
 }
 
 
@@ -88,19 +90,20 @@
 }
 
 
-.liked_content{
-    display: block;
-    float: left;
-    width: 200px;
-    height: 200px;
-    background-color: #c9ecd7;
-    margin-right: 50px;
-}
 
 .liked_story h2 {
     font-size: 24px;
     margin-bottom: 50px;
     height: 20px;
+    display: inline;
+}
+
+.liked_story_titlelink{
+    margin-bottom: 30px;
+}
+
+.liked_story_titlelink a{
+    float: right;
 }
 
 .written_stories{
@@ -109,28 +112,25 @@
 
 }
 
-.written_stories h2 {
-    margin-bottom: 30px;
-    width: 400px;
+
+
+.written_stories_title {
+    margin-bottom: 50px;
+    width: 600px;
     text-align: left;
 }
 
-.written_content{
-    display: block;
-    margin-bottom: 20px;
-}
-
-.written_content h3{
+.written_stories_title h2 {
     display: inline;
-    margin-bottom: 20px;
-    width: 400px;
 }
 
-.written_content a{
+.written_stories_title a {
     float: right;
-    margin-right: 8px;
-    margin-bottom: 7px;
+    margin-top: 30px;
 }
+
+
+
 
 .posts img {
     width: 45%;
@@ -147,13 +147,12 @@
 
 .cart {
     margin-top: 20px;
-    margin-bottom: 70px;
 }
 .cart div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     padding: 10px;
     background-color: #dcdcdc;
     border-radius: 10px;
@@ -170,3 +169,107 @@
     height: 40px;
     cursor: pointer;
 }
+
+
+.col-md-4{
+    width: 12rem;
+}
+
+.carousel-control-prev-icon {
+    filter: invert(1) grayscale(1) brightness(1.5); /* 어두운 흰색 톤 */
+}
+
+
+.carousel-control-next-icon {
+    filter: invert(1) grayscale(1) brightness(1.5); /* 어두운 흰색 톤 */
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+
+
+.grid-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    height: 240px;
+}
+
+
+.written_content_link_edit {
+    display: inline;
+    text-decoration: none;
+    color: #004df3;
+    border: 1px solid #004df3;
+    border-radius: 4px;
+}
+
+.written_content_link_edit:hover{
+    background: #004df3;
+    color: white;
+}
+
+.written_content_link_delete {
+    display: inline;
+    text-decoration: none;
+    color: #e60b0b;
+    border: 1px solid #e60b0b;
+    border-radius: 4px;
+}
+
+.written_content_link_delete:hover{
+    background: #e60b0b;
+    color: white;
+}
+
+.written_content_linkbox{
+    margin-top: 30px;
+}
+
+
+
+.written_stories_element a{
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    color: #333333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.written_stories_element a:hover{
+    color: #32b16c;
+}
+
+.story_getwritelist{
+
+
+}
+
+.story_getwritelist img{
+    width: 80%;
+    height: auto;
+    align-items: center;
+    justify-items: auto;
+    margin-top: 30px;
+}
+
+.story_getwritelist img:hover{
+    width: 100%;
+    height: auto;
+    align-items: center;
+    justify-items: auto;
+    margin-top: 20px;
+}
+
+
