@@ -25,28 +25,28 @@
         <table>
             <thead>
             <tr>
-                <th width="5%">글 번호</th>
-                <th width="15%">사진</th>
                 <th width="10%">카테고리</th>
-                <th width="40%">제목</th>
+                <th width="15%">사진</th>
+                <th width="30%">제목</th>
+                <th width="10%">작성자</th>
                 <th width="15%">작성일</th>
                 <th width="10%">조회수</th>
-                <th width="5%">좋아요 수</th>
+                <th width="10%">좋아요 수</th>
             </tr>
             </thead>
             <tbody>
             <!-- 반복문으로 story 객체 리스트 순회 -->
             <tr th:each="story : ${result.dtoList}">
-                <!-- 글 번호 -->
-                <td th:text="${story.seq}"></td>
-                <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
-                <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:100px; height: auto;"></td>
                 <!-- 카테고리 -->
                 <td th:text="${story.category}"></td>
+                <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
+                <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:100px; height: auto;"></td>
                 <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
                 <td><a th:href="@{/story/{seq}(seq=${story.seq})}" th:text="${story.title}"></a></td>
+                <!--작성자-->
+                <td th:text="${story.nickname}" class="story_count"></td>
                 <!-- 작성일 (날짜 형식 변경) -->
-                <!--<td th:text="${story.regdate != null ? #dates.format(story.regdate, 'yyyy-MM-dd') : 'Invalid date'}"></td>-->
+                <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}">작성일</td>
                 <!-- 조회수 -->
                 <td th:text="${story.viewcount}" class="story_count"></td>
                 <!-- 좋아요 수 -->
@@ -55,22 +55,31 @@
             </tbody>
         </table>
 
-        <ul class="paging">
-            <!-- 이전 페이지로 이동하는 버튼 -->
-            <li class="page prev" th:if="${result.prev}">
-                <a class="page-link" th:href="@{/mungstory(page=${result.start - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current})}" tabindex="-1">Previous</a>
-            </li>
 
-            <!-- 각 페이지 번호를 나타내는 버튼 -->
-            <li th:class="'pagenum' + (${result.page == page} ? 'active' : '')" th:each="page : ${result.pageList}" id="mungstorypagemung">
-                <a class="page-click" th:href="@{/mungstory(page=${page},  current=${current}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
-            </li>
+<!--        <div class="pagingDiv">
+            <ul class="paging prev">
 
-            <!-- 다음 페이지로 이동하는 버튼 -->
-            <li class="page next" th:if="${result.next}">
-                <a class="page-click" th:href="@{/mungstory(page=${result.end + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current})}">Next</a>
-            </li>
-        </ul>
+            </ul>-->
+
+            <ul class="paging click">
+                <!-- 이전 페이지로 이동하는 버튼 -->
+                <li class="page prev" th:if="${result.prev}">
+                    <a class="page-linked" th:href="@{/mungstory(page=${result.start - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current})}" tabindex="-1">Previous</a>
+                </li>
+                <!-- 각 페이지 번호를 나타내는 버튼 -->
+                <li th:class="'pagenum' + (${result.page == page} ? 'active' : '')" th:each="page : ${result.pageList}" id="mungstorypagemung">
+                    <a class="page-click" th:href="@{/mungstory(page=${page},  current=${current}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
+                </li>
+                <!-- 다음 페이지로 이동하는 버튼 -->
+                <li class="page next" th:if="${result.next}">
+                    <a class="page-linked" th:href="@{/mungstory(page=${result.end + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current})}">Next</a>
+                </li>
+            </ul>
+
+<!--            <ul class="paging next">
+
+            </ul>
+        </div>-->
 
     </div>
 </th:block>
