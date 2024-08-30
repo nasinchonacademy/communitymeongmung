@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.projectmeongmung.dto.MeongStoryDTO;
+import org.zerock.projectmeongmung.dto.PageRequestDTO;
+import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.entity.GamePoints;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.User;
-import org.zerock.projectmeongmung.service.MyPageService;
-import org.zerock.projectmeongmung.service.UserDetailService;
-import org.zerock.projectmeongmung.service.UserService;
-import org.zerock.projectmeongmung.service.gameService;
+import org.zerock.projectmeongmung.service.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -35,6 +34,8 @@ public class MyPageController {
     private gameService gameService;
     @Autowired
     private FileController fileController;
+    @Autowired
+    private MeongStoryService meongStoryService;
 
 
     @GetMapping("/mypage")
@@ -48,6 +49,7 @@ public class MyPageController {
         // 3개씩 그룹화하여 새로운 리스트 생성
         List<List<MeongStory>> partitionedStories = partitionList(likedStories, 3);
 
+
         model.addAttribute("partitionedStories", partitionedStories);
 
         // 젤리 포인트 가져오기
@@ -56,7 +58,8 @@ public class MyPageController {
 
         // 작성 글 가져오기
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
-        model.addAttribute("writtenStories", writtenStories);
+        List<List<MeongStory>> partitionedwirteStories = partitionList(writtenStories, 6);
+        model.addAttribute("partitionedwirteStories", partitionedwirteStories);
 
 
 
@@ -159,12 +162,30 @@ public class MyPageController {
     }
 
     @GetMapping("/mypapeWritelist")
-    public String showWritelistPage(Model model,Authentication authentication) {
+    public String showWritelistPage(Model model, Authentication authentication,
+                                    @RequestParam(value = "page",defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size,
+                                    @RequestParam(value = "type", required = false) String type,
+                                    @RequestParam(value = "keywword", required = false) String keywword,
+                                    PageRequestDTO pageRequestDTO) {
+
         String username = authentication.getName();
         User user = userDetailService.loadUserByUsername(username);
 
-        List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
-        model.addAttribute("writtenStories", writtenStories);
+        pageRequestDTO.setPage(page);
+        pageRequestDTO.setSize(size);
+        pageRequestDTO.setType(type);
+        pageRequestDTO.setKeyword(keywword);
+
+        PageResultDTO<MeongStoryDTO, MeongStory> result;
+
+        result = meongStoryService.getAllItems(pageRequestDTO);
+
+        model.addAttribute("result", result);
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
+
+//        List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
+//        model.addAttribute("writtenStories", writtenStories);
 
         return "mypage/mypageWritelist";
 

@@ -63,41 +63,69 @@
       <h2 >내가 쓴 글</h2>
       <a href="/mypapeWritelist">글 목록 보기</a>
     </div>
-    <ul th:if="${writtenStories != null}" class="grid-container">
-      <li th:each="story, iterStat : ${writtenStories}" th:if="${iterStat.index < 5}" class="grid-item">
-        <div class="written_stories_box">
-            <div class="written_stories_element">
-              <a th:href="@{'/story/view/' + ${story.seq}}" th:text="'제목: '+${story.title.length() > 6 ? story.title.substring(0,6)+'...':story.title}" class="written_stories_titlebox">제목 없음</a>
-              <a th:text="'내용: '+${story.content.length() > 4 ? story.content.substring(0,4)+'..':story.content}" class="written_stories_titlebox">제목 없음</a>
-              <a th:text="'작성일: '+${#temporals.format(story.regdate, 'MM월dd일')}"></a>
-              <a th:text="'좋아요 수: '+ ${story.viewcount}" class="story_count"></a>
-              <a th:text="'조회 수: '+ ${story.likecount}" class="story_count"></a>
-            </div>
-          <div class="written_content_linkbox">
-            <a th:href="@{'/story/edit/' + ${story.seq}}" class="written_content_link_edit">수정하기</a>
-            <a th:href="@{'/story/delete/' + ${story.seq}}" class="written_content_link_delete">삭제하기</a>
-          </div>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <!-- 6개씩 목록을 묶어 슬라이드로 구성 -->
+        <div th:each="chunk, chunkStat : ${partitionedStories}" class="swiper-slide">
+          <ul class="list-group">
+            <li th:each="story, iterStat : ${chunk}" class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="story-rank">
+                <span th:text="${iterStat.index + 1}" class="rank-number"></span>
+              </div>
+              <div class="story-content">
+                <div class="story-title">
+                  <a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}">제목</a>
+                </div>
+                <div class="story-meta">
+                  <small th:text="${story.user.nickname}">작성자</small><br/>
+                  <small th:text="'조회수: ' + ${story.viewcount}">조회수: 191</small><br/>
+                  <small th:text="'좋아요: ' + ${story.likecount}">좋아요: 4</small>
+                </div>
+              </div>
+              <div class="story-image">
+                <img th:src="${story.picture != null ? story.picture : '/path/to/default/image.jpg'}" alt="story image" class="img-thumbnail">
+              </div>
+              <div class="story-comments">
+                <span th:text="${story.commentcount}">13</span> 댓글
+              </div>
+            </li>
+          </ul>
         </div>
-      </li>
-      <a href="/mypapeWritelist" class="story_getwritelist">
-        <li  class="grid-item">
-         <img th:src="${'/image/tool/addstory.PNG'}" alt="사진">
-        </li>
-      </a>
-      <li th:if="${#lists.isEmpty(writtenStories)}" class="no-articles">작성된 글이 없습니다.</li>
-    </ul>
+      </div>
+      <!-- Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
+    </div>
+
+
   </div>
 
   <div class="cart">
     <h2>장바구니 확인!</h2>
     <div>
-      <img src="https://via.placeholder.com/150" alt="장바구니 상품 1">
-      <button>→</button>
-    </div>
-    <h2>찜한 물건 확인하기</h2>
-    <div>
-      <img src="https://via.placeholder.com/150" alt="찜한 상품 1">
-      <button>→</button>
+      <ul th:if="${writtenStories != null}" class="grid-container">
+        <li th:each="story, iterStat : ${writtenStories}" th:if="${iterStat.index < 5}" class="grid-item">
+          <div class="cart_box">
+            <div class="cart_element">
+              <a th:href="@{'/story/view/' + ${story.seq}}" th:text="'제목: '+${story.title.length() > 6 ? story.title.substring(0,6)+'...':story.title}" class="cart_titlebox">제목 없음</a>
+              <a th:text="'내용: '+${story.content.length() > 4 ? story.content.substring(0,4)+'..':story.content}" class="cart_titlebox">제목 없음</a>
+              <a th:text="'작성일: '+${#temporals.format(story.regdate, 'MM월dd일')}"></a>
+              <a th:text="'좋아요 수: '+ ${story.viewcount}" class="cart_count"></a>
+              <a th:text="'조회 수: '+ ${story.likecount}" class="cart_count"></a>
+            </div>
+            <div class="cart_content_linkbox">
+              <a th:href="@{'/story/edit/' + ${story.seq}}" class="cart_content_link_edit">수정하기</a>
+              <a th:href="@{'/story/delete/' + ${story.seq}}" class="cart_content_link_delete">삭제하기</a>
+            </div>
+          </div>
+        </li>
+        <a href="/mypapeWritelist" class="story_getwritelist">
+          <li  class="grid-item">
+            <img th:src="${'/image/tool/addstory.PNG'}" alt="사진">
+          </li>
+        </a>
+        <li th:if="${#lists.isEmpty(writtenStories)}" class="no-articles">작성된 글이 없습니다.</li>
+      </ul>
     </div>
   </div>
 </div>
