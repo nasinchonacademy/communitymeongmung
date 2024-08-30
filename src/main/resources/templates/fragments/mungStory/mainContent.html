@@ -1,65 +1,60 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <style>
     #mungstorypagemung {
-    display:inline;
-}
+        display:inline;
+    }
 </style>
 <body>
 
 <th:block th:fragment="content(dataList)">
 
-    <div class="container">
-        <!--검색하기-->
-        <form action="/mungstory" method="get" id="searchForm" class="search-bar">
-            <div class="submitGroup">
-                <input type="hidden" name="page" value="1">
-                <input type="hidden" id="currentInput" name="current" value=""> <!-- current 값을 설정 -->
-                <input type="hidden" name="type" value="tcw" />
-                <input class="control" name="keyword" placeholder="검색어를 입력하세요" value="">
-                <div class="group-append" id="button-addon4">
-                    <button class="btn-search" type="submit">검색</button>
+        <div class="container">
+            <!--검색하기-->
+            <form action="/mungstory" method="get" id="searchForm" class="search-bar">
+                <div class="submitGroup">
+                    <input type="hidden" name="page" value="1">
+                    <input type="hidden" id="currentInput" name="current" value=""> <!-- current 값을 설정 -->
+                    <input type="hidden" name="type" value="tcw" />
+                    <input class="control" name="keyword" placeholder="검색어를 입력하세요" value="">
+                    <div class="group-append" id="button-addon4">
+                        <button class="btn-search" type="submit">검색</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
 
-        <table>
-            <thead>
-            <tr>
-                <th width="10%">카테고리</th>
-                <th width="15%">사진</th>
-                <th width="30%">제목</th>
-                <th width="10%">작성자</th>
-                <th width="15%">작성일</th>
-                <th width="10%">조회수</th>
-                <th width="10%">좋아요 수</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- 반복문으로 story 객체 리스트 순회 -->
-            <tr th:each="story : ${result.dtoList}">
-                <!-- 카테고리 -->
-                <td th:text="${story.category}"></td>
-                <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
-                <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:100px; height: auto;"></td>
-                <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
-                <td><a th:href="@{/story/{seq}(seq=${story.seq})}" th:text="${story.title}"></a></td>
-                <!--작성자-->
-                <td th:text="${story.nickname}" class="story_count"></td>
-                <!-- 작성일 (날짜 형식 변경) -->
-                <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}">작성일</td>
-                <!-- 조회수 -->
-                <td th:text="${story.viewcount}" class="story_count"></td>
-                <!-- 좋아요 수 -->
-                <td th:text="${story.likecount}" class="story_count"></td>
-            </tr>
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                <tr>
+                    <th width="10%">카테고리</th>
+                    <th width="15%">사진</th>
+                    <th width="30%">제목</th>
+                    <th width="10%">작성자</th>
+                    <th width="15%">작성일</th>
+                    <th width="10%">조회수</th>
+                    <th width="10%">좋아요 수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 반복문으로 story 객체 리스트 순회 -->
+                <tr th:each="story : ${result.dtoList}">
+                    <!-- 카테고리 -->
+                    <td th:text="${story.category}"></td>
+                    <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
+                    <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:100px; height: auto;"></td>
+                    <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
+                    <td><a th:href="@{/story/{seq}(seq=${story.seq})}" th:text="${story.title}"></a></td>
+                    <!--작성자-->
+                    <td th:text="${story.nickname}" class="story_count"></td>
+                    <!-- 작성일 (날짜 형식 변경) -->
+                    <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}">작성일</td>
+                    <!-- 조회수 -->
+                    <td th:text="${story.viewcount}" class="story_count"></td>
+                    <!-- 좋아요 수 -->
+                    <td th:text="${story.likecount}" class="story_count"></td>
+                </tr>
+                </tbody>
+            </table>
 
-
-<!--        <div class="pagingDiv">
-            <ul class="paging prev">
-
-            </ul>-->
 
             <ul class="paging click">
                 <!-- 이전 페이지로 이동하는 버튼 -->
@@ -76,11 +71,10 @@
                 </li>
             </ul>
 
-<!--            <ul class="paging next">
-
-            </ul>
-        </div>-->
-
+            <div class="writeBtn">
+                <a th:href="@{/mungstory/storywirte}" class="writeBtnAtag">글쓰기</a>
+            </div>
+        </div>
     </div>
 </th:block>
 </body>

@@ -25,7 +25,7 @@
     font-weight: 1000;
 }
 
-.vat_card h3 {
+.h3class {
     position: absolute;
     top: 29.2%;
     color: black;
@@ -35,7 +35,7 @@
     text-align: left;
 }
 
-.vat_card h2, h3 {
+.vat_card h2, .h3class {
     margin-left: 1.8rem;
 }
 

@@ -18,7 +18,7 @@
         </thead>
         <tbody>
         <!-- 타임리프 반복문으로 meongstory 데이터 출력 -->
-        <tr th:each="story : ${writtenStories}">
+        <tr th:each="story : ${result.dtoList}">
             <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:40%; height: auto;"></td>
             <td><a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}" >글 제목</a></td> <!-- 제목 -->
             <td th:text="${#temporals.format(story.regdate, 'yyyy-MM-dd')}">작성일</td>
@@ -29,14 +29,23 @@
     </table>
 
     <!-- 페이지네이션 -->
-    <div class="pagination">
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">다음 페이지 &gt;</a>
-    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+<!--            이전 페이지로 이동하는 버튼 -->
+          <li class="page prev" th:if="${result.prev}">
+              <a class="page-link" th:href="@{/mypapeWritelist(page=${result.start - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}" tabindex="-1">Previous</a>
+          </li>
+<!--            각 페이지 번호를 나타내는 버튼 -->
+          <li th:class="'pagenum'+(${result.page == page} ? 'active' : '')" th:each="page : ${result.pageList}" class="page-item" id="mungstorypagemung">
+              <a class="page-link" th:href="@{/mypapeWritelist(page=${page}, current=${current}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
+          </li>
+
+<!--            다음 페이지로 이동하는 버튼-->
+            <li class="page next" th:if="${result.next}">
+                <a class="page-link" th:href="@{/mypapeWritelist(page=${result.end + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Next</a>
+            </li>
+        </ul>
+    </nav>
 
     <!-- 글쓰기 버튼 -->
     <div class="write-btn">

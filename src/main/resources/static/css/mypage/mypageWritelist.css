@@ -75,3 +75,8 @@ table th {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.page-link:active{
+    background: #0f7cb8;
+    color: white;
+}
