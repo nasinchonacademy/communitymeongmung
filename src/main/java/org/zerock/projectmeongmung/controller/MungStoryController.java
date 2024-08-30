@@ -129,6 +129,16 @@ public class MungStoryController {
                 .build();
     }
 
+    @GetMapping("/storywirte")
+    public String storywirte() {
+        return "mungStoryHtml/storywirte";
+    }
+
+    @PostMapping("/storywirte")
+    public String storywirtePost(){
+        return null;
+    }
+
     @PostMapping("/modify") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
     public String modify(MeongStoryDTO dto , @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                          RedirectAttributes redirectAttributes){
