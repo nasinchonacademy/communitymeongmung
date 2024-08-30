@@ -1,5 +1,8 @@
 const rspArr = ['r', 's', 'p'];
 
+// 전역 변수로 이미지 경로를 설정
+const imagePath = '/image/game/';
+
 let score = 0;
 let win = 0;
 let lose = 0;
@@ -24,7 +27,7 @@ function rps(userName, userChoice, computer) {
     } else if (userChoice === "s" && computer === 'r'
         || userChoice === "r" && computer === 'p'
         || userChoice === "p" && computer === 's') {
-        result = '다음 기회에..';
+        result = '아쉽네요. 다음에 또 도전해보세요!';
         lose += 1;
         score -= 1;
     } else {
@@ -36,13 +39,13 @@ function rps(userName, userChoice, computer) {
 
 function checkIfGamePlayedToday() {
     const today = new Date().toISOString().slice(0, 10);
-    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
+    const lastPlayedDate = localStorage.getItem('lastPlayedDateRSP');
     return today === lastPlayedDate;
 }
 
 function setGamePlayedToday() {
     const today = new Date().toISOString().slice(0, 10);
-    localStorage.setItem('lastPlayedDate', today);
+    localStorage.setItem('lastPlayedDateRSP', today);
 }
 
 function initializeGame() {
@@ -60,14 +63,14 @@ function disableButtons() {
 const rps1 = document.querySelector('#rps1');
 let i = 0;
 let intervalId1 = setInterval(function () {
-    rps1.src = `${rspArr[i % 3]}.png`;
+    rps1.src = imagePath + `${rspArr[i % 3]}.png`;
     i += 1;
 }, 100);
 
 const rps2 = document.querySelector('#rps2');
 let j = 0;
 let intervalId2 = setInterval(function () {
-    rps2.src = `${rspArr[j % 3]}.png`;
+    rps2.src = imagePath + `${rspArr[j % 3]}.png`;
     j += 1;
 }, 120);
 
@@ -81,10 +84,10 @@ sbtn.addEventListener('click', function () {
     clearInterval(intervalId1);
     clearInterval(intervalId2);
 
-    rps1.src = 's.png';
+    rps1.src = imagePath + 's.png'; // imagePath 절대경로 지정!!!!!
 
     const computer = Math.floor(Math.random() * 3);
-    rps2.src = rspArr[computer] + '.png';
+    rps2.src = imagePath + rspArr[computer] + '.png';
 
     rps('유나', 's', rspArr[computer]);
 
@@ -102,10 +105,10 @@ rbtn.addEventListener('click', function () {
     clearInterval(intervalId1);
     clearInterval(intervalId2);
 
-    rps1.src = 'r.png';
+    rps1.src = imagePath + 'r.png';
 
     const computer = Math.floor(Math.random() * 3);
-    rps2.src = rspArr[computer] + '.png';
+    rps2.src = imagePath + rspArr[computer] + '.png';
 
     rps('유나', 'r', rspArr[computer]);
 
@@ -123,10 +126,10 @@ pbtn.addEventListener('click', function () {
     clearInterval(intervalId1);
     clearInterval(intervalId2);
 
-    rps1.src = 'p.png';
+    rps1.src = imagePath + 'p.png';
 
     const computer = Math.floor(Math.random() * 3);
-    rps2.src = rspArr[computer] + '.png';
+    rps2.src = imagePath + rspArr[computer] + '.png';
 
     rps('유나', 'p', rspArr[computer]);
 
