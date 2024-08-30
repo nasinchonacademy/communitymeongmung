@@ -22,7 +22,7 @@
                 <h3 th:text="${user.nickname}" class="profile-nickname-bar"></h3></a>
             </li>
             <li><a sec:authorize="isAuthenticated()" th:href="@{/mypage}">마이 페이지</a></li>
-            <li><a sec:authorize="isAuthenticated()" th:href="@{/mypageedit}">프로필 수정</a></li>
+            <li><a sec:authorize="isAuthenticated()" th:href="@{/mypageedit(isRadio2Selected=true)}">프로필 수정</a></li>
             <li><a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
             <li><a th:href="@{/mungstory}">멍스토리</a></li>
             <li>

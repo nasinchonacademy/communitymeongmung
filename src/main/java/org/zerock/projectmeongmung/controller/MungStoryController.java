@@ -2,7 +2,10 @@ package org.zerock.projectmeongmung.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +14,22 @@ import org.zerock.projectmeongmung.dto.MeongStoryDTO;
 import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.entity.MeongStory;
+import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.service.MeongStoryService;
+import org.zerock.projectmeongmung.service.MyPageService;
+import org.zerock.projectmeongmung.service.UserDetailService;
+import org.zerock.projectmeongmung.service.gameService;
 
 @Controller
 @RequestMapping("/mungstory")
 @RequiredArgsConstructor
 @Log4j2
 public class MungStoryController {
+
+
+    @Autowired
+    private UserDetailService userDetailService;
+
 
     private final MeongStoryService service;
 
@@ -130,13 +142,20 @@ public class MungStoryController {
     }
 
     @GetMapping("/storywirte")
-    public String storywirte() {
+    public String storywirte(Model model,Authentication authentication) {
+        String username = authentication.getName();
+        User user = userDetailService.loadUserByUsername(username);
+        model.addAttribute("user", user);
         return "mungStoryHtml/storywirte";
     }
 
     @PostMapping("/storywirte")
-    public String storywirtePost(){
-        return null;
+    public String storywirtePost(MeongStoryDTO dto, RedirectAttributes redirectAttributes){
+
+        log.info("dto..." + dto);
+        Long gno = service.register(dto);
+
+        return "redirect:/mungstory";
     }
 
     @PostMapping("/modify") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다

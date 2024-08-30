@@ -23,7 +23,7 @@ public class MeongStory extends BaseEntity1 {
     @Column(name = "title", nullable = false, length = 40)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 2500)
     private String content;
 
     @Column(name = "likecount", nullable = false)
