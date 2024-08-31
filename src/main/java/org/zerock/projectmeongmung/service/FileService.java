@@ -12,7 +12,7 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    private final String uploadDir = "/Users/yunakang/uploads/"; // 경로를 환경변수나 설정 파일에서 가져오도록 변경할 수 있습니다.
+    private final String uploadDir = "/Users/yunakang/uploads/"; // 경로를 환경변수나 설정 파일에서 가져오도록 변경할 수 있다
 
     public String saveFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
