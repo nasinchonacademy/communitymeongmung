@@ -39,4 +39,31 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepositrory.findAll(); // DB에서 모든 제품 가지고 오기
     }
+
+    // 제품 업데이트
+    public void updateProduct(Long productId, String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
+        Optional<Product> productOpt = productRepositrory.findById(productId);
+
+        if(productOpt.isPresent()) {
+            Product product = productOpt.get();
+            product = Product.builder()
+                    .pname(pname)
+                    .pprice(pprice)
+                    .pcategory(pcategory)
+                    .pdescription(pdescription)
+                    .pcompany(pcompany)
+                    .pstock(pstock)
+                    .productphoto(productphoto)
+                    .build();
+
+            productRepositrory.save(product);
+        } else {
+            throw new IllegalArgumentException("Product with ID " + productId + " not found.");
+        }
+    }
+
+    // 제품 삭제하기
+    public void productDelete(Long productId) {
+        productRepositrory.deleteById(productId);
+    }
 }

@@ -90,7 +90,6 @@
 }
 
 
-
 .liked_story h2 {
     font-size: 24px;
     margin-bottom: 50px;
@@ -104,21 +103,6 @@
 
 .liked_story_titlelink a{
     float: right;
-}
-
-
-
-.posts img {
-    width: 45%;
-    border-radius: 10px;
-}
-.posts button {
-    background-color: #6bb08b;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
 }
 
 
@@ -136,26 +120,99 @@
 }
 
 .written_stories{
-    margin-top: 50px;
+    margin-top: 70px;
     width: 600px;
 
-}
-
-.written_stories_title {
-    margin-bottom: 50px;
-    width: 600px;
-    text-align: left;
 }
 
 .written_stories_title h2 {
+    font-size: 24px;
+    margin-bottom: 50px;
+    height: 20px;
     display: inline;
 }
 
-.written_stories_title a {
-    float: right;
-    margin-top: 30px;
+.written_stories_title{
+    margin-bottom: 30px;
 }
 
+.written_stories_title a{
+    float: right;
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    border-radius: 25px;
+}
+
+.rank-number {
+    font-size: 1.5em;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #e18348;
+}
+
+.story-content {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.story-title a {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.story-meta {
+    font-size: 0.9em;
+    color: #777;
+}
+.story-meta {
+    font-size: 0.9em;
+    color: #777;
+}
+.story-meta small {
+    display: inline;
+    margin-right: 2px;
+}
+
+.story-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.story-meta small img {
+    width: 23px;
+    height: auto;
+    margin-right: -5px;
+    margin-bottom: 2px;
+}
+
+.story-comments {
+    font-size: 0.9em;
+    color: #555;
+    margin-left: 10px;
+}
+
+#likeimg{
+    width: 8px;
+    height: auto;
+    margin-right: 3px;
+}
+
+
+/* 장바구니 관련 css */
+
+.cart{
+    margin-top: 50px;
+    width: 600px;
+}
 
 .grid-container {
     display: grid;
@@ -164,8 +221,6 @@
     list-style-type: none;
     padding: 0;
 }
-
-
 
 .grid-item {
     background-color: #fff;
@@ -177,10 +232,8 @@
     height: 240px;
 }
 
-.cart{
-    margin-top: 50px;
-    width: 600px;
-
+.cart_element{
+    display: block;
 }
 
 .cart_title {
@@ -197,7 +250,6 @@
     float: right;
     margin-top: 30px;
 }
-
 
 
 .cart_content_link_edit {
@@ -247,11 +299,16 @@
 }
 
 .cart_getwritelist{
-
-
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    height: 240px;
 }
 
-.story_getwritelist img{
+.cart_getwritelist img{
     width: 80%;
     height: auto;
     align-items: center;
@@ -259,58 +316,12 @@
     margin-top: 30px;
 }
 
-.story_getwritelist img:hover{
+.cart_getwritelist img:hover{
     width: 100%;
     height: auto;
     align-items: center;
     justify-items: auto;
     margin-top: 20px;
-}
-
-.swiper-container {
-    width: 100%;
-    height: auto;
-}
-
-.list-group-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-}
-
-.rank-number {
-    font-size: 1.5em;
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-.story-content {
-    flex-grow: 1;
-    margin-left: 10px;
-}
-
-.story-title a {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #333;
-}
-
-.story-meta {
-    font-size: 0.9em;
-    color: #777;
-}
-
-.story-image img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-.story-comments {
-    font-size: 0.9em;
-    color: #555;
-    margin-left: 10px;
 }
 
 
