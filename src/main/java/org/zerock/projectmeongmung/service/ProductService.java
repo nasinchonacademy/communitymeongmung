@@ -13,33 +13,13 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-//    @Autowired
+    @Autowired
     private ProductRepositrory productRepositrory;
-//
-//    public List<Product> getAllProducts(){
-//       return productRepositrory.findAll();
-//    }
-//
-//    public Optional<Product> getProducctById(Long pID) {
-//        return productRepositrory.findById(pID);
-//    }
 
-    private final FileService fileService;
+    @Autowired
+    private FileService fileService;
 
-    public ProductService(ProductRepositrory productRepositrory, FileService fileService) {
-        this.productRepositrory = productRepositrory;
-        this.fileService = fileService;
-    }
-
-    public String saveProduct(MultipartFile file, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
-        // 파일 저장
-        String photoPath = null;
-        try {
-            photoPath = fileService.saveFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("File upload failed");
-        }
+    public void saveProduct(String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
 
         // 제품 저장
         Product product = Product.builder()
@@ -49,11 +29,14 @@ public class ProductService {
                 .pdescription(pdescription)
                 .pcompany(pcompany)
                 .pstock(pstock)
-                .productphoto(photoPath)
+                .productphoto(productphoto)
                 .build();
 
         productRepositrory.save(product);
+    }
 
-        return photoPath;
+    // 모든 제품 가지고 오기
+    public List<Product> getAllProducts() {
+        return productRepositrory.findAll(); // DB에서 모든 제품 가지고 오기
     }
 }
