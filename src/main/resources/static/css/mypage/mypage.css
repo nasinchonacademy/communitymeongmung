@@ -176,7 +176,7 @@
     color: #777;
 }
 .story-meta small {
-    display: inline;
+   display: inline;
     margin-right: 2px;
 }
 
@@ -188,7 +188,7 @@
 }
 
 .story-meta small img {
-    width: 23px;
+   width: 23px;
     height: auto;
     margin-right: -5px;
     margin-bottom: 2px;

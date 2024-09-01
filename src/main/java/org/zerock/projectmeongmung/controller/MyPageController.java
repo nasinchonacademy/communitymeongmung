@@ -50,6 +50,8 @@ public class MyPageController {
         List<List<MeongStory>> partitionedStories = partitionList(likedStories, 3);
 
 
+        model.addAttribute("likedStories", likedStories);
+
         model.addAttribute("partitionedStories", partitionedStories);
 
         // 젤리 포인트 가져오기
@@ -58,9 +60,10 @@ public class MyPageController {
 
         // 작성 글 가져오기
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
-        List<List<MeongStory>> partitionedwirteStories = partitionList(writtenStories, 6);
-        model.addAttribute("partitionedwirteStories", partitionedwirteStories);
+        List<List<MeongStory>> partitionedwrittenStories = partitionList(writtenStories, 5);
 
+
+        model.addAttribute("partitionedwrittenStories", partitionedwrittenStories);
 
 
         return "mypage/mypage";

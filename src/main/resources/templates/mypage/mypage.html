@@ -34,30 +34,86 @@
 <th:block th:replace="fragments/mypage/mypagecontent"></th:block>
 
 <!-- 푸터 영역 -->
-<th:block th:replace="fragments/nav :: footer"></th:block>
+<th:block th:replace="~{fragments/nav :: footer}"></th:block>
 
-<!--<script th:src="@{js/mypage.js}"></script>-->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-    var swiper = new Swiper('.swiper-container', {
-        slidesPerView: 1,  // 한 번에 하나의 슬라이드(슬라이드마다 3개의 게시물 포함)
-        spaceBetween: 10,  // 슬라이드 간의 간격
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        mousewheel: true,  // 마우스 휠을 사용하여 슬라이드를 넘길 수 있음
+    document.addEventListener('DOMContentLoaded', function () {
+        var carousel = document.getElementById('storyCarousel');
+        var isDragging = false;
+        var startPosX = 0;
+
+        // 터치 시작 또는 마우스 클릭 시작 이벤트
+        carousel.addEventListener('touchstart', handleStart, { passive: true });
+        carousel.addEventListener('mousedown', handleStart);
+
+        // 터치 이동 또는 마우스 이동 이벤트
+        carousel.addEventListener('touchmove', handleMove, { passive: true });
+        carousel.addEventListener('mousemove', handleMove);
+
+        // 터치 끝 또는 마우스 클릭 끝 이벤트
+        carousel.addEventListener('touchend', handleEnd, { passive: true });
+        carousel.addEventListener('mouseup', handleEnd);
+
+        // 드래그 중지를 위한 마우스 이탈 이벤트
+        carousel.addEventListener('mouseleave', handleEnd);
+
+        function handleStart(event) {
+            isDragging = true;
+            startPosX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+        }
+
+        function handleMove(event) {
+            if (!isDragging) return;
+            var currentPosX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+            var diffX = startPosX - currentPosX;
+
+            // 슬라이드 이동 감지
+            if (diffX > 50) {
+                $(carousel).carousel('next');
+                isDragging = false;
+            } else if (diffX < -50) {
+                $(carousel).carousel('prev');
+                isDragging = false;
+            }
+        }
+
+        function handleEnd(event) {
+            isDragging = false;
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const timeElements = document.querySelectorAll('.story-time');
+
+        timeElements.forEach(function(element) {
+            const dateString = element.getAttribute('data-time');
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;  // 시간 차이 (밀리초)
+
+            const diffMinutes = Math.floor(diffMs / 60000); // 분 차이
+            const diffHours = Math.floor(diffMinutes / 60); // 시간 차이
+
+            let displayTime = "";
+
+            if (diffHours < 24) {
+                if (diffHours > 0) {
+                    displayTime = `${diffHours}시간 전`;
+                } else if (diffMinutes > 0) {
+                    displayTime = `${diffMinutes}분 전`;
+                } else {
+                    displayTime = `방금 전`;
+                }
+            } else {
+                // 24시간이 지난 경우 등록일 표시
+                displayTime = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 표시
+            }
+
+            element.textContent = displayTime;
+        });
     });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
 
 </body>
 </html>

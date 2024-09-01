@@ -39,46 +39,46 @@
 
 <script>
     $(document).ready(function() {
-    // URL 파라미터에서 current 값을 가져와서 초기 페이지 번호 설정
-    var urlParams = new URLSearchParams(window.location.search);
-    var current = urlParams.get('current') || '1'; // 기본값을 '1'로 설정
-    var currentPage = urlParams.get('page') ? parseInt(urlParams.get('page')) : 1;  // currentPage 값 설정
+        // URL 파라미터에서 current 값을 가져와서 초기 페이지 번호 설정
+        var urlParams = new URLSearchParams(window.location.search);
+        var current = urlParams.get('current') || '1'; // 기본값을 '1'로 설정
+        var currentPage = urlParams.get('page') ? parseInt(urlParams.get('page')) : 1;  // currentPage 값 설정
 
-    // sessionStorage에서 current 값 가져오기 (없으면 URL 파라미터에서 가져온다)
-    current = sessionStorage.getItem('current') || current;
+        // sessionStorage에서 current 값 가져오기 (없으면 URL 파라미터에서 가져온다)
+        current = sessionStorage.getItem('current') || current;
 
-    // 페이지 로드 시 current 값을 기반으로 라디오 버튼 상태 설정
-    $('#btnradio' + current).prop('checked', true);
-    $('label.btn').removeClass('active');
-    $('label[for="btnradio' + current + '"]').addClass('active');
-
-    // 검색 폼의 hidden input에 current 값 설정
-    $('#currentInput').val(current);
-
-    // 라디오 버튼 변경 시 처리
-    $('input[name="btnradio"]').on('change', function() {
-        var selectedValue = $(this).attr('id').replace('btnradio', '');
-        currentPage = 1;  // 라디오 버튼 변경 시 페이지를 1로 초기화
-
-        // 선택된 라디오 버튼의 상태를 sessionStorage에 저장
-        sessionStorage.setItem('current', selectedValue);
+        // 페이지 로드 시 current 값을 기반으로 라디오 버튼 상태 설정
+        $('#btnradio' + current).prop('checked', true);
+        $('label.btn').removeClass('active');
+        $('label[for="btnradio' + current + '"]').addClass('active');
 
         // 검색 폼의 hidden input에 current 값 설정
-        $('#currentInput').val(selectedValue);
+        $('#currentInput').val(current);
 
-        // 페이지를 새로고침하여 변경된 current 값 적용
-        window.location.href = '/mungstory?page=1&current=' + selectedValue;
+        // 라디오 버튼 변경 시 처리
+        $('input[name="btnradio"]').on('change', function() {
+            var selectedValue = $(this).attr('id').replace('btnradio', '');
+            currentPage = 1;  // 라디오 버튼 변경 시 페이지를 1로 초기화
+
+            // 선택된 라디오 버튼의 상태를 sessionStorage에 저장
+            sessionStorage.setItem('current', selectedValue);
+
+            // 검색 폼의 hidden input에 current 값 설정
+            $('#currentInput').val(selectedValue);
+
+            // 페이지를 새로고침하여 변경된 current 값 적용
+            window.location.href = '/mungstory?page=1&current=' + selectedValue;
+        });
+
+        // 페이지 네비게이션 버튼 클릭 시 처리
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+
+            // 페이지를 새로고침하여 해당 페이지로 이동
+            window.location.href = '/mungstory?page=' + page + '&current=' + current;
+        });
     });
-
-    // 페이지 네비게이션 버튼 클릭 시 처리
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        var page = $(this).data('page');
-
-        // 페이지를 새로고침하여 해당 페이지로 이동
-        window.location.href = '/mungstory?page=' + page + '&current=' + current;
-    });
-});
 
 </script>
 
