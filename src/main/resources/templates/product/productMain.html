@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{css/product/productMainStyle.css}" rel="stylesheet">
     <link th:href="@{css/basic.css}" rel="stylesheet">
-
 </head>
-
 
 <style>
     /* CSS 코드 */
@@ -53,11 +50,10 @@
     }
 
     #modalProductImage {
-      width: 300px;
+        width: 300px;
         height: 300px;
     }
 
-    /* 새로운 버튼 스타일 */
     .modal-buttons {
         display: flex;
         justify-content: space-around;
@@ -70,12 +66,12 @@
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.3s ease; /* 부드러운 전환 효과 */
+        transition: all 0.3s ease;
     }
 
     .modal-buttons button:hover {
-        transform: translateY(-3px); /* 호버 시 살짝 위로 올라가는 효과 */
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
     }
 
     .buy-button {
@@ -84,7 +80,7 @@
     }
 
     .buy-button:hover {
-        background-color: #3a9f73; /* 호버 시 색상 변경 */
+        background-color: #3a9f73;
     }
 
     .cart-button {
@@ -93,7 +89,109 @@
     }
 
     .cart-button:hover {
-        background-color: #0f7cb8; /* 호버 시 색상 변경 */
+        background-color: #0f7cb8;
+    }
+</style>
+
+<body>
+<!-- 헤더 영역 --><!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>productMain</title>
+    <!-- 제이쿼리 cdn -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 부트스트랩 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- 부트스트랩 아이콘 cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link th:href="@{css/product/productMainStyle.css}" rel="stylesheet">
+    <link th:href="@{css/basic.css}" rel="stylesheet">
+</head>
+
+<style>
+    /* CSS 코드 */
+    #modalWrap {
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+    }
+
+    #modalBody {
+        width: 400px;
+        height: 600px;
+        padding: 40px;
+        margin: 0 auto;
+        border: 1px solid #777;
+        background-color: #fff;
+        border-radius: 16px;
+        text-align: center;
+    }
+
+    #closeBtn {
+        float: right;
+        font-weight: bold;
+        color: #777;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    #modalProductImage {
+        width: 300px;
+        height: 300px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .modal-buttons button {
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-buttons button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .buy-button {
+        background-color: #56c395;
+        color: white;
+    }
+
+    .buy-button:hover {
+        background-color: #3a9f73;
+    }
+
+    .cart-button {
+        background-color: #17a7ec;
+        color: white;
+    }
+
+    .cart-button:hover {
+        background-color: #0f7cb8;
+    }
+
+    .card-img-top {
+        width: 100%; /* 컨테이너 너비에 맞게 */
+        height: 300px; /* 원하는 고정 높이 */
+        object-fit: cover; /* 이미지가 왜곡되지 않게 */
     }
 
 </style>
@@ -106,114 +204,34 @@
 <th:block th:replace="fragments/nav :: navMenu"></th:block>
 
 <!-- 메인 컨텐츠 영역 -->
-<!-- <th:block th:replace="fragments/product/productContent :: content"></th:block>-->
 <div class="container" th:fragment="content">
     <div class="content1">
         <div class="block1-1">
-            <img th:src="@{../image/product/banner1.png}" alt="상품" id="banner01">
+            <img th:src="@{/image/product/banner1.png}" alt="상품" id="banner01">
         </div>
 
         <div class="block1-2">
             <div class="intro-text">
                 <h5>우리 멍뭉이들을 위해 준비한 상품이에요</h5>
             </div>
-            <div class="row row-cols-1 row-cols-md-3 g-3" >
-                <div class="col">
-                    <button type="button" class="cardbtn" data-product-id="1">
+            <div class="row row-cols-1 row-cols-md-3 g-3">
+                <div class="col" th:each="product : ${products}">
+                    <button type="button" class="cardbtn" th:data-product-id="${product.pid}">
                         <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage1.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">펫생각</span>
-                                <h6 class="card-title">행소행댕 멸균 강아지우유 10개 100ml</h6>
-                                <p class="card-text">
-                                    <span id="old-price">21,000원</span>
-                                <div id="price"><span id="discount">34%</span>&nbsp;13,800원</div>
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="col">
-                    <button class="cardbtn">
-                        <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage3.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">펫생각</span>
-                                <h6 class="card-title">미니말랑 자색고구마 강아지 간식</h6>
-                                <p class="card-text">
-                                    <span id="old-price">13,500원</span>
-                                <div id="price"><span id="discount">27%</span>&nbsp;9,800원</div>
-                                <!-- <p id="description">설명</p> -->
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="col">
-                    <button class="cardbtn">
-                        <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage4.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">펫생각</span>
-                                <h6 class="card-title">하루조이 타먹는 비타민 4개입</h6>
-                                <p class="card-text">
-                                    <span id="old-price">22,000원</span>
-                                <div id="price"><span id="discount">32%</span>&nbsp;14,800원</div>
-                                <!-- <p id="description">설명</p> -->
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="col">
-                    <button class="cardbtn">
-                        <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage5.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">개과천선</span>
-                                <h6 class="card-title">베리빅 강아지 이동가방 카시트</h6>
-                                <p class="card-text">
-                                    <span id="old-price">150,000원</span>
-                                <div id="price"><span id="discount">54%</span>&nbsp;59,000원</div>
-                                <!-- <p id="description">설명</p> -->
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="col">
-                    <button class="cardbtn">
-                        <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage2.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">위드어스</span>
-                                <h6 class="card-title">담다 푸들 라텍스토이</h6>
-                                <p class="card-text">
-                                    <span id="old-price">14,000원</span>
-                                <div id="price"><span id="discount">28%</span>&nbsp;10,000원</div>
-                                <!-- <p id="description">설명</p> -->
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="col">
-                    <button class="cardbtn">
-                        <div class="card h-100" id="product-card">
-                            <img th:src="@{../image/product/productImage6.png}" class="card-img-top" alt="상품">
-                            <div class="card-body">
-                                <span id="brand">개과천선</span>
-                                <h6 class="card-title">크림 강아지 이동가방</h6>
-                                <p class="card-text">
-                                    <span id="old-price">250,000원</span>
-                                <div id="price"><span id="discount">60%</span>&nbsp;99,000원</div>
-                                <!-- <p id="description">설명</p> -->
-                                </p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
+                            <!--th:src="@{${#strings.isEmpty(user.profilePhoto) ? '/image/tool/profilelogo.PNG' : '/profiles/' + user.profilePhoto}}"-->
+                            <!--<img th:src="${product.productphoto}" class="card-img-top" alt="상품 이미지">-->
+                            <img th:src="@{'/image/product/' + ${product.productphoto}}" alt="상품 이미지" class="card-img-top">
 
+                            <div class="card-body">
+                                <span id="brand" th:text="${product.pcompany}"></span>
+                                <h6 class="card-title" th:text="${product.pname}"></h6>
+                                <p class="card-text">
+                                    <span id="price" th:text="${product.pprice} + '원'"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -222,15 +240,17 @@
             <div id="modalBody">
                 <span id="closeBtn">&times;</span>
                 <div id="modalContent">
-                    <!-- 여기에 제품 상세 정보가 표시됩니다. -->
+                    <!-- 제품 상세 정보 표시 -->
                     <h3 id="modalProductTitle">제품명</h3>
                     <p id="modalProductPrice">가격</p>
                     <img id="modalProductImage" src="" alt="상품 이미지">
                     <p id="modalProductDescription">제품 설명</p>
                     <!-- 추가된 버튼들 -->
                     <div class="modal-buttons">
-                        <a th:href="@{/payment}"><button class="buy-button" id="buyButton">젤리로 구매하기</button></a>
-                        <a th:href="@{/mypage}"><button class="cart-button" id="cartButton">장바구니</button></a>
+<!--                        <a th:href="@{/payment}"><button class="buy-button" id="buyButton">젤리로 구매하기</button></a>-->
+<!--                        <a th:href="@{/mypage}"><button class="cart-button" id="cartButton">장바구니</button></a>-->
+                        <button class="buy-button" id="buyButton">젤리로 구매하기</button>
+                        <button class="cart-button" id="cartButton">장바구니</button>
                     </div>
                 </div>
             </div>
@@ -253,6 +273,7 @@
 </div>
 <!-- 푸터 영역 -->
 <th:block th:replace="fragments/nav :: footer"></th:block>
+
 <script>
     // JavaScript 코드
     const buttons = document.querySelectorAll(".cardbtn");
@@ -288,38 +309,40 @@
         }
     };
 
-    // 제품 상세 정보를 로드하는 함수
     function loadProductDetails(productId) {
-        // 여기서 AJAX 또는 Fetch API를 사용해 서버에서 제품 정보를 가져오기
-        // 지금은 예시로 하드코딩된 데이터를 사용
-        const productDetails = {
-            1: {
-                title: "행소행댕 멸균 강아지우유 10개 100ml",
-                price: "13,800원",
-                image: "../image/product/productImage1.png",
-                description: "멸균 강아지우유는 강아지 건강에 좋은 성분이 포함되어 있습니다."
-            },
-            2: {
-                title: "미니말랑 자색고구마 강아지 간식",
-                price: "9,800원",
-                image: "../image/product/productImage3.png",
-                description: "자색고구마 간식은 강아지의 영양을 고려하여 만들어졌습니다."
-            },
-            // 더 많은 제품 추가 가능
-        };
+        $.ajax({
+            url: '/product/productMain', // 제품 상세 정보를 제공하는 서버의 URL
+            method: 'GET',
+            data: { id: productId },
+            success: function(response) {
+                // 서버로부터 받아온 데이터를 사용하여 모달 창에 표시
+                modalTitle.textContent = response.title;
+                modalPrice.textContent = response.price;
+                modalImage.src = response.image;
+                modalDescription.textContent = response.description;
 
-        // 가져온 데이터를 모달에 표시
-        const details = productDetails[productId];
-        modalTitle.textContent = details.title;
-        modalPrice.textContent = details.price;
-        modalImage.src = details.image;
-        modalDescription.textContent = details.description;
+                // 구매 및 장바구니 버튼의 링크를 동적으로 설정
+                const buyButton = document.getElementById("buyButton");
+                const cartButton = document.getElementById("cartButton");
 
-        // 모달을 보이게 함
-        modal.style.display = "block";
+                // 구매 및 장바구니 버튼의 동작을 설정
+                buyButton.onclick = function() {
+                    window.location.href = `/payment?productId=${productId}`;
+                };
+
+                cartButton.onclick = function() {
+                    window.location.href = `/mypage/cart/add?productId=${productId}`;
+                };
+
+                // 모달 창 표시
+                modal.style.display = "block";
+            },
+            error: function(error) {
+                console.error('제품 정보를 불러오는 중 오류가 발생했습니다.', error);
+            }
+        });
     }
-</script>
 
-</body>
 
-</html>
+
+    <script>

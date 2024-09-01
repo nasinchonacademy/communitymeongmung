@@ -5,68 +5,69 @@
   </div>
   <div class="button-background"></div>
 </div>
-  <div class="container">
-    <div class="liked_story_container">
-      <div class="liked_story">
-        <div class="liked_story_titlelink">
-          <h2>좋아요 누른 게시물</h2>
-          <a href="/mypagelikedlist">목록으로 보기</a>
-        </div>
-        <div id="carouselLikedStories" class="carousel slide" >
-          <div class="carousel-inner">
-            <!-- 슬라이드 아이템을 동적으로 생성 -->
-            <div th:each="group, groupStat : ${partitionedStories}"
-                 th:classappend="${groupStat.index == 0} ? ' active' : ''"
-                 class="carousel-item">
-              <div class="row">
-                <div class="col-md-4" th:each="story : ${group}">
-                  <div class="card mx-auto" style="width: 11.9rem;">
-                    <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
-                    <div class="card-body p-2">
-                      <h6 class="card-title" th:text="${story.title}">제목</h6>
-                      <p class="card-text mb-1" style="font-size: 0.85rem;" th:text="${story.likecount} + ' Likes'">100 Likes</p>
-                      <p class="card-text" style="font-size: 0.85rem;">
-                        <span th:text="${story.content.length() > 10 ? story.content.substring(0, 10) + '...' : story.content}"></span>
-                      </p>
-                      <div class="d-flex justify-content-between align-items-center mt-2">
-                        <small class="text-muted" style="font-size: 0.75rem;" th:text="'댓글 ' + ${story.commentcount}">댓글 수</small>
-                        <i class="bi bi-heart-fill text-danger"></i>
-                      </div>
+
+<div class="container">
+
+  <div class="liked_story_container">
+    <div class="liked_story">
+      <div class="liked_story_titlelink">
+        <h2>좋아요 누른 게시물</h2>
+        <a href="/mypagelikedlist">목록으로 보기</a>
+      </div>
+      <div id="carouselLikedStories" class="carousel slide">
+        <div class="carousel-inner">
+          <!-- 슬라이드 아이템을 동적으로 생성 -->
+          <div th:each="group, groupStat : ${partitionedStories}"
+               th:classappend="${groupStat.index == 0} ? ' active' : ''"
+               class="carousel-item">
+            <div class="row">
+              <div class="col-md-4" th:each="story : ${group}">
+                <div class="card mx-auto" style="width: 11.9rem;">
+                  <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
+                  <div class="card-body p-2">
+                    <h6 class="card-title" th:text="${story.title}">제목</h6>
+                    <p class="card-text mb-1" style="font-size: 0.85rem;" th:text="${story.likecount} + ' Likes'">100 Likes</p>
+                    <p class="card-text" style="font-size: 0.85rem;">
+                      <span th:text="${story.content.length() > 10 ? story.content.substring(0, 10) + '...' : story.content}"></span>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <small class="text-muted" style="font-size: 0.75rem;" th:text="'댓글 ' + ${story.commentcount}">댓글 수</small>
+                      <i class="bi bi-heart-fill text-danger"></i>
                     </div>
-                    <div class="card-footer p-2">
-                      <small class="text-muted" style="font-size: 0.75rem;" th:text="'작성자: ' + ${story.user.nickname}">작성자</small>
-                    </div>
+                  </div>
+                  <div class="card-footer p-2">
+                    <small class="text-muted" style="font-size: 0.75rem;" th:text="'작성자: ' + ${story.user.nickname}">작성자</small>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- 슬라이드 컨트롤 -->
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselLikedStories" data-bs-slide="prev"
-                  th:if="${partitionedStories.size() > 1}" style="color: #6bb08b;">
-            <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
-            <span class="visually-hidden" >Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselLikedStories" data-bs-slide="next"
-                  th:if="${partitionedStories.size() > 1}">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        </div>
+        <!-- 슬라이드 컨트롤 -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselLikedStories" data-bs-slide="prev"
+                th:if="${partitionedStories.size() > 1}" style="color: #6bb08b;">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselLikedStories" data-bs-slide="next"
+                th:if="${partitionedStories.size() > 1}">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
-
+    </div>
+  </div>
 
   <div class="written_stories">
     <div class="written_stories_title">
-      <h2 >내가 쓴 글</h2>
+      <h2>내가 쓴 글</h2>
       <a href="/mypapeWritelist">글 목록 보기</a>
     </div>
-    <div class="swiper-container">
-      <div class="swiper-wrapper">
-        <!-- 6개씩 목록을 묶어 슬라이드로 구성 -->
-        <div th:each="chunk, chunkStat : ${partitionedStories}" class="swiper-slide">
+    <div id="storyCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <!-- 5개씩 목록을 묶어 슬라이드로 구성 -->
+        <div th:each="chunk, chunkStat : ${partitionedwrittenStories}" th:classappend="${chunkStat.index == 0} ? ' active' : ''" class="carousel-item">
           <ul class="list-group">
             <li th:each="story, iterStat : ${chunk}" class="list-group-item d-flex justify-content-between align-items-center">
               <div class="story-rank">
@@ -77,13 +78,17 @@
                   <a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}">제목</a>
                 </div>
                 <div class="story-meta">
-                  <small th:text="${story.user.nickname}">작성자</small><br/>
-                  <small th:text="'조회수: ' + ${story.viewcount}">조회수: 191</small><br/>
-                  <small th:text="'좋아요: ' + ${story.likecount}">좋아요: 4</small>
+                  <small><img src="/image/tool/boardregtime.png"></small>
+                  <small class="story-time"
+                         th:attr="data-time=${#temporals.format(story.regdate, 'yyyy-MM-dd HH:mm:ss')}"></small>
+                  <small><img src="/image/tool/viewcount.png"></small>
+                  <small th:text=" ${story.viewcount}"></small>
+                  <small id="likeimg"><img src="/image/tool/boardlike.png"></small>
+                  <small th:text="${story.likecount}"></small>
                 </div>
               </div>
               <div class="story-image">
-                <img th:src="${story.picture != null ? story.picture : '/path/to/default/image.jpg'}" alt="story image" class="img-thumbnail">
+                <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="story image" class="img-thumbnail">
               </div>
               <div class="story-comments">
                 <span th:text="${story.commentcount}">13</span> 댓글
@@ -92,19 +97,23 @@
           </ul>
         </div>
       </div>
-      <!-- Pagination -->
-      <div class="swiper-pagination"></div>
+      <!-- 슬라이드 컨트롤 -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
-    </div>
-
-
   </div>
 
   <div class="cart">
     <h2>장바구니 확인!</h2>
     <div>
-      <ul th:if="${writtenStories != null}" class="grid-container">
-        <li th:each="story, iterStat : ${writtenStories}" th:if="${iterStat.index < 5}" class="grid-item">
+      <ul th:if="${likedStories != null}" class="grid-container">
+        <li th:each="story, iterStat : ${likedStories}" th:if="${iterStat.index < 5}" class="grid-item">
           <div class="cart_box">
             <div class="cart_element">
               <a th:href="@{'/story/view/' + ${story.seq}}" th:text="'제목: '+${story.title.length() > 6 ? story.title.substring(0,6)+'...':story.title}" class="cart_titlebox">제목 없음</a>
@@ -119,13 +128,16 @@
             </div>
           </div>
         </li>
-        <a href="/mypapeWritelist" class="story_getwritelist">
-          <li  class="grid-item">
+        <div class="cart_getwritelist">
+          <a href="/mypapeWritelist" >
             <img th:src="${'/image/tool/addstory.PNG'}" alt="사진">
-          </li>
-        </a>
-        <li th:if="${#lists.isEmpty(writtenStories)}" class="no-articles">작성된 글이 없습니다.</li>
+          </a>
+        </div>
       </ul>
+
+      <li th:if="${#lists.isEmpty(likedStories)}" class="no-articles">작성된 글이 없습니다.</li>
     </div>
   </div>
 </div>
+
+
