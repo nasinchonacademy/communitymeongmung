@@ -27,7 +27,8 @@ public class MeongStory extends BaseEntity1 {
     private String content;
 
     @Column(name = "likecount", nullable = false)
-    private int likecount;
+    @Builder.Default
+    private int likecount = 0;  // 기본값을 0으로 설정
 
     @Column(name = "commentcount")
     private int commentcount;

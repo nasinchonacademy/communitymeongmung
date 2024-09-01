@@ -115,13 +115,13 @@ public class MungStoryController {
         return "fragments/mungStory/mainContent :: content";
     }
 
-    // 글 상세보기
+/*    // 글 상세보기
     @GetMapping("/storylist")
     public void storylist(long seq, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
         log.info(seq);
         MeongStoryDTO dto = service.read(seq);
         model.addAttribute("dto", dto);
-    }
+    }*/
 
     // 추가된 메서드: Entity를 DTO로 변환하는 메서드
     private MeongStoryDTO entityToDto(MeongStory entity) {
@@ -158,9 +158,52 @@ public class MungStoryController {
         return "redirect:/mungstory";
     }
 
-    @PostMapping("/modify") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
+    @GetMapping("/storyread")
+    public String storylistread(long seq,
+                                @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model,
+                                @RequestParam("current") int current
+){
+
+        log.info(seq);
+
+        MeongStoryDTO dto= service.read(seq);
+
+        model.addAttribute("dto", dto);
+        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
+
+        return "mungStoryHtml/storyread";
+
+    }
+
+
+    @GetMapping("/storyedit") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
+    public String storyedit(long seq,
+                            @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model,
+                            @RequestParam("current") int current
+    ){
+
+        log.info(seq);
+
+        MeongStoryDTO dto= service.read(seq);
+
+        model.addAttribute("dto", dto);
+        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
+
+        return "mungStoryHtml/storyedit";
+    }
+
+    @PostMapping("/storyedit") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
+    // RedirectAttributes redirectAttributes 뷰 페이지에 전달, 일회성
     public String modify(MeongStoryDTO dto , @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
-                         RedirectAttributes redirectAttributes){
+                         Authentication authentication,
+                         Model model,
+                         RedirectAttributes redirectAttributes,
+                         @RequestParam("current") int current){
+
+
+        String username = authentication.getName();
+        User user = userDetailService.loadUserByUsername(username);
+        model.addAttribute("user", user);
 
         log.info("post modify...");
         log.info("dto: " + dto);
@@ -170,9 +213,23 @@ public class MungStoryController {
         redirectAttributes.addAttribute("page",requestDTO.getPage());
         redirectAttributes.addAttribute("type",requestDTO.getType());
         redirectAttributes.addAttribute("keyword",requestDTO.getKeyword());
-
+        redirectAttributes.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
         redirectAttributes.addAttribute("seq",dto.getSeq());
 
-        return "redirect:/guestbook/read";
+        return "redirect:/mungstory/storyread";
+    }
+
+    @PostMapping("/remove")
+    public String remove(long seq, RedirectAttributes redirectAttributes,
+                         Model model,
+                         @RequestParam("current") int current){
+        log.info("seq: " + seq);
+
+        service.remove(seq);
+
+        redirectAttributes.addFlashAttribute("msg", seq);
+        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
+
+        return "redirect:/mungstory";
     }
 }

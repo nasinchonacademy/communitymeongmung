@@ -21,6 +21,7 @@ public class FileController {
         try {
             // 파일이 저장된 실제 경로
             // /Users/yunakang/uploads/
+            // C:\\work\\uploads\\
             Path filePath = Paths.get("C:\\work\\uploads\\").resolve(filename);
             Resource file = new UrlResource(filePath.toUri());
 

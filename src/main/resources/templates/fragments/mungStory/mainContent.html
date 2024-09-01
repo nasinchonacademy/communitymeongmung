@@ -42,7 +42,8 @@
                     <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
                     <td><img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="사진" style="width:100px; height: auto;"></td>
                     <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
-                    <td><a th:href="@{/story/{seq}(seq=${story.seq})}" th:text="${story.title}"></a></td>
+                    <td><a th:href="@{/mungstory/storyread(page=${result.page},
+                         type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current}, seq=${story.seq})}" th:text="${story.title}"></a></td>
                     <!--작성자-->
                     <td th:text="${story.nickname}" class="story_count"></td>
                     <!-- 작성일 (날짜 형식 변경) -->
