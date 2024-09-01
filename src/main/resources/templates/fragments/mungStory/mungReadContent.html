@@ -1,0 +1,48 @@
+<main class="mainContent" th:fragment="mainContent" id="mainContent">
+    <div id="content">
+        <h1 class="mt-4">Guestbook read Page</h1>
+        <div class="form-group">
+            <input type="text" class="form-control" name="seq" th:value="${dto.seq}" readonly>
+        </div>
+
+        <div class="form-group">
+            <input type="text" class="form-control" name="title" th:value="${dto.title}" readonly>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" row="15" name="content" readonly>[[${dto.content}]]</textarea>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="writer" th:value="${dto.nickname}" readonly>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="regdate" th:value="${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="modified" th:value="${#temporals.format(dto.modified, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+        </div>
+
+        <a th:if="${user.nickname == dto.nickname}"
+           th:href="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type},keyword=${requestDTO.keyword}, current=${current}, seq=${dto.seq})}">
+            <button type="button" class="btn btn-primary">수정하기</button>
+        </a>
+
+        <form th:if="${user.nickname == dto.nickname}"
+              th:action="@{/mungstory/remove(current=${current}, seq=${dto.seq})}"
+              method="post"
+              style="display:inline;"
+              onsubmit="return confirmDelete()">
+            <button type="submit" class="btn btn-danger removeBtn">삭제하기</button>
+        </form>
+
+        <a th:href="@{/mungstory(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}">
+            <button type="button" class="btn btn-info">목록으로</button>
+        </a>
+
+        <script type="text/javascript">
+            function confirmDelete() {
+                return confirm("글을 삭제하시겠습니까?");
+            }
+        </script>
+
+    </div>
+</main>

@@ -1,0 +1,17 @@
+main#mainContent {
+    display: flex;
+    justify-content: center;
+}
+
+div#content {
+    width: 1000px;
+    height: 1000px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.textarea1{
+    user-select: none;
+    caret-color: transparent;
+}
