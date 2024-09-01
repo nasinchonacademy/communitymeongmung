@@ -1,3 +1,4 @@
+
 <main class="content" th:fragment="content1" id="sosPage">
     <div id="content">
         <div>
@@ -22,6 +23,8 @@
                 </div>
             </div>
         </div>
+
+
         <div class="vatmap">
             <style>
                 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
@@ -60,6 +63,16 @@
                 #pagination {margin:10px auto;text-align: center;}
                 #pagination a {display:inline-block;margin-right:10px;}
                 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+                /* 검색 결과 스타일 */
+                #searchResults {
+                    margin-top: 20px;
+                    padding: 10px;
+                    background-color: #f9f9f9;
+                    border-radius: 10px;
+                }
+                #searchResults ul { list-style-type: none; padding: 0; }
+                #searchResults li { margin-bottom: 10px; }
             </style>
 
             <h1>병원정보가 필요할 땐 동물병원 찾아보기</h1>
@@ -80,18 +93,24 @@
                 </div>
             </div>
 
-            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=66dcbcfcfefe76b698e9151d6ae07293"></script>
+            <!-- 검색 결과를 표시할 영역 -->
+            <div id="searchResults">
+                <h2>검색 결과</h2>
+                <ul id="resultList"></ul>
+            </div>
+            <iframe id="resultFrame" src="" title="검색 결과"></iframe>
+          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4c7e3e869419586840afdfd867981c4f"></script>
             <script>
                 var map;
                 var markers = [];
 
                 document.addEventListener('DOMContentLoaded', function() {
-                    // DOMContentLoaded 이벤트가 발생하면 loadMarkersFromCsv 함수를 호출
+                    // 페이지가 로드되면 CSV 데이터를 불러와서 지도를 초기화합니다.
                     loadMarkersFromCsv();
                 });
 
                 function loadMarkersFromCsv() {
-                    // AJAX 요청으로 CSV 데이터를 가져옴
+                    // CSV 데이터를 AJAX 요청으로 불러옵니다.
                     fetch('/read-csv')
                         .then(response => {
                             if (!response.ok) {
@@ -140,7 +159,8 @@
                 function addMarker(position, idx, title) {
                     var marker = new kakao.maps.Marker({
                         position: position,
-                        map: map
+                        map: map,
+                        title: title // 마커에 타이틀 속성 추가
                     });
 
                     var infowindow = new kakao.maps.InfoWindow({
@@ -155,19 +175,81 @@
                         infowindow.close();
                     });
 
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                        searchPlaceIdOnKakao(marker.getTitle());
+                    });
+
                     markers.push(marker);
                     return marker;
+                }
+
+                function searchPlaceIdOnKakao(placeName) {
+                    var apiKey = '237752c602fdf1b6c25015ea123e2cf8'; // Kakao Developers에서 발급받은 REST API 키
+                    var encodedQuery = encodeURIComponent(placeName);
+
+                    // 지도 중심점의 위도와 경도를 가져옵니다.
+                    var center = map.getCenter();
+                    var lat = center.getLat().toFixed(6); // 소수점 이하 6자리로 제한
+                    var lng = center.getLng().toFixed(6); // 소수점 이하 6자리로 제한
+
+                    // 반경을 20km로 설정합니다 (20000 미터)
+                    var radius = 20000; // 20km 반경 내에서 검색
+
+                    var url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodedQuery}&y=${lat}&x=${lng}&radius=${radius}`;
+
+                    fetch(url, {
+                        headers: {
+                            Authorization: `KakaoAK ${apiKey}`
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                // 응답이 성공적이지 않을 경우 상태 코드를 확인하고 오류를 발생시킴
+                                throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.documents && data.documents.length > 0) {
+                                // 첫 번째 결과의 ID를 사용하여 iframe에 결과 표시
+                                var placeId = data.documents[0].id;
+                                displayPlaceDetailsInIframe(placeId);
+                            } else {
+                                alert('해당 장소를 찾을 수 없습니다.');
+                            }
+                        })
+                        .catch(error => console.error('Error fetching location data:', error));
+                }
+
+                function displayPlaceDetailsInIframe(placeId) {
+                    var placeUrl = `https://place.map.kakao.com/${placeId}`;
+                    var resultFrame = document.getElementById('resultFrame');
+
+                    if (resultFrame) {
+                        resultFrame.src = placeUrl; // iframe에 URL 로드
+                    } else {
+                        console.error("Error: resultFrame element not found.");
+                    }
                 }
 
                 function searchPlaces() {
                     var keyword = document.getElementById('keyword').value.toLowerCase();
 
                     if (keyword.trim() !== '') {
+                        // CSV 데이터 검색
                         fetch('/read-csv')
                             .then(response => response.json())
                             .then(data => {
+                                // 동물병원 이름을 기준으로 필터링
                                 var filteredPlaces = data.filter(place => place.title.toLowerCase().includes(keyword));
                                 updateMarkers(filteredPlaces);  // 필터링된 마커만 표시
+
+                                // 첫 번째 필터링된 동물병원 이름으로 웹 검색 수행
+                                if (filteredPlaces.length > 0) {
+                                    searchPlaceIdOnKakao(filteredPlaces[0].title);
+                                } else {
+                                    alert('검색 결과가 없습니다.');
+                                }
                             })
                             .catch(error => console.error('Error fetching CSV data:', error));
                     } else {
@@ -176,6 +258,7 @@
                 }
 
                 function updateMarkers(places) {
+                    // 기존 마커 제거
                     markers.forEach(marker => marker.setMap(null));
                     markers = [];
 
@@ -202,9 +285,11 @@
                     map.setBounds(bounds);
                 }
             </script>
+            </div>
         </div>
     </div>
 </main>
+
 
 
 <!------------------------------------------->

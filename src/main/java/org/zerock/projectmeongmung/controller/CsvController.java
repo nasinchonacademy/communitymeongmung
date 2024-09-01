@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.projectmeongmung.service.CsvService;
 
@@ -91,6 +92,59 @@ public class CsvController {
                         map.put("title", row[18]);  // 19번째 데이터: 사업장명
                         map.put("lng", lng);    // 변환된 경도 (소수점 이하 6자리)
                         map.put("lat", lat);    // 변환된 위도 (소수점 이하 6자리)
+
+                    } catch (Exception e) {
+                        System.err.println("좌표 변환 오류: " + e.getMessage());
+                        e.printStackTrace();
+                        return null; // 변환 실패 시 null 반환
+                    }
+
+                    return map;
+                })
+                .filter(map -> map != null) // null 값 필터링
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/search-csv")
+    public List<Map<String, String>> searchCsv(@RequestParam("keyword") String keyword) throws IOException {
+        Resource resource = new ClassPathResource("static/csv/서울시송파구동물병원인허가정보.csv");
+        String filePath = resource.getFile().getPath();
+
+        List<String[]> csvData = csvService.readCsv(filePath);
+
+        if (csvData == null || csvData.isEmpty() || csvData.size() <= 1) {
+            return List.of();
+        }
+
+        // 키워드 검색
+        return csvData.stream()
+                .skip(1) // 헤더를 건너뜁니다.
+                .filter(row -> row[18] != null && row[18].contains(keyword)) // 사업장명에 키워드가 포함된 경우 필터링
+                .map(row -> {
+                    Map<String, String> map = new HashMap<>();
+                    try {
+                        if (row.length <= 24 || row[18] == null || row[23] == null || row[24] == null) {
+                            return null; // 데이터가 3개 모두 존재하지 않으면 null 반환
+                        }
+
+                        if (!isNumeric(row[23]) || !isNumeric(row[24])) {
+                            System.err.println("Invalid number format: " + row[23] + ", " + row[24]);
+                            return null;
+                        }
+
+                        double x = Double.parseDouble(row[23]);
+                        double y = Double.parseDouble(row[24]);
+                        ProjCoordinate srcCoord = new ProjCoordinate(x, y);
+                        ProjCoordinate dstCoord = new ProjCoordinate();
+
+                        transform.transform(srcCoord, dstCoord);
+
+                        String lng = df.format(dstCoord.x);
+                        String lat = df.format(dstCoord.y);
+
+                        map.put("title", row[18]);  // 사업장명
+                        map.put("lng", lng);    // 변환된 경도
+                        map.put("lat", lat);    // 변환된 위도
 
                     } catch (Exception e) {
                         System.err.println("좌표 변환 오류: " + e.getMessage());
