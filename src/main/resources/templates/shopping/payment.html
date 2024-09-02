@@ -91,7 +91,15 @@
 <form>
 
     <div class="container">
+        <div class="oderinformation">
         <h5>주문하신 상품 정보</h5>
+            <div class="product-info">
+                <p><strong>상품명:</strong> <span th:text="${product.pname}"></span></p>
+                <p><strong>가격:</strong> <span th:text="${product.pprice} + '원'"></span></p>
+                <p><strong>브랜드:</strong> <span th:text="${product.pcompany}"></span></p>
+                <img th:src="@{'/image/product/' + ${product.productphoto}}" alt="상품 이미지" class="img-fluid">
+            </div>
+        </div>
     </div>
 
     <div class="container">

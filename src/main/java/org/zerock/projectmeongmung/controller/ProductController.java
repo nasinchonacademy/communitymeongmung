@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.projectmeongmung.dto.ProductDTO;
 import org.zerock.projectmeongmung.entity.Product;
@@ -17,7 +16,6 @@ import org.zerock.projectmeongmung.service.ProductService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class ProductController {
@@ -90,29 +88,18 @@ public class ProductController {
         return "redirect:/productMain";
     }
 
+    // 제품 상세보기
     @GetMapping("/details")
     public ResponseEntity<?> getProductDetails(@RequestParam("id") Long productId) {
         // 제품 정보 데이터베이스에서 조회
-        ProductDTO product = productService.getProductById(productId);
+        ProductDTO productDTO = productService.getProductById(productId);
 
-        if (product == null) {
+        if (productDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("제품을 찾을 수 없습니다.");
         }
-
-        // Product 엔티티를 ProductDTO로 변환
-        ProductDTO productDTO = new ProductDTO(
-                product.getPid(),
-                product.getPname(),
-                product.getPprice(),
-                product.getPcategory(),
-                product.getPdescription(),
-                product.getPcompany(),
-                product.getPstock(),
-                product.getProductphoto()
-        );
-
+        
         // 제품 정보를 JSON 형식으로 반환
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(productDTO);
 
     }
 }

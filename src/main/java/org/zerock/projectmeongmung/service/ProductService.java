@@ -45,33 +45,31 @@ public class ProductService {
 
     // 제품 업데이트
     public void updateProduct(Long productId, String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
-        Optional<Product> productOpt = productRepositrory.findById(productId);
+        Product product = productRepositrory.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
-        if (productOpt.isPresent()) {
-            Product product = productOpt.get();
-            product = Product.builder()
-                    .pname(pname)
-                    .pprice(pprice)
-                    .pcategory(pcategory)
-                    .pdescription(pdescription)
-                    .pcompany(pcompany)
-                    .pstock(pstock)
-                    .productphoto(productphoto)
-                    .build();
+        product.setPname(pname);
+        product.setPprice(pprice);
+        product.setPcategory(pcategory);
+        product.setPdescription(pdescription);
+        product.setPcompany(pcompany);
+        product.setPstock(pstock);
+        product.setProductphoto(productphoto);
 
-            productRepositrory.save(product);
-        } else {
-            throw new IllegalArgumentException("Product with ID " + productId + " not found.");
-        }
+        productRepositrory.save(product);
     }
 
-    // 제품 삭제하기
+
+    // 제품 삭제
     public void productDelete(Long productId) {
+        if (!productRepositrory.existsById(productId)) {
+            throw new IllegalArgumentException("Product not found with ID: " + productId);
+        }
         productRepositrory.deleteById(productId);
     }
 
     public ProductDTO getProductById(Long productId) {
-        Product product = productRepositrory.findById(productId).orElse(null);
+        Product product = productRepositrory.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
         if (product == null) {
             return null;  // 혹은 예외 처리
@@ -89,5 +87,4 @@ public class ProductService {
                 product.getProductphoto()
         );
     }
-
 }

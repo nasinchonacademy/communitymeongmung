@@ -220,10 +220,10 @@
             data: { id: productId },
             success: function(response) {
                 // 서버로부터 받아온 데이터를 사용하여 모달 창에 표시
-                modalTitle.textContent = response.title;
-                modalPrice.textContent = response.price;
-                modalImage.src = response.image;
-                modalDescription.textContent = response.description;
+                modalTitle.textContent = response.pname;
+                modalPrice.textContent = response.pprice + '원';
+                modalImage.src = '/image/product/' + response.productphoto;
+                modalDescription.textContent = response.pdescription;
 
                 // 구매 및 장바구니 버튼의 링크를 동적으로 설정
                 const buyButton = document.getElementById("buyButton");
