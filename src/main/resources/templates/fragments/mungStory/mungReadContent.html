@@ -11,6 +11,11 @@
         <div class="form-group">
             <textarea class="form-control" name="content" readonly>[[${dto.content}]]</textarea>
         </div>
+
+        <div class="form-group">
+            <img th:src="${dto.picture != null ? '/profiles/' + dto.picture : '/image/tool/storydefault.PNG'}" alt="Profile Photo" style="width:auto; height: auto;">
+        </div>
+
         <div class="form-group">
             <input type="text" class="form-control" name="writer" th:value="${dto.nickname}" readonly>
         </div>

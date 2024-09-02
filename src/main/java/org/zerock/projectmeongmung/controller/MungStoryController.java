@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.LikeRequest;
 import org.zerock.projectmeongmung.dto.MeongStoryDTO;
@@ -21,9 +22,14 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.service.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/mungstory")
@@ -39,6 +45,7 @@ public class MungStoryController {
     private final MeongStoryService meongStoryService;
     private final MeongStoryRepository meongStoryRepository;
     private final StoryLikeService storyLikeService;
+    private final FileController fileController;
 
 
     // 기본적으로 초기 데이터를 로드하여 전달
@@ -48,7 +55,8 @@ public class MungStoryController {
                              @RequestParam(value = "type", required = false) String type,
                              @RequestParam(value = "keyword", required = false) String keyword,
                              @RequestParam(value = "current", defaultValue = "1") int current,
-                             PageRequestDTO pageRequestDTO, Model model) {
+                             PageRequestDTO pageRequestDTO, Model model,
+                             Authentication authentication) {
 
         // 로그로 파라미터 값을 확인
         log.info("Received page: {}, size: {}, type: {}, keyword: {}, current: {}", page, size, type, keyword, current);
@@ -77,8 +85,6 @@ public class MungStoryController {
                 break;
         }
 
-
-
         // 로그로 결과 확인
         log.info("Result: {}", result);
 
@@ -86,7 +92,6 @@ public class MungStoryController {
         model.addAttribute("result", result);
         model.addAttribute("current", current);
         model.addAttribute("pageRequestDTO", pageRequestDTO);
-
 
         return "mungStoryHtml/storyboard";
     }
@@ -158,12 +163,52 @@ public class MungStoryController {
     }
 
     @PostMapping("/storywirte")
-    public String storywirtePost(MeongStoryDTO dto, RedirectAttributes redirectAttributes){
+    public String storywirtePost(MeongStoryDTO dto, RedirectAttributes redirectAttributes,
+                                 @RequestParam("file") MultipartFile file,
+                                 Model model) {
 
         log.info("dto..." + dto);
-        Long gno = service.register(dto);
+
+        // 파일이 비어 있지 않은지 확인
+        if (!file.isEmpty()) {
+            try {
+                // 파일 저장 메서드를 호출하여 파일을 저장하고, 저장된 파일명을 DTO에 설정
+                String savedFileName = saveBoardPhoto(file);
+                dto.setPicture(savedFileName); // 파일명을 DTO의 picture 필드에 설정
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("message", "파일 업로드 실패");
+                return "error"; // 오류 페이지로 리다이렉트 또는 표시
+            }
+        }
+
+        // 서비스 계층을 통해 게시글 등록
+        service.register(dto);
 
         return "redirect:/mungstory";
+    }
+
+    public String saveBoardPhoto(MultipartFile file) throws IOException {
+        // 저장할 경로 설정
+        String uploadDir = "C:\\work\\uploads\\";
+
+        // 파일명을 고유하게 하기 위해 UUID를 사용
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+        // 전체 경로 생성
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String filePath = uploadDir + fileName;
+
+        // 파일을 지정된 경로에 저장
+        file.transferTo(new java.io.File(filePath));
+
+        // 저장된 파일의 경로를 반환
+        return fileName;
     }
 
     @GetMapping("/storyread")
