@@ -22,6 +22,8 @@ public class QStoryLike extends EntityPathBase<StoryLike> {
 
     public static final QStoryLike storyLike = new QStoryLike("storyLike");
 
+    public final DatePath<java.time.LocalDate> likeDate = createDate("likeDate", java.time.LocalDate.class);
+
     public final NumberPath<Long> storylikecountid = createNumber("storylikecountid", Long.class);
 
     public final QMeongStory storySeq;

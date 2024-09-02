@@ -4,21 +4,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.projectmeongmung.dto.LikeRequest;
 import org.zerock.projectmeongmung.dto.MeongStoryDTO;
 import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.User;
-import org.zerock.projectmeongmung.service.MeongStoryService;
-import org.zerock.projectmeongmung.service.MyPageService;
-import org.zerock.projectmeongmung.service.UserDetailService;
-import org.zerock.projectmeongmung.service.gameService;
+import org.zerock.projectmeongmung.repository.MeongStoryRepository;
+import org.zerock.projectmeongmung.service.*;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/mungstory")
@@ -30,8 +35,11 @@ public class MungStoryController {
     @Autowired
     private UserDetailService userDetailService;
 
-
     private final MeongStoryService service;
+    private final MeongStoryService meongStoryService;
+    private final MeongStoryRepository meongStoryRepository;
+    private final StoryLikeService storyLikeService;
+
 
     // 기본적으로 초기 데이터를 로드하여 전달
     @GetMapping
@@ -218,6 +226,45 @@ public class MungStoryController {
 
         return "redirect:/mungstory/storyread";
     }
+
+    @PostMapping("/like")
+    public ResponseEntity<?> like(@RequestBody LikeRequest request) {
+        User currentUser = getCurrentUser(); // 현재 로그인한 사용자의 User 객체를 가져오는 메소드
+
+        // 게시물 ID로 MeongStory 객체를 조회
+        MeongStory story = meongStoryRepository.findById(request.getSeq()).orElse(null);
+
+        if (story == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시물을 찾을 수 없습니다.");
+        }
+
+        LocalDate today = LocalDate.now();
+
+        // 데이터베이스에서 사용자 좋아요 기록 조회
+        boolean hasLikedToday = storyLikeService.hasLikedToday(currentUser, story, today);
+
+        if (hasLikedToday) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("하루에 한 번만 좋아요를 누를 수 있습니다.");
+        }
+
+        // 좋아요 처리 로직
+        storyLikeService.saveLikeRecord(currentUser, story, today);
+        storyLikeService.incrementLikeCount(story);
+
+        // 최신 likecount 값을 포함한 응답 생성
+        return ResponseEntity.ok(Map.of("likecount", story.getLikecount() + 1)); // story.getLikeCount()는 증가된 좋아요 수를 반환합니다.
+    }
+
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            return (User) authentication.getPrincipal();
+        }
+        throw new RuntimeException("사용자 인증 정보가 없습니다.");
+    }
+
+
 
     @PostMapping("/remove")
     public String remove(long seq, RedirectAttributes redirectAttributes,

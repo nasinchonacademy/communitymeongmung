@@ -9,7 +9,7 @@
             <input type="text" class="form-control" name="title" th:value="${dto.title}" readonly>
         </div>
         <div class="form-group">
-            <textarea class="form-control" row="15" name="content" readonly>[[${dto.content}]]</textarea>
+            <textarea class="form-control" name="content" readonly>[[${dto.content}]]</textarea>
         </div>
         <div class="form-group">
             <input type="text" class="form-control" name="writer" th:value="${dto.nickname}" readonly>
@@ -38,11 +38,51 @@
             <button type="button" class="btn btn-info">목록으로</button>
         </a>
 
+        <button id="likeButton" class="btn btn-danger removeBtn" th:attr="data-seq=${dto.seq}">좋아요</button>
+        <span id="likecount" th:text="${dto.likecount}">0</span>
+
+
         <script type="text/javascript">
             function confirmDelete() {
                 return confirm("글을 삭제하시겠습니까?");
             }
         </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#likeButton").click(function(event) {
+                    event.preventDefault(); // 기본 폼 제출 막기
+
+                    var seq = $(this).attr('data-seq'); // data-seq 속성에서 seq 값 가져오기
+
+                    // AJAX 요청
+                    $.ajax({
+                        url: '/mungstory/like',
+                        type: 'POST',
+                        contentType: 'application/json',  // JSON 형식으로 전송
+                        data: JSON.stringify({ seq: seq }), // JSON으로 변환하여 데이터 전송
+                        success: function(response) {
+                            console.log(response); // 서버 응답 데이터 확인
+                            if (response.likecount !== undefined) {
+                                $("#likecount").text(response.likecount); // 서버에서 받은 새로운 likecount로 업데이트
+                            } else {
+                                console.error('서버 응답에서 likecount를 찾을 수 없습니다.');
+                            }
+
+                            // 현재 날짜를 'YYYY-MM-DD' 형식으로 설정
+                            var today = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 날짜 추출
+
+                            // 로컬 스토리지에 오늘 날짜 저장
+                            localStorage.setItem('lastLikeDate', today);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText); // 서버 응답의 오류 메시지 확인
+                            alert("이미 좋아요를 누른 게시물입니다.");
+                        }
+                    });
+                });
+            });
+        </script>
+
 
     </div>
 </main>
