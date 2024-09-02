@@ -87,8 +87,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Set<GamePoints> gamePoints;
 
-
-
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,
                 String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint) {
@@ -155,5 +153,20 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         // 계정이 사용가능한지 확인 하는 로직
         return UserDetails.super.isEnabled();
+    }
+
+    // 젤리 포인트를 조작할 수 있는 메서드
+    // 추가
+    public void addJellyPoints(int points) {
+        this.jellypoint += points;
+    }
+
+    // 결제 시 감소
+    public void subtractJellyPoints(int points) {
+        if (this.jellypoint >= points) {
+            this.jellypoint -= points;
+        } else {
+            throw new IllegalArgumentException("젤리가 부족해 추가 결제 금액이 발생합니다.");
+        }
     }
 }
