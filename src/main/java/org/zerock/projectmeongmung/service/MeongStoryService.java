@@ -39,5 +39,7 @@ public interface MeongStoryService {
     // Entity -> DTO 변환 메서드
     MeongStoryDTO entityToDto(MeongStory entity);
 
+    int increaseLikeCount(Long seq);
+
 
 }

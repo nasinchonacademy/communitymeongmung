@@ -14,6 +14,7 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -203,4 +204,19 @@ public class MeongStoryServiceImpl implements MeongStoryService {
                 .nickname(entity.getUser().getNickname())  // User의 nickname을 DTO에 설정
                 .build();
     }
+
+    @Override
+    public int increaseLikeCount(Long seq) {
+        Optional<MeongStory> result = meongStoryRepository.findById(seq); // 인스턴스 변수로 호출
+
+        if (result.isPresent()) {
+            MeongStory story = result.get();
+            story.setLikecount(story.getLikecount() + 1); // 좋아요 수 증가
+            meongStoryRepository.save(story); // 변경 사항 저장
+            return story.getLikecount(); // 증가된 좋아요 수 반환
+        } else {
+            throw new IllegalArgumentException("존재하지 않는 게시물입니다.");
+        }
+    }
+
 }

@@ -3,8 +3,10 @@ package org.zerock.projectmeongmung.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
-@Table(name = "StoryLikecount")
+@Table(name = "storylikecount")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,13 +23,13 @@ public class StoryLike {
     @JoinColumn(name = "memberid", nullable = false)
     private User user;
 
+    // storySeq 필드에 대한 Getter 메서드
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storyseq", nullable = false)
     private MeongStory storySeq;
 
-    // storySeq 필드에 대한 Getter 메서드
-    public MeongStory getStorySeq() {
-        return storySeq;
-    }
+    @Column(name = "likedate", nullable = false)
+    private LocalDate likeDate; // 좋아요 날짜
 
 }
