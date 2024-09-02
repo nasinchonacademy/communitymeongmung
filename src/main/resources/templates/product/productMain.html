@@ -91,106 +91,10 @@
     .cart-button:hover {
         background-color: #0f7cb8;
     }
-</style>
-
-<body>
-<!-- 헤더 영역 --><!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>productMain</title>
-    <!-- 제이쿼리 cdn -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- 부트스트랩 cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- 부트스트랩 아이콘 cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link th:href="@{css/product/productMainStyle.css}" rel="stylesheet">
-    <link th:href="@{css/basic.css}" rel="stylesheet">
-</head>
-
-<style>
-    /* CSS 코드 */
-    #modalWrap {
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: none;
-    }
-
-    #modalBody {
-        width: 400px;
-        height: 600px;
-        padding: 40px;
-        margin: 0 auto;
-        border: 1px solid #777;
-        background-color: #fff;
-        border-radius: 16px;
-        text-align: center;
-    }
-
-    #closeBtn {
-        float: right;
-        font-weight: bold;
-        color: #777;
-        font-size: 25px;
-        cursor: pointer;
-    }
-
-    #modalProductImage {
-        width: 300px;
-        height: 300px;
-    }
-
-    .modal-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 20px;
-    }
-
-    .modal-buttons button {
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-buttons button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .buy-button {
-        background-color: #56c395;
-        color: white;
-    }
-
-    .buy-button:hover {
-        background-color: #3a9f73;
-    }
-
-    .cart-button {
-        background-color: #17a7ec;
-        color: white;
-    }
-
-    .cart-button:hover {
-        background-color: #0f7cb8;
-    }
 
     .card-img-top {
         width: 100%; /* 컨테이너 너비에 맞게 */
-        height: 300px; /* 원하는 고정 높이 */
+        height: 200px; /* 원하는 고정 높이 */
         object-fit: cover; /* 이미지가 왜곡되지 않게 */
     }
 
@@ -311,7 +215,7 @@
 
     function loadProductDetails(productId) {
         $.ajax({
-            url: '/product/productMain', // 제품 상세 정보를 제공하는 서버의 URL
+            url: '/details', // 제품 상세 정보를 제공하는 서버의 URL
             method: 'GET',
             data: { id: productId },
             success: function(response) {
@@ -331,7 +235,7 @@
                 };
 
                 cartButton.onclick = function() {
-                    window.location.href = `/mypage/cart/add?productId=${productId}`;
+                    window.location.href = `/mypage/add?productId=${productId}`;
                 };
 
                 // 모달 창 표시
@@ -345,4 +249,6 @@
 
 
 
-    <script>
+</script>
+</body>
+</html>

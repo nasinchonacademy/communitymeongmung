@@ -1,15 +1,17 @@
 package org.zerock.projectmeongmung.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.zerock.projectmeongmung.dto.ProductDTO;
 import org.zerock.projectmeongmung.entity.Product;
-import org.zerock.projectmeongmung.repository.ProductRepositrory;
 import org.zerock.projectmeongmung.service.FileService;
 import org.zerock.projectmeongmung.service.ProductService;
 
@@ -88,5 +90,30 @@ public class ProductController {
         return "redirect:/productMain";
     }
 
+    @GetMapping("/details")
+    public ResponseEntity<?> getProductDetails(@RequestParam("id") Long productId) {
+        // 제품 정보 데이터베이스에서 조회
+        ProductDTO product = productService.getProductById(productId);
+
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("제품을 찾을 수 없습니다.");
+        }
+
+        // Product 엔티티를 ProductDTO로 변환
+        ProductDTO productDTO = new ProductDTO(
+                product.getPid(),
+                product.getPname(),
+                product.getPprice(),
+                product.getPcategory(),
+                product.getPdescription(),
+                product.getPcompany(),
+                product.getPstock(),
+                product.getProductphoto()
+        );
+
+        // 제품 정보를 JSON 형식으로 반환
+        return ResponseEntity.ok(product);
+
+    }
 }
 
