@@ -54,8 +54,10 @@ public class GameController {
     }
 
     // update-jelly-points
-    @PostMapping("/update-jelly-points")
-    public ResponseEntity<String> updateJellyPoints(@RequestParam String uid, @RequestParam int points) {
+    @PostMapping("/update_jelly_points")
+    public ResponseEntity<String> updateJellyPoints(
+            @RequestParam String uid,
+            @RequestParam int points) {
         try {
             // 포인트를 사용자에게 추가
             userService.addJellyPointsToUser(uid, points);

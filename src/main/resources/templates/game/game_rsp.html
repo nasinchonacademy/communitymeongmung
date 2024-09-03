@@ -153,7 +153,7 @@
 
     <script>
         const rspArr = ['r', 's', 'p'];
-        const uid = /*[[${user.uid}]]*/''; // ''을 넣어야만 인식한다.
+        const uid = '[[${user.uid}]]'; // ''을 넣어야만 인식한다.
 
         // 전역 변수로 이미지 경로를 설정
         const imagePath = '/image/game/';
@@ -182,17 +182,17 @@
 
                 // 젤리 포인트 서버로 전송
                 $.ajax({
-                    url: '/update-jelly-points', // 서버의 젤리 포인트 업데이트
+                    url: '/update_jelly_points', // 서버의 젤리 포인트 업데이트
                     method: 'POST',
                     data: {
-                        points: 30, // 이기면 얻는 젤리
-                        userId: uid // 동적 할당
+                        userId: uid, // 동적 할당
+                        points: 30 // 이기면 얻는 젤리
                     },
                     success: function (response) {
                         console.log('젤리 적립 성공!');
                     },
                     error: function (xhr, status, error) {
-                        console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                        console.error('포인트 적립 중 오류가 발생했습니다. 상태:', status, '오류:', error);
                     }
                 });
 
