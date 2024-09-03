@@ -1,25 +1,22 @@
 var rouletter = {
     rewards: [
-        "100 포인트 젤리",    // 0 ~ 44도
-        "10 포인트 젤리",   // 45 ~ 89도
-        "10,000 포인트 젤리",     // 90 ~ 134도
-        "1 포인트 젤리",  // 135 ~ 179도
-        "1000 포인트 젤리",   // 180 ~ 224도
-        "100 포인트 젤리",  // 225 ~ 269도
-        "2000 포인트 젤리",     // 270 ~ 314도
-        "1 포인트 젤리" // 315 ~ 359도
+        { text: "100 포인트 젤리", points: 100 },    // 0 ~ 44도
+        { text: "10 포인트 젤리", points: 10 },   // 45 ~ 89도
+        { text: "10,000 포인트 젤리", points: 10000 },     // 90 ~ 134도
+        { text: "1 포인트 젤리", points: 1 },  // 135 ~ 179도
+        { text: "1000 포인트 젤리", points: 1000 },   // 180 ~ 224도
+        { text: "100 포인트 젤리", points: 100 },  // 225 ~ 269도
+        { text: "2000 포인트 젤리", points: 2000 },     // 270 ~ 314도
+        { text: "1 포인트 젤리", points: 1 } // 315 ~ 359도
     ],
 
     getRewardByAngle: function (angle) {
-        // 각도를 45도씩 나눠 섹션 구분
         var index = Math.floor(angle / 45);
         return this.rewards[index];
     },
 
     randomAngleWithinSection: function () {
-        // 45도 단위로 시작점 설정
         var baseAngle = this.random() * 45;
-        // 섹션 내에서 랜덤한 0 ~ 44도 추가
         var offset = Math.floor(Math.random() * 45);
         return baseAngle + offset;
     },
@@ -28,7 +25,6 @@ var rouletter = {
         return Math.floor(Math.random() * 8);
     },
 
-    // 하루에 한번만 게임을 돌릴 수 있도록
     canPlayToday: function () {
         var lastPlayed = localStorage.getItem('lastPlayed');
         if (!lastPlayed) return true;
@@ -50,19 +46,40 @@ var rouletter = {
         var btn = document.querySelector('.rouletter-btn');
         var panel = document.querySelector('.rouletter-wacu');
 
-        // 애니메이션 시작
         var randomDeg = (360 * 4) + this.randomAngleWithinSection();
         panel.style.transition = 'transform 4s cubic-bezier(0.33, 1, 0.68, 1)';
         panel.style.transform = 'rotate(' + randomDeg + 'deg)';
 
-        // 애니메이션 끝난 후 결과 표시
         setTimeout(() => {
             var actualAngle = randomDeg % 360;
             var reward = this.getRewardByAngle(actualAngle);
-            alert('축하합니다! ' + reward + '를 받으셨습니다!');
+            alert('축하합니다! ' + reward.text + '를 받으셨습니다!');
             this.savePlayTime();
             btn.innerText = 'start';
-        }, 4000);  // 4초 뒤에 실행 (애니메이션 끝나는 시간과 맞춤)
+
+            // 포인트를 서버에 전송
+            this.sendPointsToServer(reward.points);
+
+        }, 4000);
+    },
+
+    sendPointsToServer: function (points) {
+        const uid = '[[${user.uid}]]';   // 사용자 ID 가져오기
+
+        $.ajax({
+            url: '/game_list/update-jelly-points', // 서버의 젤리 포인트 업데이트
+            method: 'POST',
+            data: {
+                points: points, // 얻은 젤리 포인트
+                uid: uid // 사용자 ID
+            },
+            success: function (response) {
+                console.log('젤리 적립 성공!');
+            },
+            error: function (xhr, status, error) {
+                console.error('포인트 적립 중 오류가 발생했습니다.', error);
+            }
+        });
     }
 }
 
@@ -73,3 +90,11 @@ document.addEventListener('click', function (e) {
     }
 });
 
+document.addEventListener('click', function (e) {
+    var target = e.target;
+    if (target.classList.contains('rouletter-btn')) {
+        // 버튼에서 유저 ID를 가져옴
+        var uid = target.getAttribute('data-uid');
+        rouletter.start(uid);
+    }
+});

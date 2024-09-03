@@ -99,6 +99,8 @@
     const rows = [];
     let turn = 'O';
 
+    const uid = '[[${user.uid}]]'; // UID 값 가져오기
+
     $result.classList.add('result-message');
 
     const checkWinner = () => {
@@ -209,8 +211,23 @@
             event.target.textContent = 'O';
             if (checkWinner()) {
                 $result.textContent = `축하합니다. 젤리 50개를 획득했어요!`;
-                $table.removeEventListener('click', callback);
                 savePlayTime();
+                // 포인트 적립 AJAX 호출
+                $.ajax({
+                    url: '/game_list/update-jelly-points', // 서버의 젤리 포인트 업데이트
+                    method: 'POST',
+                    data: {
+                        points: 50, // 이기면 얻는 젤리 포인트
+                        uid: uid // 사용자 ID
+                    },
+                    success: function (response) {
+                        console.log('젤리 적립 성공!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                    }
+                });
+                $table.removeEventListener('click', callback);
             } else if (checkDraw()) {
                 $result.textContent = `무승부입니다!`;
                 savePlayTime();

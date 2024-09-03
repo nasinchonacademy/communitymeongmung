@@ -169,4 +169,5 @@ public class User implements UserDetails {
             throw new IllegalArgumentException("젤리가 부족해 추가 결제 금액이 발생합니다.");
         }
     }
+
 }

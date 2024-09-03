@@ -74,7 +74,7 @@ public class UserService {
     @Transactional
     public void addJellyPointsToUser(String uid, int points) {
         User user = findByUid(uid);
-        user.addJellyPoints(points);  // User 엔티티의 addJellyPoints 메서드 호출
+        user.addJellyPoints(points);
         userRepository.save(user);
     }
 
