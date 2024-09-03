@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.projectmeongmung.entity.MeongStory;
-import org.zerock.projectmeongmung.entity.QMeongStory;
 import org.zerock.projectmeongmung.entity.User;
 
 import java.util.Optional;
