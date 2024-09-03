@@ -185,7 +185,7 @@
                     url: '/update_jelly_points', // 서버의 젤리 포인트 업데이트
                     method: 'POST',
                     data: {
-                        userId: uid, // 동적 할당
+                        uid: uid, // 동적 할당
                         points: 30 // 이기면 얻는 젤리
                     },
                     success: function (response) {
