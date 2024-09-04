@@ -1,0 +1,82 @@
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 100px;
+}
+
+.vet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.vet_namelist p {
+    display: inline;
+    margin-right: 30px;
+}
+
+.vet_name {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: bolder;
+    font-size: 42px;
+}
+
+.vet_namelist_title {
+    font-size: 24px;
+    color: #8a8a8a;
+    margin-left: -20px;
+}
+
+
+
+.vet-card {
+    display: flex;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    align-items: center;
+}
+
+.vet-photo{
+   margin-left: 400px;
+}
+
+.vet-photo img{
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    float: right;
+}
+
+.vet-info {
+    margin-left: 20px;
+}
+
+
+.hospital-name {
+    color: #555;
+    font-size: 1.2em;
+    margin: 5px 0;
+}
+
+.tags {
+    margin: 10px 0;
+    color: #007bff;
+    margin-bottom: 70px;
+}
+
+
+.description li {
+    font-weight: normal;
+    margin-bottom: 15px;
+    width: 400px;
+    font-size: 17px;
+}
+

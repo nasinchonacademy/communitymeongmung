@@ -37,7 +37,7 @@ var rouletter = {
         localStorage.setItem('lastPlayed', Date.now());
     },
 
-    start: function () {
+    start: function (uid) {
         if (!this.canPlayToday()) {
             alert("오늘은 이미 룰렛을 돌리셨네요! 내일 또 돌리러 와주세요!");
             return;
@@ -58,17 +58,16 @@ var rouletter = {
             btn.innerText = 'start';
 
             // 포인트를 서버에 전송
-            this.sendPointsToServer(reward.points);
+            this.sendPointsToServer(reward.points, uid);
 
         }, 4000);
     },
 
-    sendPointsToServer: function (points) {
-        const uid = '[[${user.uid}]]';   // 사용자 ID 가져오기
-
+    sendPointsToServer: function (points, uid) {
         $.ajax({
-            url: '/game_list/update-jelly-points', // 서버의 젤리 포인트 업데이트
+            url: '/game_list/update_jelly_points',
             method: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // 요청의 Content-Type 설정
             data: {
                 points: points, // 얻은 젤리 포인트
                 uid: uid // 사용자 ID
@@ -86,15 +85,8 @@ var rouletter = {
 document.addEventListener('click', function (e) {
     var target = e.target;
     if (target.classList.contains('rouletter-btn')) {
-        rouletter.start();
-    }
-});
-
-document.addEventListener('click', function (e) {
-    var target = e.target;
-    if (target.classList.contains('rouletter-btn')) {
-        // 버튼에서 유저 ID를 가져옴
         var uid = target.getAttribute('data-uid');
+        console.log('UID:', uid); // 확인용 로그 추가
         rouletter.start(uid);
     }
 });

@@ -84,6 +84,13 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Set<GamePoints> gamePoints;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VetRecommendation> recommendations;
+
+    @OneToMany(mappedBy = "user")
+    private List<SOSboard> sosBoards;
+
+
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,
                 String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint) {

@@ -1,4 +1,0 @@
-package org.zerock.projectmeongmung.dto;
-
-public class VetDto {
-}
