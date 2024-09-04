@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.projectmeongmung.entity.MeongStory;
-import org.zerock.projectmeongmung.entity.QMeongStory;
+import org.zerock.projectmeongmung.entity.StoryComment;
 import org.zerock.projectmeongmung.entity.User;
 
 import java.util.Optional;
@@ -21,6 +21,9 @@ public class MeongStoryRepositoryTest {
 
     @Autowired
     private MeongStoryRepository meongStoryRepository;
+
+    @Autowired
+    private StoryCommentRepository storyCommentRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -72,5 +75,35 @@ public class MeongStoryRepositoryTest {
         Page<MeongStory> result = meongStoryRepository.findAll(builder, pageable);
 
         result.stream().forEach(meongStory -> System.out.println("페이지 : " + meongStory));
+    }
+
+    @Test
+    public void testCommentDummies(){
+        Optional<User> userOptional = userRepository.findByUid("test2");
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            Optional<MeongStory> meongStoryOptional = meongStoryRepository.findById(259L);
+            if (meongStoryOptional.isPresent()) {
+                MeongStory meongStory = meongStoryOptional.get();
+
+                IntStream.rangeClosed(1, 2).forEach(i -> {
+                    StoryComment storyComment = StoryComment.builder()
+                            .commentid((long) + i)
+                            .commentcontent("Content" + i)
+                            .story(meongStory) // MeongStory 엔터티 객체를 설정
+                            .user(user)        // User 객체와 연관 설정
+                            .build();
+
+                    // StoryComment 엔터티를 DB에 저장
+                    storyCommentRepository.save(storyComment);
+                });
+            } else {
+                System.out.println("MeongStory not found");
+            }
+        } else {
+            System.out.println("User not found");
+        }
     }
 }

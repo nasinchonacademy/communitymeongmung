@@ -41,7 +41,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung","/mungstory", "/mungstory/mungstoryAll", "/",
+                        .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung",
+                                "/mungstory","/mungstory/addcomment","/mungstory/storyread", "/mungstory/mungstoryAll", "/",
                                 "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**",
                                 "/api/check-duplicate", "/read-csv","/profiles/**" ) // 여기서 /read-csv를 추가합니다
                         .permitAll()

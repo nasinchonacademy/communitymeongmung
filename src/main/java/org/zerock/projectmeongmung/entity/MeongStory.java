@@ -50,8 +50,11 @@ public class MeongStory extends BaseEntity1 {
     @JoinColumn(name = "memberid", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "storySeq")
+    @OneToMany(mappedBy = "storySeq", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StoryLike> likes;
+
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StoryComment> comments;
 
     public String getNickname() {
         return user.getNickname();
