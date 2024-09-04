@@ -13,8 +13,43 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!--기본 css-->
     <link th:href="@{css/basic.css}" rel="stylesheet">
+    <!--우편번호-->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{js/roadAddress.js}"></script>
+    <!--포트원-->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
 <script>
+    // 포트원
+    var IMP = window.IMP;
+    IMP.init('imp73447046')
+
+    function requestPay() {
+        // 결제창 호출
+        IMP.request_pay(
+            {
+                // 파라미터 값 설정
+                pg: "kakaopay.TC0ONETIME",
+                pay_method: "card",
+                merchant_uid: "57008833-33004", // 상점 고유 주문번호
+                name: "포트원 테스트",
+                amount: 1004,
+                buyer_email: "good@portone.io",
+                buyer_name: "포트원 기술지원팀",
+                buyer_tel: "010-1234-5678",
+                buyer_addr: "서울특별시 강남구 삼성동",
+                buyer_postcode: "123-456",
+            },
+            function (rsp) {
+                if (rsp.success) {
+                    // 결제 성공
+                    form.action = "/payment_complete";
+                    form.submit(); // 폼 제출
+                } else {
+                    alert("결제에 실패하였습니다. 에러: " + rsp.error_msg);
+                }
+            });
+    }
 
 </script>
 <style>
@@ -88,11 +123,11 @@
 <th:block th:replace="fragments/nav :: navMenu"></th:block>
 
 <!-- 메인 컨텐츠 영역 -->
-<form>
+
 
     <div class="container">
         <div class="oderinformation">
-        <h5>주문하신 상품 정보</h5>
+            <h5>주문하신 상품 정보</h5>
             <div class="product-info">
                 <p><strong>상품명:</strong> <span th:text="${product.pname}"></span></p>
                 <p><strong>가격:</strong> <span th:text="${product.pprice} + '원'"></span></p>
@@ -112,34 +147,42 @@
 
     <div class="container">
         <h1>결제 정보</h1>
-        <form action="/submit-order" method="POST">
+        <form action="/submitorder" method="POST">
+            <input type="hidden" id="productIdField" name="productId" th:value= "${product.pid}">
 
             <div class="form-group">
-                <label for="res_name">받는 사람 이름</label>
-                <input type="text" id="res_name" name="res_name" required maxlength="20">
+                <label for="resname">받는 사람 이름</label>
+                <input type="text" id="resname" name="resname" required maxlength="20">
             </div>
 
             <div class="form-group">
-                <label for="res_phone">연락처</label>
-                <input type="text" id="res_phone" name="res_phone" required maxlength="20">
+                <label for="resphone">연락처</label>
+                <input type="text" id="resphone" name="resphone" required maxlength="20">
             </div>
 
             <div class="form-group">
-                <label for="res_address">주소</label>
-                <input type="text" id="res_address" name="res_address" required maxlength="100">
+                <label>주소</label>
+                <input type="text" id="sample4_postcode" placeholder="우편번호">
+                <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+                <input type="text" id="sample4_roadAddress" name="roadaddr" placeholder="도로명주소">
+                <input type="text" id="sample4_jibunAddress" name="localaddr" placeholder="지번주소">
+                <span id="guide" style="color:#999;display:none"></span>
+                <input type="text" id="resaddress" name="resaddress" placeholder="상세주소">
             </div>
 
             <div class="form-group">
-                <label for="res_requirement">요청 사항</label>
-                <input type="text" id="res_requirement" name="res_requirement" maxlength="100">
+                <label for="resrequirement">요청 사항</label>
+                <input type="text" id="resrequirement" name="resrequirement" maxlength="100">
             </div>
 
             <div class="form-group">
-                <button type="submit" formaction="/payment_complete">결제하기</button>
+<!--                onclick="requestPay()"-->
+<!--                <a th:href="@{/payment_complete}">-->
+                    <button type="submit">결제하기</button></a>
             </div>
         </form>
     </div>
-</form>
+
 
 <!-- 푸터 영역 -->
 <th:block th:replace="fragments/nav :: footer"></th:block>

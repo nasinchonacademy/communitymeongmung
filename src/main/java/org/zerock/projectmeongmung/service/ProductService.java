@@ -2,25 +2,21 @@ package org.zerock.projectmeongmung.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.zerock.projectmeongmung.dto.ProductDTO;
 import org.zerock.projectmeongmung.entity.Product;
-import org.zerock.projectmeongmung.repository.ProductRepositrory;
+import org.zerock.projectmeongmung.repository.ProductRepository;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
-import static org.zerock.projectmeongmung.entity.QProduct.product;
 
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepositrory productRepositrory;
+    private final ProductRepository productRepository;
 
     @Autowired
-    private FileService fileService;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public void saveProduct(String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
 
@@ -35,17 +31,17 @@ public class ProductService {
                 .productphoto(productphoto)
                 .build();
 
-        productRepositrory.save(product);
+        productRepository.save(product);
     }
 
     // 모든 제품 가지고 오기
     public List<Product> getAllProducts() {
-        return productRepositrory.findAll(); // DB에서 모든 제품 가지고 오기
+        return productRepository.findAll(); // DB에서 모든 제품 가지고 오기
     }
 
     // 제품 업데이트
     public void updateProduct(Long productId, String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
-        Product product = productRepositrory.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
         product.setPname(pname);
@@ -56,20 +52,20 @@ public class ProductService {
         product.setPstock(pstock);
         product.setProductphoto(productphoto);
 
-        productRepositrory.save(product);
+        productRepository.save(product);
     }
 
 
     // 제품 삭제
     public void productDelete(Long productId) {
-        if (!productRepositrory.existsById(productId)) {
+        if (!productRepository.existsById(productId)) {
             throw new IllegalArgumentException("Product not found with ID: " + productId);
         }
-        productRepositrory.deleteById(productId);
+        productRepository.deleteById(productId);
     }
 
     public ProductDTO getProductById(Long productId) {
-        Product product = productRepositrory.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
 
         if (product == null) {
             return null;  // 혹은 예외 처리

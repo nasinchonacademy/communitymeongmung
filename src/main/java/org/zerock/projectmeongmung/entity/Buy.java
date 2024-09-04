@@ -5,8 +5,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "buy")
@@ -16,40 +19,47 @@ public class Buy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderno", updatable = false)
+    @Column(name = "orderno")
     private Long orderno;
 
     @ManyToOne
-    @JoinColumn(name = "memberid", nullable = false)
+    @JoinColumn(name = "id")
     private User user;
 
-    @Column(name = "resname", nullable = false)
-    private String resName;
+    @ManyToOne
+    @JoinColumn(name = "productid")  // Product와의 연관관계 추가
+    private Product product;
 
-    @Column(name = "resaddress", nullable = false)
-    private String resAddress;
+    @Column(name = "resname")
+    private String resname;
 
-    @Column(name = "resphone", nullable = false)
-    private String resPhone;
+    @Column(name = "resaddress")
+    private String resaddress;
+
+    @Column(name = "resphone")
+    private String resphone;
 
     @Column(name = "resrequirement")
-    private String resRequirement;
+    private String resrequirement;
 
-    @Column(name = "totalprice", nullable = false)
-    private int totalPrice;
+    @Column(name = "totalprice")
+    private int totalprice;
 
-    @Column(name = "orderdate", nullable = false)
-    private Timestamp orderDate;
+//    @CreationTimestamp
+//    @Column(name = "orderDate", nullable = false, updatable = false)
+//    private Timestamp orderDate;
 
     @Builder
-    public Buy(User user, String resName, String resAddress, String resPhone, String resRequirement, int totalPrice, Timestamp orderDate) {
+    public Buy(User user, Product product, String resname, String resaddress, String resphone, String resrequirement, int totalprice) {
         this.user = user;
-        this.resName = resName;
-        this.resAddress = resAddress;
-        this.resPhone = resPhone;
-        this.resRequirement = resRequirement;
-        this.totalPrice = totalPrice;
-        this.orderDate = orderDate;
+        this.product = product;
+        this.resname = resname;
+        this.resaddress = resaddress;
+        this.resphone = resphone;
+        this.resrequirement = resrequirement;
+        this.totalprice = totalprice;
+//        this.orderDate = orderDate;  // null일 경우 현재 시간으로 설정
     }
+
 }
 

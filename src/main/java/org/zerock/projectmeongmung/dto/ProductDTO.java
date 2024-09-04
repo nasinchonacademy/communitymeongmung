@@ -2,6 +2,7 @@ package org.zerock.projectmeongmung.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.zerock.projectmeongmung.entity.Product;
 
 @Getter
 @Setter
@@ -15,6 +16,19 @@ public class ProductDTO {
     private String pcompany;
     private int pstock;
     private String productphoto;
+
+    // 엔티티 변환 메서드
+    public Product toEntity() {
+        return Product.builder()
+                .pname(pname)
+                .pprice(pprice)
+                .pcategory(pcategory)
+                .pdescription(pdescription)
+                .pcompany(pcompany)
+                .pstock(pstock)
+                .productphoto(productphoto)
+                .build();
+    }
 
     // 기본 생성자
     public ProductDTO() {}

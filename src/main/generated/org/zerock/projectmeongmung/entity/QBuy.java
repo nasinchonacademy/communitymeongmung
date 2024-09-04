@@ -22,19 +22,19 @@ public class QBuy extends EntityPathBase<Buy> {
 
     public static final QBuy buy = new QBuy("buy");
 
-    public final DateTimePath<java.sql.Timestamp> orderDate = createDateTime("orderDate", java.sql.Timestamp.class);
-
     public final NumberPath<Long> orderno = createNumber("orderno", Long.class);
 
-    public final StringPath resAddress = createString("resAddress");
+    public final QProduct product;
 
-    public final StringPath resName = createString("resName");
+    public final StringPath resaddress = createString("resaddress");
 
-    public final StringPath resPhone = createString("resPhone");
+    public final StringPath resname = createString("resname");
 
-    public final StringPath resRequirement = createString("resRequirement");
+    public final StringPath resphone = createString("resphone");
 
-    public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
+    public final StringPath resrequirement = createString("resrequirement");
+
+    public final NumberPath<Integer> totalprice = createNumber("totalprice", Integer.class);
 
     public final QUser user;
 
@@ -56,6 +56,7 @@ public class QBuy extends EntityPathBase<Buy> {
 
     public QBuy(Class<? extends Buy> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.product = inits.isInitialized("product") ? new QProduct(forProperty("product")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

@@ -15,22 +15,22 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pid", updatable = false)
+    @Column(name = "pid")
     private Long pid;
 
-    @Column(name = "pname", nullable = false)
+    @Column(name = "pname")
     private String pname;
 
-    @Column(name = "pprice", nullable = false)
+    @Column(name = "pprice")
     private int pprice;
 
-    @Column(name = "pcategory", nullable = false)
+    @Column(name = "pcategory")
     private String pcategory;
 
-    @Column(name = "pdescription", nullable = false)
+    @Column(name = "pdescription")
     private String pdescription;
 
-    @Column(name = "pcompany", nullable = false)
+    @Column(name = "pcompany")
     private String pcompany;
 
     @Column(name = "pstock")
