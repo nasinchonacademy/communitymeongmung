@@ -1,0 +1,22 @@
+<div class="container">
+    <h1>전문가 프로필</h1>
+    <div class="vet-list">
+        <div class="vet-card" th:each="vet : ${vets}">
+
+            <div class="vet-info">
+                <div class="vet_namelist">
+                    <p th:text="${vet.vetname}" class="vet_name">이름</p>
+                    <p class="vet_namelist_title">수의사</p>
+                </div>
+                <p class="tags">
+                </p>
+                <div class="description" th:each="desc : ${vet.description}">
+                    <li th:text="${desc}">소개</li>
+                </div>
+            </div>
+            <div class="vet-photo">
+                <img th:src="@{/profiles/{filename}(filename=${vet.profilePhoto})}" alt="프로필 사진">
+            </div>
+        </div>
+    </div>
+</div>

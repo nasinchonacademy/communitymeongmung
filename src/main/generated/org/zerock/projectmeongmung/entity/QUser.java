@@ -52,7 +52,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profilePhoto = createString("profilePhoto");
 
+    public final SetPath<VetRecommendation, QVetRecommendation> recommendations = this.<VetRecommendation, QVetRecommendation>createSet("recommendations", VetRecommendation.class, QVetRecommendation.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.util.Date> regDate = createDateTime("regDate", java.util.Date.class);
+
+    public final ListPath<SOSboard, QSOSboard> sosBoards = this.<SOSboard, QSOSboard>createList("sosBoards", SOSboard.class, QSOSboard.class, PathInits.DIRECT2);
 
     public final BooleanPath termuse = createBoolean("termuse");
 
