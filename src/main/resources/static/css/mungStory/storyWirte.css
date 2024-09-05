@@ -11,7 +11,71 @@ div#content {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.textarea1{
+.textarea1 {
     user-select: none;
     caret-color: transparent;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 200px;
+    margin-right: 260px;
 }
+
+.categoryform {
+    display: block;
+    width: 930px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.writegroup {
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+input#title {
+    outline: none;
+    width: 930px;
+    border: none;
+    border-bottom: 1px solid #cbcbcb;
+    margin-bottom: 15px;
+}
+
+textarea#boardcontent {
+    resize: none;
+    width: 930px;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    height: 400px;
+}
+
+input#file {
+    margin-left: 15px;
+}
+
+.submitgroup {
+    text-align: right;
+    margin-right: 15px;
+}
+
+button.commentSubmit {
+    width: 70px;
+    height: 40px;
+    background-color: #6bc7a033;
+    border: none;
+    border-radius: 3px;
+}
+

@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -359,14 +360,25 @@ public class MungStoryController {
     public ResponseEntity<List<Map<String, Object>>> getComments(@RequestParam("seq") Long seq) {
         List<StoryComment> comments = storyCommentRepository.findByStorySeq(seq);
 
+        // 날짜 포맷터 생성 (MM/dd/HH/mm/ss 형식)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+
         List<Map<String, Object>> commentDataList = comments.stream().map(comment -> {
             Map<String, Object> commentData = new HashMap<>();
             commentData.put("commentId", comment.getCommentid());  // 댓글 ID 추가
             commentData.put("seq", seq);  // 게시글 ID 추가
             commentData.put("nickname", comment.getUser().getNickname());
             commentData.put("commentcontent", comment.getCommentcontent());
-            commentData.put("regdate", comment.getRegdate().toString());  // 등록일
-            commentData.put("modified", comment.getModified() != null ? comment.getModified().toString() : "수정되지 않음");  // 수정일
+
+            // regdate와 modified 날짜를 MM/dd/HH/mm/ss 형식으로 포맷
+            String regdate = comment.getRegdate().format(formatter);  // 등록일 포맷
+            String modified = comment.getModified() != null
+                    ? comment.getModified().format(formatter)
+                    : "수정되지 않음";  // 수정일 포맷 (null 처리)
+
+            commentData.put("regdate", regdate);  // 포맷된 등록일
+            commentData.put("modified", modified);  // 포맷된 수정일
+
             return commentData;
         }).collect(Collectors.toList());
 
@@ -399,12 +411,15 @@ public class MungStoryController {
 
         storyCommentRepository.save(storyComment); // 댓글 저장
 
+        // 날짜 포맷팅 설정
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+
         // 댓글 저장 후 응답으로 날짜 정보 포함
         return ResponseEntity.ok(Map.of(
                 "commentcount", story.getCommentcount(),
                 "nickname", storyComment.getUser().getNickname(),
-                "regdate", storyComment.getRegdate().toString(),  // 등록일
-                "modified", storyComment.getModified().toString()  // 수정일
+                "regdate", storyComment.getRegdate().format(formatter),  // 포맷팅된 등록일
+                "modified", storyComment.getModified() != null ? storyComment.getModified().format(formatter) : "수정되지 않음"  // 포맷팅된 수정일
         ));
     }
 

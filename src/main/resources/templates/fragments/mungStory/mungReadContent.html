@@ -1,287 +1,286 @@
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <body>
-        <div id="content">
-            <div class="mainContent1">
-                    <div class="form-group">
-                        <input type="hidden" class="seq" name="seq" th:value="${dto.seq}" readonly>
-                    </div>
+    <div id="content">
+        <div class="mainContent1">
+            <div class="form-group">
+                <input type="hidden" class="seq" name="seq" th:value="${dto.seq}" readonly>
+            </div>
 
-                <hr>
-                    <div class="form-group">
-                        <input type="text" class="title" name="title" th:value="${dto.title}" readonly>
-                    </div>
+            <hr>
+            <div class="form-group">
+                <input type="text" class="title" name="title" th:value="${dto.title}" readonly>
+            </div>
 
-                    <div class="form-group">
-                        <input type="text" class="writer" name="writer" th:value="${dto.nickname}" readonly>
-                        <input type="text" class="regdate" name="regdate" th:value="'  |  '+${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            <div class="form-group">
+                <input type="text" class="writer" name="writer" th:value="${dto.nickname}" readonly>
+                <input type="text" class="regdate" name="regdate" th:value="'  |  '+${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+            <hr>
 
-
-
-                    </div>
-                <hr>
-
-
-
-                <div class="pictureAndlikecount">
-                    <div class="form-groupPicture">
-                        <img th:src="${dto.picture != null ? '/profiles/' + dto.picture : '/image/tool/storydefault.PNG'}" alt="Profile Photo" style="width:960px;;">
-                    </div>
-
-                    <div class="form-group">
-                        <textarea class="content" name="content" th:text="${dto.content}" readonly></textarea>
-
-                    </div>
-
-                    <div class="form-group">
-                        <input type="hidden" class="modified" name="modified" th:value="${#temporals.format(dto.modified, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-                    </div>
-
-                    <div class="likeBundle">
-                        <button id="likeButton" class="likeButton" th:attr="data-seq=${dto.seq}">좋아요</button>
-                        <span id="likecount" th:text="${dto.likecount}">0</span>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="writer" name="writer" th:value="${dto.nickname}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="regdate" name="regdate" th:value="${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-                    </div>
+            <div class="pictureAndlikecount">
+                <div class="form-groupPicture">
+                    <img class="dogdefault" th:src="${dto.picture != null ? '/profiles/' + dto.picture : '/image/tool/storydefault.PNG'}" alt="Profile Photo" style="width:927px;;">
                 </div>
 
-                <!--댓글 섹션 시작-->
+                <div class="form-group">
+                    <textarea class="content" name="content" th:text="${dto.content}" readonly></textarea>
 
-                <th:block th:replace="fragments/mungStory/mungCommentContent :: commentContent"></th:block>
+                </div>
 
-                <!--댓글 섹션 끝-->
+                <div class="form-group">
+                    <input type="hidden" class="modified" name="modified" th:value="${#temporals.format(dto.modified, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
 
-                <a th:if="${user.nickname == dto.nickname}"
-                   th:href="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type},keyword=${requestDTO.keyword}, current=${current}, seq=${dto.seq})}">
-                    <button type="button" class="btn btn-primary">수정하기</button>
+
+                <button id="likeButton" class="likeButton" th:attr="data-seq=${dto.seq}">좋아요
+                    <span id="likecount" th:text="${dto.likecount}">0</span>
+                    <div id="heartAnimationContainer"></div> <!-- 하트 애니메이션이 나타날 영역 -->
+                </button>
+
+
+                <div class="form-group">
+                    <input type="text" class="writer" name="writer" th:value="${dto.nickname}" readonly>
+                </div>
+            </div>
+
+            <hr>
+
+            <!--댓글 섹션 시작-->
+            <th:block th:replace="fragments/mungStory/mungCommentContent :: commentContent"></th:block>
+            <!--댓글 섹션 끝-->
+
+            <div class="modifyAndDelete" th:if="${user.nickname == dto.nickname}">
+                <a class="edit-link"
+                   th:href="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current}, seq=${dto.seq})}">
+                    <button type="button" class="edit-button">수정하기</button>
                 </a>
 
-                <form th:if="${user.nickname == dto.nickname}"
+                <form class="delete-form"
                       th:action="@{/mungstory/remove(current=${current}, seq=${dto.seq})}"
                       method="post"
                       style="display:inline;"
                       onsubmit="return confirmDelete()">
-                    <button type="submit" class="btn btn-danger removeBtn">삭제하기</button>
+                    <button type="submit" class="delete-button">삭제하기</button>
                 </form>
-
-                <div class="writeBtn">
-                    <a th:href="@{/mungstory/storywirte}" class="writeBtnAtag">
-                        <button type="button" class="btn btn-info">글쓰기</button></a>
-                </div>
-
-                <a th:href="@{/mungstory(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}">
-                    <button type="button" class="btn btn-info">전체글</button>
-                </a>
             </div>
 
-            <input type="hidden" class="userIdClass2" id="userIdClass2" th:value="${user.Id}" />
-            <input type="hidden" class="userIdClass2" id="userNicknameHidden" th:value="${user.nickname}" />
-            <script type="text/javascript">
-                // JSP에서 서버 변수를 JavaScript 변수로 전달
-                    var userNickname = document.getElementById('userNicknameHidden').value;
-                    console.log('User Nickname from hidden field:', userNickname);
-            </script>
-            <script type="text/javascript">
-                document.addEventListener('DOMContentLoaded', function() {
-                    console.log('DOM fully loaded and parsed');
-                    console.log('User Nickname:', userNickname); // userNickname 확인
-
-                    let isFirstLoad = true; // 처음 실행 여부를 확인하기 위한 변수
-
-                    // textarea 요소 선택 및 자동 높이 조절 함수
-                    const textarea = document.querySelector('textarea.content');
-
-                    function autoResizeTextarea() {
-                        textarea.style.height = 'auto';  // 높이를 초기화
-                        textarea.style.height = textarea.scrollHeight + 'px';  // 내용에 맞게 높이 설정
-                    }
-
-                    textarea.addEventListener('input', autoResizeTextarea);  // input 이벤트에 함수 연결
-                    autoResizeTextarea();  // 페이지 로드 시 초기 설정
-
-                    // 댓글 목록 로드 함수
-                    function loadComments() {
-                        var seq = document.querySelector("input[name='seq']").value;
-
-                        // 페이지 로드 시 서버로부터 댓글 목록을 가져옴
-                        $.ajax({
-                            url: '/mungstory/comments',
-                            type: 'GET',
-                            data: {
-                                seq: seq
-                            },
-                            success: function(response) {
-                                console.log(response);
-                                response.forEach(function(comment) {
-                                    let modifiedText = (comment.regdate !== comment.modified) ? ' (수정됨)' : '';
-                                    let deleteButton = '';
-
-                                    if (userNickname === comment.nickname) {
-                                        deleteButton = `<button class="btn btn-danger removeBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">댓글 삭제3</button>`;
-                                    }
-
-                                    // 댓글 목록에 추가
-                                    $("#commentList").append(
-                                        `<li data-comment-id="${comment.commentId}">
-                                            <span>${comment.nickname}</span>
-                                            <span>${comment.commentcontent}</span>
-                                            <span>등록일: ${comment.regdate}${modifiedText}</span>
-                                            ${deleteButton}
-                                        </li>`
-                                    );
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                alert("댓글을 불러오는 데 문제가 발생했습니다.");
-                            }
-                        });
-                    }
-
-                    // 댓글 삭제 함수 정의
-                    window.deleteComment = function(commentId, seq) {
-                        if (!confirm('댓글을 삭제하시겠습니까?')) {
-                            return;
-                        }
-
-                        $.ajax({
-                            url: '/mungstory/commentremove',
-                            type: 'POST',
-                            contentType: 'application/x-www-form-urlencoded',
-                            data: {
-                                commentId: commentId,
-                                seq: seq
-                            },
-                            success: function(response) {
-                                console.log("댓글 삭제 성공:", response);
-                                $(`li[data-comment-id='${commentId}']`).remove();
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("댓글 삭제 실패:", xhr.responseText);
-                                alert("댓글 삭제 중 문제가 발생했습니다.");
-                            }
-                        });
-                    }
-
-                    // 댓글 제출 함수 정의
-                    window.validateAndSubmitComment = function() {
-                        if (isFirstLoad) {
-                            isFirstLoad = false;
-                            return;
-                        }
-
-                        console.log('validateAndSubmitComment called');
-
-                        var content = document.getElementById("boardcontent").value.trim();
-                        if (content === "") {
-                            alert("댓글을 입력해주세요.");
-                            return;
-                        }
-
-                        var seq = document.querySelector("input[name='seq']").value;
-                        var userId = document.getElementById("userIdClass2").value;
-                        userId = parseInt(userId, 10);
-
-                        console.log("User ID:", userId);
-
-                        if (isNaN(userId)) {
-                            console.error("유효하지 않은 사용자 ID입니다.");
-                            alert("유효하지 않은 사용자 ID입니다.");
-                            return;
-                        }
-
-                        $.ajax({
-                            url: '/mungstory/addcomment',
-                            type: 'POST',
-                            contentType: 'application/x-www-form-urlencoded',
-                            data: {
-                                seq: seq,
-                                commentcontent: content,
-                                userId: userId
-                            },
-                            success: function(response) {
-                                console.log(response);
-                                var regdate = response.regdate || '등록일 없음';
-                                var modified = response.modified || '수정일 없음';
-                                let modifiedText = (regdate !== modified) ? ' (수정됨)' : '';
-
-                                if (response.commentcount !== undefined && response.nickname !== undefined) {
-                                    $("#commentList").append(
-                                        `<li data-comment-id="${response.commentId}">
-                                            <span>${response.nickname}</span>
-                                            <span>${content}</span>
-                                            <span>등록일: ${regdate}${modifiedText}</span>
-                                            <button class="btn btn-danger removeBtn" data-comment-id="${response.commentId}" data-seq="${response.seq}" onclick="deleteComment(${response.commentId}, ${response.seq})">댓글 삭제</button>
-                                        </li>`
-                                    );
-                                    $("#boardcontent").val("");
-                                    $("#noCommentsMessage").hide();
-                                } else {
-                                    console.error('서버 응답에서 commentcount 또는 nickname을 찾을 수 없습니다.');
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                alert("댓글을 추가하는데 문제가 발생했습니다.");
-                            }
-                        });
-                    }
-
-                    var commentButton = document.querySelector('.btn-primary');
-                    if (commentButton) {
-                        commentButton.addEventListener('click', validateAndSubmitComment, { once: true });
-                    } else {
-                        console.error('댓글 제출 버튼을 찾을 수 없습니다.');
-                    }
-
-                    function handleLikeButtonClick(event) {
-                        event.preventDefault();
-
-                        var seq = $(this).attr('data-seq');
-
-                        $.ajax({
-                            url: '/mungstory/like',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({ seq: seq }),
-                            success: function(response) {
-                                console.log(response);
-                                if (response.likecount !== undefined) {
-                                    $("#likecount").text(response.likecount);
-                                } else {
-                                    console.error('서버 응답에서 likecount를 찾을 수 없습니다.');
-                                }
-
-                                var today = new Date().toISOString().split('T')[0];
-                                localStorage.setItem('lastLikeDate', today);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                alert("이미 좋아요를 누른 게시물입니다.");
-                            }
-                        });
-                    }
-
-                    var likeButton = document.getElementById('likeButton');
-                    if (likeButton) {
-                        likeButton.addEventListener('click', handleLikeButtonClick);
-                    } else {
-                        console.error('좋아요 버튼을 찾을 수 없습니다.');
-                    }
-
-                    // 페이지 로드 시 댓글 목록 불러오기
-                    loadComments();
-                });
-
-                function confirmDelete() {
-                    return confirm("글을 삭제하시겠습니까?");
-                }
-            </script>
-
+            <div class="writephy">
+                <a th:href="@{/mungstory/storywirte}" class="writeBtnAtag">
+                    <button type="button" class="boardwriter">글쓰기</button></a>
+            </div>
+            <div class="writephy">
+                <a class="allthephy" th:href="@{/mungstory(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}">
+                    <button type="button" class="allboard">전체글</button>
+                </a>
+            </div>
         </div>
+
+        <input type="hidden" class="userIdClass2" id="userIdClass2" th:value="${user.Id}" />
+        <input type="hidden" class="userIdClass2" id="userNicknameHidden" th:value="${user.nickname}" />
+        <script type="text/javascript">
+            // JSP에서 서버 변수를 JavaScript 변수로 전달
+                var userNickname = document.getElementById('userNicknameHidden').value;
+                console.log('User Nickname from hidden field:', userNickname);
+        </script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM fully loaded and parsed');
+                console.log('User Nickname:', userNickname); // userNickname 확인
+
+                let isFirstLoad = true; // 처음 실행 여부를 확인하기 위한 변수
+
+                // textarea 요소 선택 및 자동 높이 조절 함수
+                const textarea = document.querySelector('textarea.content');
+
+                function autoResizeTextarea() {
+                    textarea.style.height = 'auto';  // 높이를 초기화
+                    textarea.style.height = textarea.scrollHeight + 'px';  // 내용에 맞게 높이 설정
+                }
+
+                textarea.addEventListener('input', autoResizeTextarea);  // input 이벤트에 함수 연결
+                autoResizeTextarea();  // 페이지 로드 시 초기 설정
+
+                // 댓글 목록 로드 함수
+                function loadComments() {
+                    var seq = document.querySelector("input[name='seq']").value;
+
+                    // 페이지 로드 시 서버로부터 댓글 목록을 가져옴
+                    $.ajax({
+                        url: '/mungstory/comments',
+                        type: 'GET',
+                        data: {
+                            seq: seq
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            response.forEach(function(comment) {
+                                let modifiedText = (comment.regdate !== comment.modified) ? ' (수정됨)' : '';
+                                let deleteButton = '';
+
+                                if (userNickname === comment.nickname) {
+                                    deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>`;
+                                }
+
+                                // 댓글 목록에 추가
+                                $("#commentList").append(
+                                    `<li data-comment-id="${comment.commentId}">
+                                        <span id="commentnickname">${comment.nickname}</span>
+                                        <span id="commentcontent">${comment.commentcontent}</span>
+                                        <span id="commentdate">${comment.regdate}${modifiedText}</span>
+                                        ${deleteButton}
+                                        <hr>
+                                    </li>`
+                                );
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            alert("댓글을 불러오는 데 문제가 발생했습니다.");
+                        }
+                    });
+                }
+
+                // 댓글 삭제 함수 정의
+                window.deleteComment = function(commentId, seq) {
+                    if (!confirm('댓글을 삭제하시겠습니까?')) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/mungstory/commentremove',
+                        type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {
+                            commentId: commentId,
+                            seq: seq
+                        },
+                        success: function(response) {
+                            console.log("댓글 삭제 성공:", response);
+                            $(`li[data-comment-id='${commentId}']`).remove();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("댓글 삭제 실패:", xhr.responseText);
+                            alert("댓글 삭제 중 문제가 발생했습니다.");
+                        }
+                    });
+                }
+
+                // 댓글 제출 함수 정의
+                window.validateAndSubmitComment = function() {
+                    if (isFirstLoad) {
+                        isFirstLoad = false;
+                        return;
+                    }
+
+                    console.log('validateAndSubmitComment called');
+
+                    var content = document.getElementById("boardcontent").value.trim();
+                    if (content === "") {
+                        alert("댓글을 입력해주세요.");
+                        return;
+                    }
+
+                    var seq = document.querySelector("input[name='seq']").value;
+                    var userId = document.getElementById("userIdClass2").value;
+                    userId = parseInt(userId, 10);
+
+                    console.log("User ID:", userId);
+
+                    if (isNaN(userId)) {
+                        console.error("유효하지 않은 사용자 ID입니다.");
+                        alert("유효하지 않은 사용자 ID입니다.");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/mungstory/addcomment',
+                        type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {
+                            seq: seq,
+                            commentcontent: content,
+                            userId: userId
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            var regdate = response.regdate || '등록일 없음';
+                            var modified = response.modified || '수정일 없음';
+                            let modifiedText = (regdate !== modified) ? ' (수정됨)' : '';
+
+                            if (response.commentcount !== undefined && response.nickname !== undefined) {
+                                $("#commentList").append(
+                                    `<li data-comment-id="${response.commentId}">
+                                        <span id="commentnickname">${response.nickname}</span>
+                                        <span id="commentcontent">${content}</span>
+                                        <span id="commentdate">${regdate}${modifiedText}</span>
+
+                                        <button class="commentremoveBtn" data-comment-id="${response.commentId}" data-seq="${response.seq}" onclick="deleteComment(${response.commentId}, ${response.seq})">X</button>
+                                        <hr class="commenthr">
+                                    </li>`
+                                );
+                                $("#boardcontent").val("");
+                                $("#noCommentsMessage").hide();
+                            } else {
+                                console.error('서버 응답에서 commentcount 또는 nickname을 찾을 수 없습니다.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            alert("댓글을 추가하는데 문제가 발생했습니다.");
+                        }
+                    });
+                }
+
+                var commentButton = document.querySelector('.commentreg');
+                if (commentButton) {
+                    commentButton.addEventListener('click', validateAndSubmitComment, { once: true });
+                } else {
+                    console.error('댓글 제출 버튼을 찾을 수 없습니다.');
+                }
+
+                function handleLikeButtonClick(event) {
+                    event.preventDefault();
+
+                    var seq = $(this).attr('data-seq');
+
+                    $.ajax({
+                        url: '/mungstory/like',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ seq: seq }),
+                        success: function(response) {
+                            console.log(response);
+                            if (response.likecount !== undefined) {
+                                $("#likecount").text(response.likecount);
+                            } else {
+                                console.error('서버 응답에서 likecount를 찾을 수 없습니다.');
+                            }
+
+                            var today = new Date().toISOString().split('T')[0];
+                            localStorage.setItem('lastLikeDate', today);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            alert("이미 좋아요를 누른 게시물입니다.");
+                        }
+                    });
+                }
+
+                var likeButton = document.getElementById('likeButton');
+                if (likeButton) {
+                    likeButton.addEventListener('click', handleLikeButtonClick);
+                } else {
+                    console.error('좋아요 버튼을 찾을 수 없습니다.');
+                }
+
+                // 페이지 로드 시 댓글 목록 불러오기
+                loadComments();
+            });
+
+            function confirmDelete() {
+                return confirm("글을 삭제하시겠습니까?");
+            }
+        </script>
+    </div>
     </body>
 </main>

@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung",
                                 "/mungstory","/mungstory/addcomment","/mungstory/storyread", "/mungstory/mungstoryAll", "/",
-                                "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**",
+                                "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**","/mungstory/comments",
                                 "/api/check-duplicate", "/read-csv","/profiles/**" ) // 여기서 /read-csv를 추가합니다
                         .permitAll()
                         .anyRequest().authenticated())
