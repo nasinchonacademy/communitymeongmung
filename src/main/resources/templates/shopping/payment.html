@@ -147,8 +147,10 @@
 
     <div class="container">
         <h1>결제 정보</h1>
-        <form action="/submitorder" method="POST">
+        <!--폼에 히든으로 제품아이디값 가지고 오기 -->
+        <form action="/payment_complete" method="POST">
             <input type="hidden" id="productIdField" name="productId" th:value= "${product.pid}">
+            <input type="hidden" id="totalprice" name="totalprice" th:value="${product.pprice}">
 
             <div class="form-group">
                 <label for="resname">받는 사람 이름</label>
@@ -162,12 +164,12 @@
 
             <div class="form-group">
                 <label>주소</label>
-                <input type="text" id="sample4_postcode" placeholder="우편번호">
+                <input type="text" id="postcode" name="postcode" placeholder="우편번호">
                 <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-                <input type="text" id="sample4_roadAddress" name="roadaddr" placeholder="도로명주소">
-                <input type="text" id="sample4_jibunAddress" name="localaddr" placeholder="지번주소">
-                <span id="guide" style="color:#999;display:none"></span>
-                <input type="text" id="resaddress" name="resaddress" placeholder="상세주소">
+                <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소">
+                <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소">
+                <span id="guide" style="color:#999;display:none"></span><input type="text" id="detailaddress" name="detailaddress" placeholder="상세주소">
+                <input type="text" id="extraaddress" name="extraaddress" placeholder="참고항목">
             </div>
 
             <div class="form-group">
@@ -178,7 +180,7 @@
             <div class="form-group">
 <!--                onclick="requestPay()"-->
 <!--                <a th:href="@{/payment_complete}">-->
-                    <button type="submit">결제하기</button></a>
+                    <button type="submit">결제하기</button>
             </div>
         </form>
     </div>

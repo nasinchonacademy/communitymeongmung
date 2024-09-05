@@ -23,15 +23,15 @@ function sample4_execDaumPostcode() {
             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('sample4_postcode').value = data.zonecode;
-            document.getElementById("sample4_roadAddress").value = roadAddr;
-            document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+            document.getElementById('postcode').value = data.zonecode;
+            document.getElementById("roadaddress").value = roadAddr;
+            document.getElementById("jibunaddress").value = data.jibunAddress;
 
             // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
             if(roadAddr !== ''){
-                document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+                document.getElementById("extraaddress").value = extraRoadAddr;
             } else {
-                document.getElementById("sample4_extraAddress").value = '';
+                document.getElementById("extraaddress").value = '';
             }
 
             var guideTextBox = document.getElementById("guide");

@@ -22,17 +22,25 @@ public class QBuy extends EntityPathBase<Buy> {
 
     public static final QBuy buy = new QBuy("buy");
 
+    public final StringPath detailaddress = createString("detailaddress");
+
+    public final StringPath extraaddress = createString("extraaddress");
+
+    public final StringPath jibunaddress = createString("jibunaddress");
+
     public final NumberPath<Long> orderno = createNumber("orderno", Long.class);
 
-    public final QProduct product;
+    public final NumberPath<Integer> postcode = createNumber("postcode", Integer.class);
 
-    public final StringPath resaddress = createString("resaddress");
+    public final QProduct product;
 
     public final StringPath resname = createString("resname");
 
     public final StringPath resphone = createString("resphone");
 
     public final StringPath resrequirement = createString("resrequirement");
+
+    public final StringPath roadaddress = createString("roadaddress");
 
     public final NumberPath<Integer> totalprice = createNumber("totalprice", Integer.class);
 

@@ -1,40 +1,41 @@
 <div class="signup-container" th:fragment="content">
     <!--        <img src="../static/mainicon.PNG" alt="Mungmung Logo" class="logo">-->
 
+    <div class="signup">
+        <form th:action="@{/signup1}" class="signup-form" method="POST" onsubmit="return validateForm()">
+            <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+            <h2>회원가입</h2>
+            <div class="form-group">
+                <label for="uid">아이디</label>
+                <input type="text" id="uid" name="uid" placeholder="아이디" >
+                <a href="#" class="duplicate-check" onclick="checkDuplicate()">중복확인</a>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" placeholder="비밀번호" >
+            </div>
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" placeholder="이름" >
+            </div>
+            <div class="form-group">
+                <label for="email">이메일 주소</label>
+                <input type="email" id="email" name="email" placeholder="이메일 주소" >
+            </div>
 
-    <form th:action="@{/signup1}" class="login-form" method="POST" onsubmit="return validateForm()">
-        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
-        <h2>회원가입</h2>
-        <div class="form-group">
-            <label for="uid">아이디</label>
-            <input type="text" id="uid" name="uid" placeholder="아이디" >
-            <a href="#" class="duplicate-check" onclick="checkDuplicate()">중복확인</a>
-        </div>
-        <div class="form-group">
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" placeholder="비밀번호" >
-        </div>
-        <div class="form-group">
-            <label for="name">이름</label>
-            <input type="text" id="name" name="name" placeholder="이름" >
-        </div>
-        <div class="form-group">
-            <label for="email">이메일 주소</label>
-            <input type="email" id="email" name="email" placeholder="이메일 주소" >
-        </div>
 
+            <input type="hidden" id="terms1" name="termuse" value="false">
+            <input type="hidden" id="terms2" name="personalinfo" value="false">
+            <input type="hidden" id="terms3" name="marketsns" value="false">
+            <input type="hidden" id="terms4" name="locservice" value="false">
+            <div class="btnWrap">
 
-        <input type="hidden" id="terms1" name="termuse" value="false">
-        <input type="hidden" id="terms2" name="personalinfo" value="false">
-        <input type="hidden" id="terms3" name="marketsns" value="false">
-        <input type="hidden" id="terms4" name="locservice" value="false">
-        <div class="btnWrap">
-        <button type="submit" class="next-btn" >다음</button>
-
-        </div>
-        <!--        <button class="back-btn" onclick="history.back();"><img src="../static/returnback.PNG"></button>-->
-    </form>
-    <button class="back-btn" onclick="history.back();">뒤로가기</button>
+                <button type="submit" class="next-btn" >다음</button>
+            </div>
+            <!--        <button class="back-btn" onclick="history.back();"><img src="../static/returnback.PNG"></button>-->
+        </form>
+        <button class="back-btn" onclick="history.back();">뒤로가기</button>
+    </div>
     <div id="termsModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>

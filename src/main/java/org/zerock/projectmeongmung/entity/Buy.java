@@ -33,13 +33,25 @@ public class Buy {
     @Column(name = "resname")
     private String resname;
 
-    @Column(name = "resaddress")
-    private String resaddress;
-
     @Column(name = "resphone")
     private String resphone;
 
-    @Column(name = "resrequirement")
+    @Column(name = "postcode")
+    private int postcode;
+
+    @Column(name = "roadaddress")
+    private String roadaddress;
+
+    @Column(name = "jibunaddress")
+    private String jibunaddress;
+
+    @Column(name = "detailaddress")
+    private String detailaddress;
+
+    @Column(name = "extraaddress")
+    private String extraaddress;
+
+    @Column(name = "resrequirement" )
     private String resrequirement;
 
     @Column(name = "totalprice")
@@ -50,12 +62,18 @@ public class Buy {
 //    private Timestamp orderDate;
 
     @Builder
-    public Buy(User user, Product product, String resname, String resaddress, String resphone, String resrequirement, int totalprice) {
+    public Buy(User user, Product product, String resname, String resphone,
+               int postcode, String roadaddress, String jibunaddress, String detailaddress, String extraaddress,
+               String resrequirement, int totalprice) {
         this.user = user;
         this.product = product;
         this.resname = resname;
-        this.resaddress = resaddress;
         this.resphone = resphone;
+        this.postcode = postcode;
+        this.roadaddress = roadaddress;
+        this.jibunaddress = jibunaddress;
+        this.detailaddress = detailaddress;
+        this.extraaddress = extraaddress;
         this.resrequirement = resrequirement;
         this.totalprice = totalprice;
 //        this.orderDate = orderDate;  // null일 경우 현재 시간으로 설정
