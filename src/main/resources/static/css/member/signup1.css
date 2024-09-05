@@ -14,12 +14,19 @@ h2 {
     padding-right: 430px;
 }
 
-.login-form {
+.signup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     min-width: 1000px;
     margin-bottom: -44.5px;
+    margin-top: 5rem;
 }
 .form-group {
     text-align: left;
@@ -76,9 +83,10 @@ h2 {
     cursor: pointer;
     width:  275px;
     font-size: 16px;
-    float: right;
     margin-top: 30px;
-    margin-left: 280px;
+    margin-left: 19rem;
+    z-index: 10;
+    position: relative
 
 }
 .signup-container input[type="submit"]:hover {
@@ -93,9 +101,11 @@ h2 {
     border-radius: 15px;
     cursor: pointer;
     width: 275px;
+    height: 49px;
     font-size: 16px;
-    margin-left: 810px;
-    margin-bottom: 100px;
+    margin-bottom: 10rem;
+    margin-right: 18rem;
+    margin-top: -0.2rem;
 }
 
 .btnWrap{
@@ -105,7 +115,7 @@ h2 {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
