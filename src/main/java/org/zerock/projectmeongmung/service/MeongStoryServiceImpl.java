@@ -219,4 +219,12 @@ public class MeongStoryServiceImpl implements MeongStoryService {
         }
     }
 
+    @Override
+    public void incrementViewCount(long seq) {
+        MeongStory story = meongStoryRepository.findById(seq)
+                .orElseThrow(() -> new RuntimeException("Story not found with seq: " + seq));
+        story.setViewcount(story.getViewcount() + 1); // viewcount 증가
+        meongStoryRepository.save(story); // 업데이트
+    }
+
 }

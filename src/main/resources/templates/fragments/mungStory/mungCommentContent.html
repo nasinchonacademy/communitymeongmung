@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+<main class="commentContent" th:fragment="commentContent" id="commentContent">
+    <div>
+        <ul id="commentList">
+            <li th:each="comment : ${commentDtoList}">
+                <form>
+                <!-- 댓글 ID를 숨긴 input 태그로 전송 -->
+                <input type="hidden" name="commentId" th:value="${comment.Id}">
+                <input type="hidden" name="seq" th:value="${comment.seq}">
+                <!--<button type="submit" class="btn btn-danger removeBtn">댓글 삭제</button>-->
+                </form>
+
+            </li>
+        </ul>
+        <p th:if="${#lists.isEmpty(commentDtoList)}">작성된 댓글이 없습니다.</p>
+    </div>
+
+    <div class="commentButton">
+            <input type="hidden" name="seq" value="${dto.seq}">
+            <input type="hidden" name="userId" value="${userId}"> <!-- 사용자 ID 추가 -->
+            <div>
+                <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
+                <button type="button" class="commentreg" onclick="validateAndSubmitComment()">등록</button>
+            </div>
+    </div>
+</main>
+</body>
+</html>

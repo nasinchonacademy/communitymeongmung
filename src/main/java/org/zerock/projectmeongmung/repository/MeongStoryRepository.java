@@ -37,6 +37,8 @@ public interface MeongStoryRepository extends JpaRepository<MeongStory, Long>, Q
     @Query("SELECT m FROM MeongStory m WHERE m.category = 'Category2' AND (m.title LIKE CONCAT('%', :keyword, '%') OR m.content LIKE CONCAT('%', :keyword, '%'))")
     Page<MeongStory> searchDailyItemsByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
+
+
 /*    @Query("SELECT m FROM MeongStory m WHERE (m.title LIKE %:keyword% OR m.content LIKE %:keyword%  LIKE %:keyword%) AND m.category = :category")*/
 
     /**/

@@ -13,13 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.projectmeongmung.dto.LikeRequest;
-import org.zerock.projectmeongmung.dto.MeongStoryDTO;
-import org.zerock.projectmeongmung.dto.PageRequestDTO;
-import org.zerock.projectmeongmung.dto.PageResultDTO;
+import org.zerock.projectmeongmung.dto.*;
 import org.zerock.projectmeongmung.entity.MeongStory;
+import org.zerock.projectmeongmung.entity.StoryComment;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
+import org.zerock.projectmeongmung.repository.StoryCommentRepository;
+import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.service.*;
 
 import java.io.IOException;
@@ -27,9 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/mungstory")
@@ -42,10 +42,14 @@ public class MungStoryController {
     private UserDetailService userDetailService;
 
     private final MeongStoryService service;
+    private final MeongStoryCommentService serviceC;
     private final MeongStoryService meongStoryService;
+    private final MeongStoryService getCommentsByStorySeq;
     private final MeongStoryRepository meongStoryRepository;
     private final StoryLikeService storyLikeService;
+    private final UserRepository userRepository;
     private final FileController fileController;
+    private final StoryCommentRepository storyCommentRepository;
 
 
     // 기본적으로 초기 데이터를 로드하여 전달
@@ -212,21 +216,39 @@ public class MungStoryController {
     }
 
     @GetMapping("/storyread")
-    public String storylistread(long seq,
-                                @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model,
-                                @RequestParam("current") int current
-){
+    public String storylistread(@RequestParam("seq") long seq,
+                                @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
+                                Model model,
+                                @RequestParam("current") int current,
+                                RedirectAttributes redirectAttributes) {
 
-        log.info(seq);
+        // 조회수 증가
+        service.incrementViewCount(seq);
 
-        MeongStoryDTO dto= service.read(seq);
+        MeongStoryDTO dto = service.read(seq);
+
+        // 현재 로그인한 사용자 닉네임을 model에 추가
+        User user = (User) model.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("userNickname", user.getNickname());
+        } else {
+            model.addAttribute("userNickname", "Guest");
+        }
 
         model.addAttribute("dto", dto);
-        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
+        model.addAttribute("current", current);
+
+        // 댓글 목록 로드
+        List<StoryCommentDto> commentDtoList = serviceC.getCommentsByStorySeq(seq);
+        if (commentDtoList == null || commentDtoList.isEmpty()) {
+            model.addAttribute("error", "No comments found for this story");
+        } else {
+            model.addAttribute("commentDtoList", commentDtoList);
+        }
 
         return "mungStoryHtml/storyread";
-
     }
+
 
 
     @GetMapping("/storyedit") //위에 modify는 get방식으로 화면을 띄울때만 사용 post방식을 이용하여 데이터를 넘기겠다
@@ -312,7 +334,8 @@ public class MungStoryController {
 
 
     @PostMapping("/remove")
-    public String remove(long seq, RedirectAttributes redirectAttributes,
+    public String remove(long seq,
+                         RedirectAttributes redirectAttributes,
                          Model model,
                          @RequestParam("current") int current){
         log.info("seq: " + seq);
@@ -324,4 +347,111 @@ public class MungStoryController {
 
         return "redirect:/mungstory";
     }
+
+    // 댓글을 읽어오는 메서드
+    @GetMapping("/read")
+    public String commentonlyread(Model model,
+                                  @RequestParam("seq") Long seq,
+                                  RedirectAttributes redirectAttributes) {
+        log.info("Reading comment for story seq: " + seq);
+
+        return "fragmants/mungStory/mungCommentContent"; // 이 경로에 맞는 템플릿이 있는지 확인하세요.
+    }
+
+    @GetMapping("/comments")
+    public ResponseEntity<List<Map<String, Object>>> getComments(@RequestParam("seq") Long seq) {
+        List<StoryComment> comments = storyCommentRepository.findByStorySeq(seq);
+
+        // 날짜 포맷터 생성 (MM/dd/HH/mm/ss 형식)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+
+        List<Map<String, Object>> commentDataList = comments.stream().map(comment -> {
+            Map<String, Object> commentData = new HashMap<>();
+            commentData.put("commentId", comment.getCommentid());  // 댓글 ID 추가
+            commentData.put("seq", seq);  // 게시글 ID 추가
+            commentData.put("nickname", comment.getUser().getNickname());
+            commentData.put("commentcontent", comment.getCommentcontent());
+
+            // regdate와 modified 날짜를 MM/dd/HH/mm/ss 형식으로 포맷
+            String regdate = comment.getRegdate().format(formatter);  // 등록일 포맷
+            String modified = comment.getModified() != null
+                    ? comment.getModified().format(formatter)
+                    : "수정되지 않음";  // 수정일 포맷 (null 처리)
+
+            commentData.put("regdate", regdate);  // 포맷된 등록일
+            commentData.put("modified", modified);  // 포맷된 수정일
+
+            return commentData;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(commentDataList);
+    }
+
+
+
+    @PostMapping("/addcomment")
+    public ResponseEntity<Map<String, Object>> addComment(@RequestParam("seq") Long seq,
+                                                          @RequestParam("commentcontent") String commentContent,
+                                                          @RequestParam("userId") Long userId) {
+
+        log.info("Adding comment to story seq: " + seq);
+
+        MeongStory story = meongStoryRepository.findById(seq).orElse(null);
+
+        if (story == null) {
+            log.error("Story not found with seq: " + seq);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Story not found"));
+        }
+
+        // 댓글 생성 및 저장
+        StoryComment storyComment = StoryComment.builder()
+                .commentcontent(commentContent)
+                .user(userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId)))
+                .story(story)
+                .build();
+
+        storyCommentRepository.save(storyComment); // 댓글 저장
+
+        // 날짜 포맷팅 설정
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+
+        // 댓글 저장 후 응답으로 날짜 정보 포함
+        return ResponseEntity.ok(Map.of(
+                "commentcount", story.getCommentcount(),
+                "nickname", storyComment.getUser().getNickname(),
+                "regdate", storyComment.getRegdate().format(formatter),  // 포맷팅된 등록일
+                "modified", storyComment.getModified() != null ? storyComment.getModified().format(formatter) : "수정되지 않음"  // 포맷팅된 수정일
+        ));
+    }
+
+    @PostMapping("/commentremove")
+    public ResponseEntity<Map<String, Object>> removeComment(
+            @RequestParam("commentId") Long commentId,
+            @RequestParam("seq") Long seq) {
+
+        log.info("Deleting comment with ID: " + commentId + " for post seq: " + seq);
+
+        try {
+            // 댓글 삭제 로직 호출
+            serviceC.removeComment(commentId);
+
+            // 성공적으로 처리되었음을 응답
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "댓글이 삭제되었습니다.");
+            response.put("status", "success");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("댓글 삭제 실패", e);
+
+            // 에러 발생 시 처리
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "댓글 삭제 중 문제가 발생했습니다.");
+            response.put("status", "error");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "storycomment")
@@ -13,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class StoryComment {
+public class StoryComment extends BaseEntity1 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +22,12 @@ public class StoryComment {
     @Column(name = "commentcontent", nullable = false, length = 2500)
     private String commentcontent;
 
-    @Column(name = "commentregitime", nullable = false)
-    private LocalDateTime commentregitime;
-
-    @Column(name = "commentupdate", nullable = false)
-    private LocalDateTime commentupdate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberid", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seq", nullable = false)  // 외래 키 설정
-    private MeongStory story;  // `MeongStory` 엔티티와의 관계 설정
+    @JoinColumn(name = "seq", nullable = false)
+    private MeongStory story;
+
 }

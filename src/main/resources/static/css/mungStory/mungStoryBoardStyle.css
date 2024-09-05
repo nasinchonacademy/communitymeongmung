@@ -12,6 +12,11 @@
     margin-right: 15%;
 }*/
 
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
 .search-bar {
     display: flex;
     justify-content: center;
@@ -143,4 +148,27 @@ table th {
     color: #00c292;
     background-color: #f8f9fa;
     border-color: #dee2e6;
+}
+
+.writeBtnAtag {
+    display: inline-block;
+    background-color: #6bc7a0;
+    width: 70px;
+    height: 40px;
+    border-radius: 3px;
+    text-decoration: none;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+}
+
+.writeBtn {
+    margin-top: 6px;
+    margin-left: 875px;
+    margin-bottom: 18px;
+}
+
+.writeBtnAtag:hover {
+    background-color: #59a585; /* 마우스를 올려도 색이 변하지 않도록 설정 */
+    color: white; /* 텍스트 색상도 그대로 유지 */
 }
