@@ -77,11 +77,12 @@
     <h5>배송 정보</h5>
     <div>
         <div class="payProduct">
-            상품명 : 행소행댕 멸균 강아지우유 10개 100ml<br>
-            받는 사람 이름 : 강유나<br>
-            연락처 : 01080202057<br>
-            배송지 :서울특별시 공항대로 24가길 현대아이파크<br>
-            요청사항 : 없음
+            상품명 : <span th:text="${buy.product.pname}"></span><br>
+            받는 사람 이름 : <span th:text="${buy.resname}"></span><br>
+            연락처 : <span th:text="${buy.resphone}"></span><br>
+            배송지 : <span th:text="${buy.roadaddress} + ' ' + ${buy.detailaddress}"></span><br>
+            요청사항 : <span th:text="${buy.resrequirement}"></span></br>
+            총 결제 금액 : <span th:text="${buy.totalprice}"></span>원
         </div>
     </div>
 </div>

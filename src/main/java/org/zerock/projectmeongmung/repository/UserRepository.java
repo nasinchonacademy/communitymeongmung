@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUid(String uid);//uid로 사용자 정보를 가져옴
     Optional<User> findByNickname(String nickname);
+    Optional<User> findByEmail(String email);
 
     @Modifying
     @Transactional

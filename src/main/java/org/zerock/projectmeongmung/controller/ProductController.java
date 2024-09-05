@@ -36,13 +36,31 @@ public class ProductController {
         return "product/productMain";
     }
 
-    @GetMapping("/creatProduct")
-    public String creatProductForm() {
+    // 상품 관리자 페이지 (상품 등록, 목록보기, 수정, 삭제)
+    @GetMapping("/getproductlist")
+    public String getProductList(Model model) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        return "product/getproductList";
+    }
+
+    // 상품 등록, 수정 관리자 페이지
+    @GetMapping("/createProduct")
+    public String createProductForm(@RequestParam(value = "productId", required = false) Long productId, Model model) {
+        if (productId != null) {
+            // productId가 있는 경우, 해당 상품을 조회해서 모델에 추가
+            ProductDTO productDTO = productService.getProductById(productId);
+            model.addAttribute("product", productDTO);  // 모델에 상품 정보를 추가
+        } else {
+            // productId가 없는 경우, 새로운 상품 등록 폼을 보여줌
+            model.addAttribute("product", new ProductDTO());  // 빈 DTO를 모델에 추가
+        }
         return "product/create_product";
     }
 
+
     // 상품 올리기
-    @PostMapping("/creatProduct")
+    @PostMapping("/createProduct")
     public String creatProduct(
 
             @RequestParam("productFile") MultipartFile productFile,
@@ -63,10 +81,10 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PostMapping("/upadateProduct")
+    @PostMapping("/updateProduct")
     public String updateProduct(
             @RequestParam("productId") Long productId,
-            @RequestParam("productFile") MultipartFile productFile,
+            @RequestParam(value = "productFile", required = false) MultipartFile productFile,
             @RequestParam("pname") String pname,
             @RequestParam("pprice") int pprice,
             @RequestParam("pcategory") String pcategory,
@@ -74,8 +92,18 @@ public class ProductController {
             @RequestParam("pcompany") String pcompany,
             @RequestParam("pstock") int pstock) throws IOException {
 
+        // 기존 Product를 데이터베이스에서 조회
+        Product existingProduct = productService.getProductById(productId).toEntity();
+
         // 파일올리기
-        String productphoto = fileService.saveFile(productFile);
+        String productphoto;
+        if (productFile != null && !productFile.isEmpty()) {
+            // 새로운 파일을 업로드하는 경우
+            productphoto = fileService.saveFile(productFile);
+        } else {
+            // 파일을 업로드하지 않은 경우 기존 파일을 유지
+            productphoto = existingProduct.getProductphoto();
+        }
 
         productService.updateProduct(productId, productphoto, pname, pprice, pcategory, pdescription, pcompany, pstock);
         return "redirect:/productMain";

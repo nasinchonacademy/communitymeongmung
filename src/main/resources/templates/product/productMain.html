@@ -231,6 +231,9 @@
 
                 // 구매 및 장바구니 버튼의 동작을 설정
                 buyButton.onclick = function() {
+                    // 제품 ID를 결제 페이지 폼에 전달
+                    //document.getElementById("productIdField").value = productId;
+
                     window.location.href = `/payment?productId=${productId}`;
                 };
 
@@ -246,6 +249,7 @@
             }
         });
     }
+
 
 
 
