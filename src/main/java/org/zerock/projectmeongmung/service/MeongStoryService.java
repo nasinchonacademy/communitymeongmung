@@ -43,5 +43,6 @@ public interface MeongStoryService {
 
     int increaseLikeCount(Long seq);
 
+    void incrementViewCount(long seq);
 
 }

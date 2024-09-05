@@ -216,12 +216,14 @@ public class MungStoryController {
     }
 
     @GetMapping("/storyread")
-    public String storylistread(long seq,
+    public String storylistread(@RequestParam("seq") long seq,
                                 @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                                 Model model,
                                 @RequestParam("current") int current,
                                 RedirectAttributes redirectAttributes) {
-        log.info("Story sequence: {}", seq);
+
+        // 조회수 증가
+        service.incrementViewCount(seq);
 
         MeongStoryDTO dto = service.read(seq);
 
@@ -236,8 +238,8 @@ public class MungStoryController {
         model.addAttribute("dto", dto);
         model.addAttribute("current", current);
 
+        // 댓글 목록 로드
         List<StoryCommentDto> commentDtoList = serviceC.getCommentsByStorySeq(seq);
-
         if (commentDtoList == null || commentDtoList.isEmpty()) {
             model.addAttribute("error", "No comments found for this story");
         } else {

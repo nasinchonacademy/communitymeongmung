@@ -9,6 +9,8 @@
             <hr>
             <div class="form-group">
                 <input type="text" class="title" name="title" th:value="${dto.title}" readonly>
+                <input type="text" class="viewcount" name="viewcount" th:value="'조회 ' + ${dto.viewcount}" readonly>
+                <input type="text" class="likecountTitle" name="viewcount" th:value="'좋아요 ' + ${dto.likecount}" readonly>
             </div>
 
             <div class="form-group">
