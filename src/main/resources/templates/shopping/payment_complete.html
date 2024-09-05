@@ -77,6 +77,7 @@
     <h5>배송 정보</h5>
     <div>
         <div class="payProduct">
+            주문 번호: <span th:text="${buy.orderno}"></span></br>
             상품명 : <span th:text="${buy.product.pname}"></span><br>
             받는 사람 이름 : <span th:text="${buy.resname}"></span><br>
             연락처 : <span th:text="${buy.resphone}"></span><br>
@@ -90,7 +91,9 @@
 <div class="container">
     <h5>결제 포인트 정보</h5>
     <div>
-        <div class="point">현재 보유 중인 젤리: 0 개</div>
+        <div class="point">
+            현재 남은 젤리 : <span th:text="${jellyPoints}"></span> 개<br>
+        </div>
     </div>
 </div>
 

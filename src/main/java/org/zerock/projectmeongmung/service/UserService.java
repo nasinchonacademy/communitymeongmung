@@ -85,4 +85,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    // 사용자 정보 저장 메서드 추가
+    public User save(User user) {
+        return userRepository.save(user); // 사용자 정보 저장
+    }
+
 }

@@ -140,8 +140,9 @@
     <div class="container">
         <h5>결제 포인트 정보</h5>
         <div>
-            <div class="point">현재 보유 중인 젤리: 1700 개<br>
-                젤리 차감 후 결제 금액: 12,100원</div>
+            <div class="point">
+                현재 보유 중인 젤리: <span th:text="${jellyPoints}"> 개<br>
+                젤리 차감 후 결제 금액: <span th:text="${finalPrice}"> 원</div>
         </div>
     </div>
 
