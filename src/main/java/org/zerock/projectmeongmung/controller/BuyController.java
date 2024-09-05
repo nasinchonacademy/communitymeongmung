@@ -88,15 +88,25 @@ public class BuyController {
         int remainingPrice = Math.max(0, totalprice - jellyPoints);
 
         // 결제 금액 차감 후 젤리 포인트 업데이트
-        user.subtractJellyPoints(totalprice); // 젤리 포인트 차감
+        if (jellyPoints >= totalprice) {
+            // 젤리로 결제 가능한 경우
+            user.subtractJellyPoints(totalprice); // 젤리 포인트 차감
+            totalprice = 0; // 남은 결제 금액 0으로 설정
+        } else {
+            // 젤리가 부족한 경우 남은 금액만 차감
+            user.subtractJellyPoints(jellyPoints);
+            totalprice = remainingPrice;
+        }
+
+        // 젤리 포인트 업데이트 후 저장
         userService.save(user); // 업데이트된 사용자 정보 저장
 
         // 주문 생성 후 반환되는 주문 번호
         Buy buy = buyService.createBuy(productId, user, resname, resphone, postcode,
                roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
 
-        // 주문 정보 모델에 추가
-        // model.addAttribute("buy", buy);
+        // 남은 젤리 포인트를 모델에 추가하여 결제 완료 페이지로 전달
+        model.addAttribute("jellyPoints", user.getJellypoint()); // 남은 젤리 포인트
 
         // return "redirect:/payment_complete_success?productId=" + productId;
         return "redirect:/payment_complete_success?orderNo=" + buy.getOrderno();
@@ -112,9 +122,15 @@ public class BuyController {
 //    }
 
     @GetMapping("/payment_complete_success")
-    public String paymentCompleteSuccess(@RequestParam("orderNo") Long orderNo, Model model) {
+    public String paymentCompleteSuccess(@RequestParam("orderNo") Long orderNo, Authentication authentication, Model model) {
         Buy buy = buyService.getOrderById(orderNo); // 주문 정보 가져오기
+
+        // 현재 로그인한 사용자 정보 가져오기
+        User user = (User) authentication.getPrincipal();
+
         model.addAttribute("buy", buy); // 주문 정보 모델에 추가
+        model.addAttribute("jellyPoints", user.getJellypoint()); // 남은 젤리 포인트 추가
+
         return "shopping/payment_complete";  // 결제 완료 페이지로 렌더링
     }
 
