@@ -1,10 +1,13 @@
 <div class="rec" th:fragment="sosNav">
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <div id="bgcor1">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <!-- 라디오 버튼 -->
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                   th:checked="${current == 'radio1'}">
             <label class="btn btn-outline-light" for="btnradio1">동물병원</label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
+                   th:checked="${current == 'radio2'}">
             <label class="btn btn-outline-light" for="btnradio2">SOS 상담</label>
         </div>
     </div>

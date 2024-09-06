@@ -18,6 +18,8 @@ public interface MeongStoryRepository extends JpaRepository<MeongStory, Long>, Q
 
     List<MeongStory> findByUserId(Long userId);
     Page<MeongStory> findByCategory(String category, Pageable pageable);
+    List<MeongStory> findTop5ByOrderByLikecountDesc();
+
 
     @Modifying
     @Transactional

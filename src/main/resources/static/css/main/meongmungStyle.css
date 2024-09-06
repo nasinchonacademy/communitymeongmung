@@ -7,6 +7,8 @@
 
 .content h6 {
     margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .content section{
@@ -46,4 +48,201 @@
 
 .block1-3 {
     height: 250px;
+}
+
+
+
+.product {
+    position: relative;
+    display: inline-block;
+    overflow: hidden; /* 이미지 영역 밖은 보이지 않게 설정 */
+}
+
+.product-image {
+    width: 300px;
+}
+
+.description {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    transform: translateY(100%);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    opacity: 0;
+    text-align: center;
+    /* align-items: center; */
+    /* justify-content: center; */
+    line-height: 15px;
+}
+
+/* 마우스를 이미지에 올리면 설명이 위로 올라오게 하기 */
+.product:hover .description {
+    transform: translateY(0); /* 원래 위치로 이동 */
+    opacity: 1; /* 투명도 변경 */
+}
+
+.product-image {
+    width: 195px;
+    height: 195px;
+}
+
+.description > p {
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+.description > h3 {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+
+/*카드*/
+
+/* 구글 폰트 추가 */
+                @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+                body {
+                    font-family: 'Roboto', sans-serif;
+                }
+
+                .cate {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 30px;
+                    /*display: flex;*/
+                    /*flex-wrap: wrap;*/
+                    /*min-height: 100vh;*/
+                    /*padding: 30px;*/
+                    /*margin: 0 auto;*/
+                    /*width: 1000px;*/
+                }
+
+                .game-card {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 250px;
+                    margin: 20px;
+                    text-align: center;
+                    text-decoration: none;
+                    color: #000;
+                }
+
+                /*a:link {*/
+                /*    color: #ffffff;*/
+                /*}*/
+
+                .container {
+                    width: 220px;
+                    height: 310px;
+                    transition: all 0.1s;
+                    position: relative;
+                    margin-bottom: 10px;
+                }
+
+                .overlay {
+                    position: absolute;
+                    width: 220px;
+                    height: 310px;
+                    background: linear-gradient(105deg, transparent 40%,
+                    rgba(255, 219, 112, 0.8) 45%,
+                    rgba(132, 50, 255 ,0.6) 50%, transparent 54%);
+                    filter: brightness(1.1) opacity(0.8);
+                    mix-blend-mode: color-dodge;
+                    background-size: 150% 150%;
+                    background-position: 100%;
+                    transition: all 0.1s;
+                }
+
+                /*a {*/
+                /*    text-decoration: none;*/
+                /*}*/
+
+                /*.cate a {*/
+                /*    display: flex;*/
+                /*    align-items: center;*/
+                /*    width: 250px; height: 330px;*/
+                /*    !*background: linear-gradient(181deg, rgba(228, 245, 253, 0.54) 0%, rgba(233, 255, 227, 0.66) 100%);*!*/
+                /*    border-radius: 16px;*/
+                /*    border: 2px solid #def3db;*/
+                /*    padding: 16px 24px;*/
+                /*    margin: 20px auto;*/
+                /*    transition: all 0.3s;*/
+                /*    text-align: center;*/
+                /*}*/
+
+                /*.card-img-top {*/
+                /*    width: 100px;*/
+                /*    height: 120px;*/
+                /*}*/
+
+                .card {
+                    width: 220px;
+                    height: 310px;
+                    background-size: cover;
+                    border-radius: 16px;
+                }
+
+                .game-card span {
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-top: 10px;
+                }
+
+
+/*메뉴1*/
+
+/* 전체 컨테이너를 가로로 정렬 */
+.container {
+    display: flex;
+    justify-content: space-between; /* 텍스트와 이미지를 좌우로 배치 */
+    align-items: flex-start; /* 텍스트와 이미지를 위쪽에 맞춤 */
+}
+
+/* 텍스트 블록을 세로로 정렬 */
+.text-block {
+    margin-right: 20px; /* 이미지와의 간격 */
+    max-width: 300px; /* 텍스트 블록의 너비 제한 */
+}
+
+/* 각 문단의 스타일 */
+.maintitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.maincontent {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.maintitle2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* 이미지 스타일 */
+.image-block img {
+    max-width: 500px;
+    height: auto;
+}
+
+.container2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-block {
+    margin-right: 20px;
+    margin-top: 130px;
+    max-width: 300px;
+    /* display: flex; */
+    /* vertical-align: middle; */
 }

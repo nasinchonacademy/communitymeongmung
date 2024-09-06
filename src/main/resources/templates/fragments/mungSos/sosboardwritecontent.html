@@ -1,0 +1,59 @@
+<main class="mainContent" th:fragment="mainContent" id="mainContent">
+    <div id="content">
+        <h1 class="mt-4">GuestBook Register Page</h1>
+        <form th:action="@{/sosboardwrite}" th:method="post" enctype="multipart/form-data" th:onsubmit="return validateForm()">
+
+            <div class="form-group">
+                <label>Writer</label>
+                <input type="text" class="textarea1" name="nickname" th:placeholder="${user.nickname}" th:value="${user.nickname}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="textarea" name="title" id="title" placeholder="40byte 입력 가능">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea class="textarea" rows="5" name="content" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="file">Attach Photo</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept="image/*">
+            </div>
+
+            <div>
+                <input type="hidden" name="likecount" value="0">
+                <input type="hidden" name="commentcount" value="0">
+                <input type="hidden" name="viewcount" value="0">
+                <input type="hidden" name="uid" th:value="${user.uid}" >
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <script>
+            function validateForm() {
+                var title = document.getElementById("title").value.trim();
+                var boardcontent = document.getElementById("boardcontent").value.trim();
+
+                // 타이틀 검증
+                if (title === "") {
+                    alert("제목을 입력해주세요.");
+                    document.getElementById("title").focus();  // 타이틀 필드에 포커스
+                    return false;  // 폼 제출 방지
+                }
+
+                // 컨텐츠 검증
+                if (boardcontent === "") {
+                    alert("내용를 입력해주세요.");
+                    document.getElementById("boardcontent").focus();  // 컨텐츠 필드에 포커스
+                    return false;  // 폼 제출 방지
+                }
+
+                return true;  // 폼 제출 허용
+            }
+        </script>
+
+    </div>
+</main>

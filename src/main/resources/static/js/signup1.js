@@ -40,7 +40,7 @@ let isUidChecked = false;
                 return false;
             }
 
-            if (password.length < 1 || uid.length > 20) {
+            if (password.length < 1 || password.length > 20) {
                 alert('비밀번호는 8자 이상 20자 이하이어야 합니다.');
                 return false;
             }

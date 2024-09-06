@@ -58,24 +58,6 @@ public class MeongStoryRepositoryTest {
     }
 
 
-    @Test
-    public void testQuery1() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("seq").descending());
-
-        QMeongStory qMeongStory = QMeongStory.meongStory;
-
-        String keyword = "1";
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        BooleanExpression expression = qMeongStory.title.contains(keyword);
-
-        builder.and(expression);
-
-        Page<MeongStory> result = meongStoryRepository.findAll(builder, pageable);
-
-        result.stream().forEach(meongStory -> System.out.println("페이지 : " + meongStory));
-    }
 
     @Test
     public void testCommentDummies(){

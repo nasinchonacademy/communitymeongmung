@@ -69,6 +69,9 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private int jellypoint;
 
+    @Column(name = "role", nullable = false)
+    private boolean admin = false;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "regdate", nullable = false, updatable = false)
     @CreatedDate
@@ -110,6 +113,7 @@ public class User implements UserDetails {
         this.jellypoint = jellypoint;
         this.personalinfo = personalinfo;
         this.regDate = new Date();
+        this.admin = false;
     }
 
 

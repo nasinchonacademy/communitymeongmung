@@ -41,7 +41,7 @@ public class MyPageController {
     @GetMapping("/mypage")
     public String getMyPage(Authentication authentication, Model model) {
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
 
         // 좋아요한 스토리 가져오기
         List<MeongStory> likedStories = myPageService.getLikedStories(user);
@@ -94,7 +94,7 @@ public class MyPageController {
     @GetMapping("/mypageedit")
     public String showEditPage(Model model,Authentication authentication) {
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
         return "mypage/mypage_edit";
     }
@@ -113,7 +113,7 @@ public class MyPageController {
 
         // 기존 사용자 정보를 불러오기
         String username = authentication.getName();
-        User  existingUser = userDetailService.loadUserByUsername(username);
+        User  existingUser = userDetailService.findUserByUid(username);
 
         // 프로필 사진을 파일로 저장할 경우에만 처리
         String profilePhotoPath = existingUser.getProfilePhoto();
@@ -155,7 +155,7 @@ public class MyPageController {
     @GetMapping("/mypagejellylist")
     public String showjellylistPage(Model model,Authentication authentication) {
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
 
         List<GamePoints> gamePoints = gameService.getGamePoints(user);
         model.addAttribute("gamePoints", gamePoints);
@@ -173,7 +173,7 @@ public class MyPageController {
                                     PageRequestDTO pageRequestDTO) {
 
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
 
         pageRequestDTO.setPage(page);
         pageRequestDTO.setSize(size);
@@ -197,7 +197,7 @@ public class MyPageController {
     @GetMapping("/mypagelikedlist")
     public String showLikedlistPage(Model model,Authentication authentication) {
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
 
         List<MeongStory> likedStories = myPageService.getLikedStories(user);
         model.addAttribute("likedStories", likedStories);;

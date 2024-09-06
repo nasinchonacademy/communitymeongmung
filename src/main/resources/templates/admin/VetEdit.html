@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수의사 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>수의사 정보 수정</h2>
+    <form th:action="@{/admin/vet/edit/{vetid}(vetid=${vetDTO.vetid})}" th:object="${vetDTO}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="vatname">수의사 이름</label>
+            <input type="text" id="vatname" th:field="*{vetname}" placeholder="수의사 이름" required>
+        </div>
+
+        <div class="form-group">
+            <label for="animalhospitlename">동물 병원 이름</label>
+            <input type="text" id="animalhospitlename" th:field="*{animalhospitlename}" placeholder="동물 병원 이름" required>
+        </div>
+        <div class="form-group">
+            <label for="description">소개:</label>
+            <!-- description 값을 textarea에서 보여주고 수정할 수 있도록 -->
+            <textarea th:text="${descriptionText}" name="description" class="form-control" rows="10" id="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="registerdate">등록 날짜</label>
+            <input type="date" id="registerdate" th:field="*{registerdate}" placeholder="YYYY-MM-DD" required>
+        </div>
+
+        <div class="form-group">
+            <label for="withdrawaldate">탈퇴 날짜</label>
+            <input type="date" id="withdrawaldate" th:field="*{withdrawaldate}" placeholder="YYYY-MM-DD" required>
+        </div>
+
+        <div class="form-group">
+            <label for="profilePhoto">프로필 사진 (변경 시 선택)</label>
+            <input type="file" id="profilePhoto" name="profilePhoto">
+            <div th:if="${vetDTO.profilePhotoPath}">
+                <p>현재 프로필 사진:</p>
+                <img th:src="@{/profiles/{fileName}(fileName=${vetDTO.profilePhotoPath})}" alt="Profile Photo" width="100">
+            </div>
+        </div>
+
+        <div>
+            <label for="visibility">공개 여부</label>
+            <select id="visibility" name="visibility" th:value="${vetDTO.visibility}">
+                <option value="true">공개</option>
+                <option value="false">비공개</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">수정하기</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

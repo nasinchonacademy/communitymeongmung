@@ -161,7 +161,7 @@ public class MungStoryController {
     @GetMapping("/storywirte")
     public String storywirte(Model model,Authentication authentication) {
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
         return "mungStoryHtml/storywirte";
     }
@@ -277,7 +277,7 @@ public class MungStoryController {
 
 
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
 
         log.info("post modify...");

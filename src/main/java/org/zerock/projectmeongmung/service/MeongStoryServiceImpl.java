@@ -14,8 +14,10 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -225,6 +227,12 @@ public class MeongStoryServiceImpl implements MeongStoryService {
                 .orElseThrow(() -> new RuntimeException("Story not found with seq: " + seq));
         story.setViewcount(story.getViewcount() + 1); // viewcount 증가
         meongStoryRepository.save(story); // 업데이트
+    }
+
+    @Override
+    public List<MeongStoryDTO> getTop5StoriesByLikeCount() {
+        List<MeongStory> topStories = meongStoryRepository.findTop5ByOrderByLikecountDesc();
+        return topStories.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
 }
