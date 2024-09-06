@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "sosboard")
@@ -48,6 +49,11 @@ public class SOSboard {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date deldate;
+
+    @OneToMany(mappedBy = "sosboard", cascade = CascadeType.ALL)
+    private Set<SOSboardcomment> comments;  // 게시물에 달린 댓글들
+
+
 
     @PrePersist
     protected void onCreate() {

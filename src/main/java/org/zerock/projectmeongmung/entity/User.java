@@ -93,6 +93,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<SOSboard> sosBoards;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<SOSboardcomment> comments;  // 유저가 작성한 댓글
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SOSboardlikecount> soslikes;  // SOSboardlikecount와의 관계
+
 
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,

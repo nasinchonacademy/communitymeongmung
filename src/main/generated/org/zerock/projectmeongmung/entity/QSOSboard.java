@@ -24,6 +24,8 @@ public class QSOSboard extends EntityPathBase<SOSboard> {
 
     public final NumberPath<Integer> commentcount = createNumber("commentcount", Integer.class);
 
+    public final SetPath<SOSboardcomment, QSOSboardcomment> comments = this.<SOSboardcomment, QSOSboardcomment>createSet("comments", SOSboardcomment.class, QSOSboardcomment.class, PathInits.DIRECT2);
+
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.util.Date> deldate = createDateTime("deldate", java.util.Date.class);

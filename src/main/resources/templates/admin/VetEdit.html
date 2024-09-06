@@ -48,6 +48,7 @@
     </style>
 </head>
 <body>
+
 <div class="container">
     <h2>수의사 정보 수정</h2>
     <form th:action="@{/admin/vet/edit/{vetid}(vetid=${vetDTO.vetid})}" th:object="${vetDTO}" method="post" enctype="multipart/form-data">

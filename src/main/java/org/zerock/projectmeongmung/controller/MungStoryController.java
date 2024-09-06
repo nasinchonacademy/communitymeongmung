@@ -327,16 +327,6 @@ public class MungStoryController {
     }
 
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            return (User) authentication.getPrincipal();
-        }
-        throw new RuntimeException("사용자 인증 정보가 없습니다.");
-    }
-
-
-
     @PostMapping("/remove")
     public String remove(long seq,
                          RedirectAttributes redirectAttributes,

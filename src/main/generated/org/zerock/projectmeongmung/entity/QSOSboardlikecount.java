@@ -24,7 +24,7 @@ public class QSOSboardlikecount extends EntityPathBase<SOSboardlikecount> {
 
     public final NumberPath<Integer> likecount = createNumber("likecount", Integer.class);
 
-    public final DateTimePath<java.util.Date> likecountupdate = createDateTime("likecountupdate", java.util.Date.class);
+    public final DatePath<java.time.LocalDate> likecountupdate = createDate("likecountupdate", java.time.LocalDate.class);
 
     public final QUser member;
 
