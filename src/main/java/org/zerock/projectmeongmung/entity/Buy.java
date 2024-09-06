@@ -79,5 +79,11 @@ public class Buy {
 //        this.orderDate = orderDate;  // null일 경우 현재 시간으로 설정
     }
 
+    @Column(name = "status")
+    private String status = "준비 중";
+
+    public void setStatus(String string) {
+        this.status = status;
+    }
 }
 

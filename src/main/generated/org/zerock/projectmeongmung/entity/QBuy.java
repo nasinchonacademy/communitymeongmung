@@ -42,6 +42,8 @@ public class QBuy extends EntityPathBase<Buy> {
 
     public final StringPath roadaddress = createString("roadaddress");
 
+    public final StringPath status = createString("status");
+
     public final NumberPath<Integer> totalprice = createNumber("totalprice", Integer.class);
 
     public final QUser user;

@@ -78,7 +78,11 @@
             해당 상품은 현재 준비 중이에요!
         </div>
         <!-- 주문 취소 버튼 -->
-        <button class="order-cancel-button" onclick="confirmCancel()">주문 취소하기</button>
+<!--        <button class="order-cancel-button" onclick="confirmCancel()">주문 취소하기</button>-->
+        <form th:action="@{/get_order_cancel}" method="post" onsubmit="return confirm('해당 제품의 주문을 취소하시겠습니까?');">
+            <input type="hidden" name="orderNo" th:value="${buy.orderno}">
+            <button class="order-cancel-button" type="submit">주문 취소하기</button>
+        </form>
     </div>
 </div>
 
@@ -90,15 +94,5 @@
 <!-- 푸터 영역 -->
 <th:block th:replace="fragments/nav :: footer"></th:block>
 
-<script>
-    function confirmCancel() {
-        const userConfirmed = confirm('해당 제품의 주문을 취소하시겠습니까?');
-        if (userConfirmed) {
-            // 주문 취소 확인 시 메시지를 출력
-            alert('정상적으로 주문 취소가 완료되었습니다.');
-            window.location.href = '/meongmung'; // 취소 후 이동할 페이지 URL 설정
-        }
-    }
-</script>
 </body>
 </html>

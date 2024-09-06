@@ -2,6 +2,7 @@ package org.zerock.projectmeongmung.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class BuyController {
 
@@ -34,7 +37,18 @@ public class BuyController {
     private UserService userService; // 사용자 정보 가져오기
 
     @GetMapping("/get_order_list")
-    public String getOderList(Model model) {
+    public String getOderList(Authentication authentication, Model model) {
+        // 로그인한 사용자 가져오기
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        // 사용자의 주문 목록 가져오기
+        User user = userService.findByUid(username);
+        List<Buy> orders = buyService.getOrdersByUser(user);
+
+        // 모델에 주문 목록 추가
+        model.addAttribute("orders", orders);
+
         return "shopping/get_order_list";
     }
 
@@ -43,7 +57,11 @@ public class BuyController {
 
         // 현재 로그인한 사용자 가져오기
         // 스프링 시큐리티
-        User user = (User) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        // User 엔티티를 서비스로부터 조회
+        User user = userService.findByUid(username); // userService는 username을 통해 User 엔티티를 조회
 
         // 제품 정보 가지고 오기
         ProductDTO product = productService.getProductById(productId);
@@ -52,6 +70,7 @@ public class BuyController {
         // 젤리 포인트 가지고 오기
         int productPrice = product.getPprice(); // 여기가 문제라면 ProductDTO의 getter 메서드 확인 필요
         int jellyPoints = user.getJellypoint(); // User 엔티티에서 젤리 포인트 값 가지고 오기
+
 
         // 젤리 차감 후 최종 금액
         int finalPrice = Math.max(0, productPrice - jellyPoints); // 젤리 포인트를 차감한 금액, 최소 0원으로 설정
@@ -77,7 +96,11 @@ public class BuyController {
                               Authentication authentication,
                               Model model) {
 
-        User user = (User) authentication.getPrincipal(); // 현재 로그인된 사용자 정보
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        // User 엔티티를 서비스로부터 조회
+        User user = userService.findByUid(username); // userService는 username을 통해 User 엔티티를 조회
 
         // 제품 정보 가지고 오기
         ProductDTO product = productService.getProductById(productId);
@@ -93,20 +116,20 @@ public class BuyController {
             user.subtractJellyPoints(totalprice); // 젤리 포인트 차감
             totalprice = 0; // 남은 결제 금액 0으로 설정
         } else {
-            // 젤리가 부족한 경우 남은 금액만 차감
+            // 젤리가 부족한 경우
             user.subtractJellyPoints(jellyPoints);
             totalprice = remainingPrice;
         }
 
-        // 젤리 포인트 업데이트 후 저장
+        // 결제 금액 차감 후 젤리 포인트 업데이트
         userService.save(user); // 업데이트된 사용자 정보 저장
 
         // 주문 생성 후 반환되는 주문 번호
         Buy buy = buyService.createBuy(productId, user, resname, resphone, postcode,
-               roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
+                roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
 
-        // 남은 젤리 포인트를 모델에 추가하여 결제 완료 페이지로 전달
-        model.addAttribute("jellyPoints", user.getJellypoint()); // 남은 젤리 포인트
+        // 주문 정보 모델에 추가
+        // model.addAttribute("buy", buy);
 
         // return "redirect:/payment_complete_success?productId=" + productId;
         return "redirect:/payment_complete_success?orderNo=" + buy.getOrderno();
@@ -124,16 +147,46 @@ public class BuyController {
     @GetMapping("/payment_complete_success")
     public String paymentCompleteSuccess(@RequestParam("orderNo") Long orderNo, Authentication authentication, Model model) {
         Buy buy = buyService.getOrderById(orderNo); // 주문 정보 가져오기
+        model.addAttribute("buy", buy); // 주문 정보 모델에 추가
 
         // 현재 로그인한 사용자 정보 가져오기
-        User user = (User) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
 
-        model.addAttribute("buy", buy); // 주문 정보 모델에 추가
-        model.addAttribute("jellyPoints", user.getJellypoint()); // 남은 젤리 포인트 추가
+        User user = userService.findByUid(username);
+
+        // 젤리 포인트가 0보다 작은 경우 0으로 처리
+        int remainingJellyPoints = Math.max(user.getJellypoint(), 0);
+        model.addAttribute("jellyPoints", remainingJellyPoints); // 남은 젤리 포인트 추가
 
         return "shopping/payment_complete";  // 결제 완료 페이지로 렌더링
     }
 
+    // 배송 상태 보기
+    @GetMapping("/get_order_check")
+    public String orderCheck(@RequestParam("orderNo") Long orderNo, Model model){
+        Buy order = buyService.getOrderById(orderNo);
+        model.addAttribute("buy", order); // 주문 정보 모델에 추가
 
+        return "shopping/get_order_check";
+    }
+
+    // 주문 취소
+    @PostMapping("/get_order_cancel")
+    public String cancelOrder(@RequestParam("orderNo") Long orderNo, Model model) {
+        // 주문번호를 통해 주문 정보 가져오기
+        Buy order = buyService.getOrderById(orderNo);
+
+        if (order == null) {
+            model.addAttribute("error", "주문을 찾을 수 없습니다.");
+            return "errorPage";
+        }
+
+        // 주문 취소 처리
+        buyService.cancelOrder(orderNo);
+
+        // 취소 완료 후 페이지로 리다이렉트
+        return "redirect:/get_order_list";
+    }
 
 }

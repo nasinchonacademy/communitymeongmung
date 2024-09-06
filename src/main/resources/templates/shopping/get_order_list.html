@@ -6,7 +6,7 @@
     <title>제목 입력란</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- 부트스트랩 cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- 부트스트랩 아이콘 cdn -->
@@ -15,7 +15,7 @@
     <link th:href="@{css/basic.css}" rel="stylesheet">
 </head>
 <style>
-    .container{
+    .container {
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -76,21 +76,30 @@
 <h5 class="order-massage">주문내역 확인하기</h5>
 <div class="container">
     <h5>배송 정보</h5>
-    <div>
+    <div th:each="order : ${orders}">
         <div class="payProduct">
-            상품명 : 행소행댕 멸균 강아지우유 10개 100ml<br>
-            받는 사람 이름 : 강유나<br>
-            연락처 : 01080202057<br>
-            배송지 :서울특별시 공항대로 24가길 현대아이파크<br>
-            요청사항 : 없음
+            주문 번호: <span th:text="${order.orderno}"></span><br>
+            상품명 : <span th:text="${order.product.pname}"></span><br>
+            받는 사람 이름 : <span th:text="${order.resname}"></span><br>
+            연락처 : <span th:text="${order.resphone}"></span><br>
+            배송지 : <span th:text="${order.roadaddress} + ' ' + ${order.detailaddress}"></span><br>
+            요청사항 : <span th:text="${order.resrequirement}"></span><br>
+            총 결제 금액 : <span th:text="${order.totalprice}"></span> 원
         </div>
-        <a th:href="@{/get_order_check}"><button class="order-check-button">배송 상태 상세보기</button></a>
+        <a th:href="@{/get_order_check(orderNo=${order.orderno})}">
+            <button class="order-check-button">배송 상태 상세보기</button>
+        </a>
+        <hr>
     </div>
 </div>
 
 <div class="allButton">
-    <a th:href="@{/meongmung}"><button class="home-button" id="homeButton">HOME</button></a>
-    <a th:href="@{/productMain}"><button class="cart-button" id="cartButton">계속 쇼핑하기</button></a>
+    <a th:href="@{/meongmung}">
+        <button class="home-button" id="homeButton">HOME</button>
+    </a>
+    <a th:href="@{/productMain}">
+        <button class="cart-button" id="cartButton">계속 쇼핑하기</button>
+    </a>
 </div>
 
 <!-- 푸터 영역 -->

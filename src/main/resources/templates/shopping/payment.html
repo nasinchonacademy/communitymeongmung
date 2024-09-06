@@ -141,8 +141,10 @@
         <h5>결제 포인트 정보</h5>
         <div>
             <div class="point">
-                현재 보유 중인 젤리: <span th:text="${jellyPoints}"> 개<br>
-                젤리 차감 후 결제 금액: <span th:text="${finalPrice}"> 원</div>
+                현재 보유 중인 젤리: <span th:text="${jellyPoints}"></span> 개<br>
+                젤리 차감 후 결제 금액: <span th:text="${finalPrice}"></span> 원
+            </div>
+
         </div>
     </div>
 
@@ -179,9 +181,8 @@
             </div>
 
             <div class="form-group">
-<!--                onclick="requestPay()"-->
 <!--                <a th:href="@{/payment_complete}">-->
-                    <button type="submit">결제하기</button>
+                    <button onclick="requestPay()" type="submit">카카오PAY 결제하기</button></a>
             </div>
         </form>
     </div>
