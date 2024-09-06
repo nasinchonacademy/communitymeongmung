@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.SOSboardDTO;
 import org.zerock.projectmeongmung.entity.User;
@@ -18,6 +21,7 @@ import org.zerock.projectmeongmung.service.SOSboardService;
 import org.zerock.projectmeongmung.service.UserDetailService;
 
 import java.io.IOException;
+import java.security.Security;
 import java.util.List;
 
 @Controller
@@ -73,7 +77,7 @@ public class SOSboardController {
     public String sosBoardWrite(Model model, Authentication authentication,
                                 @RequestParam(value = "current", defaultValue = "radio2") String current ){
         String username = authentication.getName();
-        User user = userDetailService.loadUserByUsername(username);
+        User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
         model.addAttribute("current", current);
 
@@ -98,6 +102,41 @@ public class SOSboardController {
         sosboardService.saveSOSboard(sosboardDTO);
 
         return "redirect:/soshospitallist";
+    }
+
+    @GetMapping("/sosboardread")
+    public String sosboardread(@RequestParam("sosboardseq") long sosboardseq,
+                               @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
+                               Model model,@RequestParam("current") String current,
+                               RedirectAttributes redirectAttributes) {
+
+        // 조회수 증가
+        sosboardService.increaseViewcount(sosboardseq);
+
+        SOSboardDTO sosdto = sosboardService.read(sosboardseq);
+
+        //현재 로그인한 사용자 닉네임을 model에 추가
+        User user =(User)model.getAttribute("user");
+        if(user != null){
+            model.addAttribute("userNickname", user.getNickname());
+        }else {
+            model.addAttribute("userNickname", "Guest");
+        }
+        model.addAttribute("current", current);
+        model.addAttribute("sosdto", sosdto);
+
+        //댓글 목록 로드
+
+
+        return "meongsoshtml/sosboardread";
+    }
+
+    private User GetCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.getPrincipal() instanceof  User) {
+            return (User)authentication.getPrincipal();
+        }
+        throw new RuntimeException("사용자 인증 정보가 없습니다");
     }
 
 

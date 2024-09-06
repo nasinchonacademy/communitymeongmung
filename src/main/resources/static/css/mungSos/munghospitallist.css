@@ -76,10 +76,16 @@
     margin-bottom: 30px;
 }
 
+#resultFrame {
+    width: 100%;     /* 가로 크기 100% */
+    height: 800px;   /* 세로 크기 800px */
+    margin-top: 10px;
+}
+
 /*================ content2 ===============*/
 
 .content2 {
-    width: 1200px;
+    max-width: 1200px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -223,6 +229,10 @@ table a:hover{
 
 }
 
+#sosPageContent{
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
 
 

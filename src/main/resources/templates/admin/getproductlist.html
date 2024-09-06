@@ -13,7 +13,7 @@
   <h1>상품 목록</h1>
 
   <!-- 새로운 상품 등록 버튼 -->
-  <a href="/createProduct" class="btn btn-primary mb-3">새 상품 등록</a>
+  <a href="/admin/createProduct" class="btn btn-primary mb-3">새 상품 등록</a>
 
   <!-- 상품 목록 테이블 -->
   <table class="table table-hover">
@@ -40,11 +40,11 @@
       <td th:text="${product.pcompany}"></td>
       <td th:text="${product.pstock}"></td>
       <td>
-        <form th:action="@{/deleteProduct}" method="post" style="display:inline-block;">
+        <form th:action="@{/admin/deleteProduct}" method="post" style="display:inline-block;">
           <input type="hidden" name="productId" th:value="${product.pid}"/>
           <button type="submit" class="btn btn-danger btn-sm">삭제</button>
         </form>
-        <a th:href="@{/createProduct(productId=${product.pid})}" class="btn btn-warning btn-sm">수정</a>
+        <a th:href="@{/admin/createProduct(productId=${product.pid})}" class="btn btn-warning btn-sm">수정</a>
       </td>
     </tr>
 

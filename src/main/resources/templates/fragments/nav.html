@@ -46,6 +46,9 @@
                         <li><a sec:authorize="isAuthenticated()" th:href="@{/productMain}">멍뭉쇼핑</a></li>
                     </ul>
                 </li>
+            <li sec:authorize="hasRole('ADMIN')">
+                <a href="/admin/index" target="_blank">관리자 페이지</a>
+            </li>
             </div>
     </ul>
 </nav>

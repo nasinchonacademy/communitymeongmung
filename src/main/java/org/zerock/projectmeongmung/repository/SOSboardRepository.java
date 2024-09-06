@@ -14,6 +14,7 @@ import java.util.List;
 public interface SOSboardRepository extends JpaRepository<SOSboard, Long> {
     Page<SOSboard> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
     List<SOSboard> findTop3ByOrderByLikecountDesc(Pageable pageable);
+    List<SOSboard> findByUserId(Long userId);
 
     @Modifying
     @Transactional

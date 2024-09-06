@@ -32,7 +32,7 @@ public class QSOSboard extends EntityPathBase<SOSboard> {
 
     public final DateTimePath<java.util.Date> moddate = createDateTime("moddate", java.util.Date.class);
 
-    public final ArrayPath<byte[], Byte> picture = createArray("picture", byte[].class);
+    public final StringPath picture = createString("picture");
 
     public final DateTimePath<java.util.Date> regdate = createDateTime("regdate", java.util.Date.class);
 

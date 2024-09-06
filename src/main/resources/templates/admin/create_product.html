@@ -14,7 +14,7 @@
   <h1 th:text="${product != null && product.pid != null ? '상품 수정' : '상품 등록'}"></h1>
 
   <!-- 상품 등록 및 수정 폼 -->
-  <form th:action="${product != null && product.pid != null ? '/updateProduct' : '/createProduct'}" method="post" enctype="multipart/form-data">
+  <form th:action="${product != null && product.pid != null ? '/admin/updateProduct' : '/admin/createProduct'}" method="post" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="pname" class="form-label">상품명</label>
       <input type="text" class="form-control" id="pname" name="pname" th:value="${product?.pname}" required>
@@ -47,7 +47,7 @@
     <input type="hidden" name="productId" th:value="${product?.pid}"/>
 
     <button type="submit" class="btn btn-primary">저장</button>
-    <a href="/productMain" class="btn btn-secondary">취소</a>
+    <a href="admin/getproductlist" class="btn btn-secondary">취소</a>
   </form>
 </div>
 

@@ -17,7 +17,7 @@ public class GlobalControllerAdvice {
     @ModelAttribute
     public void addUserToModel(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
-            User user = userDetailService.loadUserByUsername(authentication.getName());
+            User user = userDetailService.findUserByUid(authentication.getName());
             if (user != null) {
                 model.addAttribute("user", user);
             }

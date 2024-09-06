@@ -96,5 +96,16 @@ public class SOSboardService {
         return top3Boards.stream().map(this::entityToDTO).collect(Collectors.toList());
     }
 
+    public SOSboardDTO read(Long sosboardseq) {
+        return repository.findById(sosboardseq).map(this::entityToDTO).orElse(null);
+    }
+
+    public void increaseViewcount(Long sosboardseq) {
+        SOSboard soSboard = repository.findById(sosboardseq)
+                .orElseThrow(() -> new RuntimeException("Sosboard not found with seq "+ sosboardseq));
+        soSboard.setViewcount(soSboard.getViewcount() + 1);
+        repository.save(soSboard);
+    }
+
 
 }
