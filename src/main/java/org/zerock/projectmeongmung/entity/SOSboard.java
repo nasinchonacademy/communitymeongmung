@@ -35,17 +35,24 @@ public class SOSboard {
     private Date moddate;
 
     @Lob
-    private byte[] picture;
+    private String picture;
 
     @Column(nullable = false)
-    private int commentcount;
+    private int commentcount=0;
 
     @Column(nullable = false)
-    private int likecount;
+    private int likecount=0;
 
     @Column(nullable = false)
-    private int viewcount;
+    private int viewcount=0;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date deldate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.regdate = new Date();  // 현재 날짜로 설정
+    }
+
+
 }

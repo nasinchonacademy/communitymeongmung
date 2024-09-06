@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class Vet {
     @ElementCollection
     @CollectionTable(name = "vet_description", joinColumns = @JoinColumn(name = "vetid"))
     @Column(name = "description")
-    private List<String> description;  // 소개 필드
+    private List<String> description = new ArrayList<>();  // 소개 필드
 
     @Column(nullable = false)
     @ColumnDefault("0")

@@ -85,7 +85,7 @@
 /*================ content2 ===============*/
 
 .content2 {
-    width: 1200px;
+    max-width: 1200px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -229,6 +229,10 @@ table a:hover{
 
 }
 
+#sosPageContent{
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
 
 

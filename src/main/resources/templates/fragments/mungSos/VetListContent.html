@@ -1,7 +1,7 @@
 <div class="container">
     <h1>전문가 프로필</h1>
     <div class="vet-list">
-        <div class="vet-card" th:each="vet : ${vets}">
+        <div class="vet-card" th:each="vet : ${vets}" th:if="${vet.visibility == true}">
 
             <div class="vet-info">
                 <div class="vet_namelist">

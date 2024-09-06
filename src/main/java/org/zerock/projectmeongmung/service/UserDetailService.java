@@ -1,12 +1,18 @@
 package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -22,9 +28,32 @@ public class UserDetailService implements UserDetailsService {
 
 
     //사용자 이름(id)로 사용자의 정보를 가져오는 메서드
-    @Override
-    public User loadUserByUsername(String uid) {
+
+    public User findUserByUid(String uid) {
         return userRepository.findByUid(uid)
-                .orElseThrow(()-> new IllegalArgumentException(uid));
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + uid));
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String uid) {
+        // 사용자 정보를 UID로 찾음
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + uid));
+
+        // 사용자가 관리자인 경우 ROLE_ADMIN, 그렇지 않으면 ROLE_USER 권한을 부여
+        List<GrantedAuthority> authorities;
+        if (user.isAdmin()) {
+            authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        // Spring Security의 UserDetails 객체를 반환
+        return new org.springframework.security.core.userdetails.User(
+                user.getUid(),
+                user.getPassword(),
+                authorities
+        );
     }
 }

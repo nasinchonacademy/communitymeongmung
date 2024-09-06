@@ -14,34 +14,29 @@
     <!--기본 css-->
     <link th:href="@{css/basic.css}" rel="stylesheet">
     <link th:href="@{css/mungSos/mungSosNavStyle.css}" rel="stylesheet">
-    <link th:href="@{css/mungSos/munghospitallist.css}" rel="stylesheet">
+    <link th:href="@{css/mungSos/sosboardreadStyle.css}" rel="stylesheet">
     <script th:src="@{js/sosPage.js}"></script>
 
 
 
 </head>
-    <body>
-        <!-- 헤더 영역 -->
-        <th:block th:replace="fragments/nav :: header"></th:block>
+<body>
+<!-- 헤더 영역 -->
+<th:block th:replace="fragments/nav :: header"></th:block>
 
-        <!-- SNB 영역 -->
-        <th:block th:replace="fragments/nav :: navMenu"></th:block>
+<!-- SNB 영역 -->
+<th:block th:replace="fragments/nav :: navMenu"></th:block>
 
-        <!--메인 컨텐츠 nav-->
-        <th:block th:replace="fragments/mungSos/mungSosNav :: sosNav"></th:block>
+<!--메인 컨텐츠 nav-->
+<th:block th:replace="fragments/mungSos/mungSosNav :: sosNav"></th:block>
 
-        <!-- 메인 컨텐츠 영역 -->
+<!-- 메인 컨텐츠 영역 -->
+<div th:replace="~{fragments/mungSos/sosboardreadcontent :: mainContent}"></div>
 
-        <div id="sosPage">
-            <div th:replace="~{fragments/mungSos/soshospitallistContent}"></div>
-        </div>
-
-
-
-        <!-- 푸터 영역 -->
-        <th:block th:replace="fragments/nav :: footer"></th:block>
+<!-- 푸터 영역 -->
+<th:block th:replace="fragments/nav :: footer"></th:block>
 
 
-    </body>
+</body>
 
 </html>

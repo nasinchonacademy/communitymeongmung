@@ -50,7 +50,7 @@
 <body>
 <div class="container">
     <h2>수의사 등록</h2>
-    <form th:action="@{/vet/register}" th:object="${vetDTO}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/vetregister}" th:object="${vetDTO}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="vatname">수의사 이름</label>
             <input type="text" id="vatname" th:field="*{vetname}" placeholder="수의사 이름" required>
