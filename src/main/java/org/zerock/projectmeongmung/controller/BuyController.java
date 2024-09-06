@@ -39,11 +39,26 @@ public class BuyController {
     }
 
     @GetMapping("payment")
-    public String getPayment(@RequestParam("productId") Long productId, Model model) {
+    public String getPayment(@RequestParam("productId") Long productId, Authentication authentication, Model model) {
+
+        // 현재 로그인한 사용자 가져오기
+        // 스프링 시큐리티
+        User user = (User) authentication.getPrincipal();
 
         // 제품 정보 가지고 오기
         ProductDTO product = productService.getProductById(productId);
         model.addAttribute("product", product);
+
+        // 젤리 포인트 가지고 오기
+        int productPrice = product.getPprice(); // 여기가 문제라면 ProductDTO의 getter 메서드 확인 필요
+        int jellyPoints = user.getJellypoint(); // User 엔티티에서 젤리 포인트 값 가지고 오기
+
+        // 젤리 차감 후 최종 금액
+        int finalPrice = Math.max(0, productPrice - jellyPoints); // 젤리 포인트를 차감한 금액, 최소 0원으로 설정
+
+        // 모델에 젤리 포인트와 최종 결제 금액 추가
+        model.addAttribute("jellyPoints", jellyPoints);
+        model.addAttribute("finalPrice", finalPrice);
 
         return "shopping/payment";
     }
@@ -68,16 +83,22 @@ public class BuyController {
         ProductDTO product = productService.getProductById(productId);
         model.addAttribute("product", product);
 
-        // 결제 정보 저장
-        // 결제 정보 저장
+        // 사용자의 젤리 포인트 차감
+        int jellyPoints = user.getJellypoint();
+        int remainingPrice = Math.max(0, totalprice - jellyPoints);
+
+        // 결제 금액 차감 후 젤리 포인트 업데이트
+        user.subtractJellyPoints(totalprice); // 젤리 포인트 차감
+        userService.save(user); // 업데이트된 사용자 정보 저장
+
+        // 주문 생성 후 반환되는 주문 번호
         Buy buy = buyService.createBuy(productId, user, resname, resphone, postcode,
-                roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
+               roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
 
         // 주문 정보 모델에 추가
-        model.addAttribute("buy", buy);
+        // model.addAttribute("buy", buy);
 
         // return "redirect:/payment_complete_success?productId=" + productId;
-        // 이제 buy 엔티티에서 정보를 가져와야 한다. 주문 번호로 조회하기
         return "redirect:/payment_complete_success?orderNo=" + buy.getOrderno();
 
     }
