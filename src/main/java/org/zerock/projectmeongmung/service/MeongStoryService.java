@@ -7,6 +7,8 @@ import org.zerock.projectmeongmung.dto.StoryCommentDto;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.User;
 
+import java.util.List;
+
 public interface MeongStoryService {
 
     // 등록 메서드
@@ -45,4 +47,5 @@ public interface MeongStoryService {
 
     void incrementViewCount(long seq);
 
+    List<MeongStoryDTO> getTop5StoriesByLikeCount();
 }

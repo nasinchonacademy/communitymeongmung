@@ -23,24 +23,21 @@ public class SOSboardDTO {
 
     private Date moddate; // 수정일
 
-    private String picture; // 이미지
+    private byte[] picture; // 이미지
 
-    private int commentcount=0; // 댓글 수
+    private int commentcount; // 댓글 수
 
-    private int viewcount=0; // 조회 수
+    private int viewcount; // 조회 수
 
     private Date deldate; // 삭제일
 
     private String nickname;
 
-    private String uid;
-
-    private int likecount=0;
+    private int likecount;
 
 
 
     public SOSboardDTO(SOSboard sosboard) {
         this.nickname = sosboard.getUser().getNickname();
-        this.uid = sosboard.getUser().getUid();
     }
 }

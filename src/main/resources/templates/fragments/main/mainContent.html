@@ -1,47 +1,33 @@
 <main class="content" th:fragment="content">
     <section>
-        <div class="bn">
-            <!--<a href="#"><img id="bn" th:src="@{/image/배너1.png}" alt="배너1"></a>-->
-            <div id="carouselExample" class="carousel slide">
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="5000">
-                        <a href="#">
-                        <img src="/image/main/bn1.png" class="d-block w-100" alt="...">
-                        </a>
-                    </div>
-                    <div class="carousel-item" data-bs-interval="5000">
-                        <a href="#">
-                        <img src="/image/main/bn2.png" class="d-block w-100" alt="...">
-                        </a>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+        <div class="container2">
+            <div class="text-block">
+                <p class="maintitle">송파구의 동물병원</p>
+                <p class="maincontent">본문 내용이 들어갈 부분입니다.</p>
+                <p class="maintitle2">추가 내용이 들어갈 부분입니다.</p>
             </div>
-
+            <div class="image-block">
+                <img class="logoimg" src="/image/main/logoSizeup.png" alt="강아지 이미지">
+            </div>
         </div>
 
-        <div class="jellyboard">
-            <br>
-            <h6>퀘스트로 젤리부자 되러 가기!!</h6>
-            <a href="#"><img id="jelly1" th:src="@{/image/main/card.png}" alt="젤리1"></a>
-            <a href="#"><img id="jelly2" th:src="@{/image/main/card.png}" alt="젤리2"></a>
-            <a href="#"><img id="jelly3" th:src="@{/image/main/card.png}" alt="젤리3"></a>
-        </div>
-        <div class="mungStroy">
-            <br>
-            <h6>이번 주 놓치기 아쉬운 멍스토리!!</h6>
-            <a href="#"><img id="mungStroy-1" th:src="@{/image/main/mung1.png}" alt="멍스토리1"></a>
-            <a href="#"><img id="mungStroy-2" th:src="@{/image/main/mung2.png}" alt="멍스토리2"></a>
-            <a href="#"><img id="mungStroy-3" th:src="@{/image/main/mung3.png}" alt="멍스토리3"></a>
-            <a href="#"><img id="mungStroy-4" th:src="@{/image/main/mung4.png}" alt="멍스토리4"></a>
-            <a href="#"><img id="mungStroy-5" th:src="@{/image/main/mung5.png}" alt="멍스토리5"></a>
+
+        <h6>이번 주 놓치기 아쉬운 멍스토리!!</h6>
+        <!-- topStories 리스트를 5개 출력 -->
+        <div class="product-container">
+            <div class="product" th:each="story : ${topStories}">
+                <!-- 각 상품을 링크로 감싸서 클릭 시 이동 -->
+                <a th:href="@{/mungstory/storyread(page=${1},
+                             type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}" style="text-decoration: none; color: inherit;">
+                    <img th:src="@{${story.picture}}" alt="Story Image" class="product-image">
+                    <div class="description">
+                        <p th:text="'작성자: ' + ${story.nickname}"></p>
+                        <h3 th:text="${story.title}"></h3>
+                        <p th:text="'좋아요 수: ' + ${story.likecount}"></p>
+                        <p th:text="'조회 수: ' + ${story.viewcount}"></p>
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="dogMoll">
             <br>

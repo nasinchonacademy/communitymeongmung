@@ -41,7 +41,10 @@
                     <td th:text="${story.category}"></td>
                     <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
 
-                    <td><img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" alt="Profile Photo" style="width:100px; height: 70px;"></td>
+                    <td>
+                        <img th:src="${story.picture != null and !story.picture.isEmpty() ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}"
+                             alt="Profile Photo" style="width:100px; height: 70px;">
+                    </td>
 
                     <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
                     <td><a th:href="@{/mungstory/storyread(page=${result.page},
