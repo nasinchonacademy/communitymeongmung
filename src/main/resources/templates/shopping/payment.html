@@ -31,7 +31,7 @@
                 // 파라미터 값 설정
                 pg: "kakaopay.TC0ONETIME",
                 pay_method: "card",
-                merchant_uid: "57008833-33004", // 상점 고유 주문번호
+                merchant_uid: "57008833-33084", // 상점 고유 주문번호
                 name: "포트원 테스트",
                 amount: 1004,
                 buyer_email: "good@portone.io",
@@ -42,9 +42,8 @@
             },
             function (rsp) {
                 if (rsp.success) {
-                    // 결제 성공
-                    form.action = "/payment_complete";
-                    form.submit(); // 폼 제출
+                    // 결제 성공 시 폼 제출
+                    document.querySelector('form').submit();
                 } else {
                     alert("결제에 실패하였습니다. 에러: " + rsp.error_msg);
                 }
@@ -182,7 +181,8 @@
 
             <div class="form-group">
 <!--                <a th:href="@{/payment_complete}">-->
-                    <button onclick="requestPay()" type="submit">카카오PAY 결제하기</button></a>
+                <button type="button" onclick="requestPay()">카카오PAY 결제하기</button>
+
             </div>
         </form>
     </div>

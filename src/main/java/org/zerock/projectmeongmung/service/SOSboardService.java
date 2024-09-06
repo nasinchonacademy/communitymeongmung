@@ -107,5 +107,37 @@ public class SOSboardService {
         repository.save(soSboard);
     }
 
+    public int increaseLikeCount(Long sosboardseq) {
+        Optional<SOSboard> result = repository.findById(sosboardseq);
+
+        if(result.isPresent()) {
+            SOSboard soSboard = result.get();
+            soSboard.setLikecount(soSboard.getLikecount() + 1);
+            repository.save(soSboard);
+            return soSboard.getLikecount();
+        }else {
+            throw new IllegalArgumentException("존재하지 않는 게시물입니다.");
+        }
+
+    }
+
+    public void remove(Long sosboardseq) {repository.deleteById(sosboardseq);}
+
+    public void modify( SOSboardDTO dto) {
+        SOSboard entity = repository.findById(dto.getSosboardseq())
+                .orElseThrow(() -> new IllegalArgumentException("Sosboard not found with seq "+ dto.getSosboardseq()));
+
+        entity.setTitle(dto.getTitle());
+        entity.setContent(dto.getContent());
+        entity.setRegdate(dto.getRegdate());
+        entity.setModdate(dto.getModdate());
+        entity.setPicture(dto.getPicture());
+        entity.setCommentcount(dto.getCommentcount());
+        entity.setViewcount(dto.getViewcount());
+        entity.setLikecount(dto.getLikecount());
+        entity.setViewcount(dto.getViewcount());
+
+        repository.save(entity);
+    }
 
 }

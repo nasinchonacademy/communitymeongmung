@@ -295,8 +295,12 @@ public class MungStoryController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<?> like(@RequestBody LikeRequest request) {
-        User currentUser = getCurrentUser(); // 현재 로그인한 사용자의 User 객체를 가져오는 메소드
+    public ResponseEntity<?> like(@RequestBody LikeRequest request, Authentication authentication) {
+        // 인증된 사용자의 UID를 가져옴
+        String uid = authentication.getName();  // 여기서 인증된 사용자의 UID를 가져옴
+
+        // UID를 통해 사용자 정보를 가져옴
+        User currentUser = userDetailService.findUserByUid(uid);
 
         // 게시물 ID로 MeongStory 객체를 조회
         MeongStory story = meongStoryRepository.findById(request.getSeq()).orElse(null);
