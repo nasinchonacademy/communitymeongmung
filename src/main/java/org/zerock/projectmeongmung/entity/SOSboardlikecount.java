@@ -5,7 +5,9 @@ import lombok.*;
 import org.zerock.projectmeongmung.entity.SOSboard;
 import org.zerock.projectmeongmung.entity.User;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Locale;
 
 @Entity
 @Table(name = "sosboardlikecount")
@@ -25,12 +27,12 @@ public class SOSboardlikecount {
     private SOSboard sosboard;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)  // User와의 관계 설정
     private User member;
 
     @Column(nullable = false)
     private int likecount;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date likecountupdate;
+    @Column(name = "likecountupdate", nullable = false)
+    private LocalDate likecountupdate;
 }

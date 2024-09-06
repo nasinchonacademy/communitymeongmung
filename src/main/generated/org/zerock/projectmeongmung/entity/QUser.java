@@ -20,6 +20,10 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final BooleanPath admin = createBoolean("admin");
+
+    public final SetPath<SOSboardcomment, QSOSboardcomment> comments = this.<SOSboardcomment, QSOSboardcomment>createSet("comments", SOSboardcomment.class, QSOSboardcomment.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.util.Date> dogbirthday = createDateTime("dogbirthday", java.util.Date.class);
 
     public final StringPath dogbreed = createString("dogbreed");
@@ -57,6 +61,8 @@ public class QUser extends EntityPathBase<User> {
     public final DateTimePath<java.util.Date> regDate = createDateTime("regDate", java.util.Date.class);
 
     public final ListPath<SOSboard, QSOSboard> sosBoards = this.<SOSboard, QSOSboard>createList("sosBoards", SOSboard.class, QSOSboard.class, PathInits.DIRECT2);
+
+    public final SetPath<SOSboardlikecount, QSOSboardlikecount> soslikes = this.<SOSboardlikecount, QSOSboardlikecount>createSet("soslikes", SOSboardlikecount.class, QSOSboardlikecount.class, PathInits.DIRECT2);
 
     public final BooleanPath termuse = createBoolean("termuse");
 
