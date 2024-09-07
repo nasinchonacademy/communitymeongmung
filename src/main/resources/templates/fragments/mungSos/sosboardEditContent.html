@@ -1,19 +1,19 @@
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <div id="content">
-        <form th:action="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()">
+        <form th:action="@{/sosboardedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()">
+            <input type="hidden" name="page" th:value="${requestDTO.page}" />
+            <input type="hidden" name="size" th:value="${requestDTO.size}" />
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" />
 
-            <input type="hidden" name="page" th:value="${requestDTO.page}">
-            <input type="hidden" name="type" th:value="${requestDTO.type}">
-            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
-
+            <input type="hidden" name="current" th:value="${current}" />
             <input type="hidden" name="likecount" th:value="${dto.likecount}">
             <input type="hidden" name="commentcount" th:value="${dto.commentcount}">
             <input type="hidden" name="viewcount" th:value="${dto.viewcount}">
             <input type="hidden" name="id" th:value="${user.id}">
-            <input type="hidden" name="category" th:value="${(current == 2 || current == 3) ? (current == 2 ? 'Category1' : 'Category2') : 'Category1'}">
+
 
             <div class="form-group">
-                <input type="hidden" class="form-control" name="seq" th:value="${dto.seq}" readonly>
+                <input type="hidden" class="form-control" name="sosboardseq" th:value="${dto.sosboardseq}" readonly>
             </div>
 
             <div class="writegroup">
@@ -30,11 +30,11 @@
 
 
             <div class="form-group">
-                <input type="hidden" class="form-control" th:value="${#temporals.format(dto.regdate,'yyyy/MM/dd HH:mm:ss')}" readonly>
+                <input type="hidden" class="form-control" th:value="${#dates.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
             </div>
 
             <div class="form-group">
-                <input type="hidden" class="form-control" th:value="${#temporals.format(dto.modified,'yyyy/MM/dd HH:mm:ss')}" readonly>
+                <input type="hidden" class="form-control" th:value="${#dates.format(dto.moddate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
             </div>
 
         </form>
@@ -46,12 +46,12 @@
         </div>
 
         <a th:if="${user.nickname != dto.nickname}">
-            <button type="button" class="commentSubmit" disabled>수정하기</button>
+            <button type="button" class="removeBtn" disabled>삭제하기</button>
             <!-- 값 줄때 마우스는 금지 마우스로 변경 해야함 또한 부가 설명에는 작성자만 삭제할 수 있습니다 띄우도록 설정 -->
         </a>
 
         <div class="Allthe" id="clickableDiv">
-            <a id="listGoLink" th:href="@{/mungstory(page=${requestDTO.page}, type=${requestDTO.type},keyword=${requestDTO.keyword}, current=${current})}" class="listGo">
+            <a id="listGoLink" th:href="@{/soshospitallist(page=${requestDTO.page}, type=${requestDTO.type},keyword=${requestDTO.keyword}, current=${current})}" class="listGo">
                 목록으로
             </a>
         </div>

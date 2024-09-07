@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!--기본 css-->
     <link th:href="@{css/basic.css}" rel="stylesheet">
-    <link th:href="@{css/mungSos/mungSosNavStyle.css}" rel="stylesheet">
-    <link th:href="@{css/mungSos/sosboardreadStyle.css}" rel="stylesheet">
+    <link th:href="@{/css/mungStory/storyRead.css}" rel="stylesheet">
     <script th:src="@{js/sosPage.js}"></script>
 
 
@@ -28,7 +27,6 @@
 <th:block th:replace="fragments/nav :: navMenu"></th:block>
 
 <!--메인 컨텐츠 nav-->
-<th:block th:replace="fragments/mungSos/mungSosNav :: sosNav"></th:block>
 
 <!-- 메인 컨텐츠 영역 -->
 <div th:replace="~{fragments/mungSos/sosboardreadcontent :: mainContent}"></div>

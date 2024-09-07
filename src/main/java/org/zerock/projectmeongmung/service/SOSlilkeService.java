@@ -17,9 +17,6 @@ public class SOSlilkeService {
     @Autowired
     private SOSboardRepository boardRepository;
 
-    @Autowired
-    private  SOSboardRepository osboardRepository;
-
 
     public boolean checkIfUserLiked(User user, SOSboard sosboard, LocalDate likeDate) {
         return boardLikeRepository.existsByMemberAndSosboardAndLikecountupdate(user, sosboard, likeDate);
