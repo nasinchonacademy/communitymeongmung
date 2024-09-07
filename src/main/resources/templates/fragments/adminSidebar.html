@@ -22,7 +22,7 @@
     </style>
 </head>
 <body>
-<div class="sidebar" >
+<nav class="sidebar" th:fragment="sidebar" >
     <h4 class="text-white">관리자 메뉴</h4>
     <div class="list-group">
         <a th:href="@{/admin/user-management}" class="list-group-item list-group-item-action">사용자 관리</a>
@@ -31,6 +31,6 @@
         <a th:href="@{/admin/reports}" class="list-group-item list-group-item-action">보고서 확인</a>
         <a th:href="@{/admin/getproductlist}" class="list-group-item list-group-item-action">상품 관리 페이지</a>
     </div>
-</div>
+</nav>
 </body>
 </html>

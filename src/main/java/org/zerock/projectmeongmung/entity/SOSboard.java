@@ -50,7 +50,7 @@ public class SOSboard {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deldate;
 
-    @OneToMany(mappedBy = "sosboard", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sosboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SOSboardcomment> comments;  // 게시물에 달린 댓글들
 
 
@@ -58,6 +58,13 @@ public class SOSboard {
     @PrePersist
     protected void onCreate() {
         this.regdate = new Date();  // 현재 날짜로 설정
+    }
+
+    @PreRemove
+    protected void preRemove() {
+        if (comments != null) {
+            comments.clear();  // 삭제 전에 관련 댓글 목록을 비움
+        }
     }
 
 

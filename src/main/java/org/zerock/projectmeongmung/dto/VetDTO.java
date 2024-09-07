@@ -21,6 +21,9 @@ public class VetDTO {
     private MultipartFile profilePhoto; // 프로필 사진 업로드 시 사용
     private String profilePhotoPath;    // 저장된 파일 경로를 다루는 필드
     private Boolean visibility;
+    private String username;                // 수의사 로그인 아이디
+    private String password;        // 수의사 로그인 비밀번호 (암호화되기 전의 원본 비밀번호)
+    private String email;
     private List<String> description = new ArrayList<>();
 }
 

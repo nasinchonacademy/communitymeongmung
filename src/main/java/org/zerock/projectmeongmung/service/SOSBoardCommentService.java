@@ -3,9 +3,11 @@ package org.zerock.projectmeongmung.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.AddUserRequest;
 import org.zerock.projectmeongmung.dto.SOSBoardCommentDto;
 import org.zerock.projectmeongmung.dto.StoryCommentDto;
+import org.zerock.projectmeongmung.entity.SOSboard;
 import org.zerock.projectmeongmung.entity.SOSboardcomment;
 import org.zerock.projectmeongmung.entity.StoryComment;
 import org.zerock.projectmeongmung.entity.User;
@@ -40,7 +42,7 @@ public class SOSBoardCommentService {
                 .collect(Collectors.toList());
     }
 
-    public void CommentRegister(StoryCommentDto commentDto) {
+    public void CommentRegister(SOSBoardCommentDto commentDto) {
         // 댓글 등록 로직
         SOSboardcomment comment = SOSboardcomment.builder()
                 .soscommentcontent(commentDto.getCommentcontent())
@@ -64,7 +66,17 @@ public class SOSBoardCommentService {
                 .build();
     }
 
+    @Transactional
     public void removeComment(Long commentId) {
-       SOSBoardCommentRepository.deleteById(commentId);}
+        SOSboardcomment comment =  SOSBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
+        // 게시물에서 댓글 제거 및 댓글 수 업데이트
+        SOSboard sosboard = comment.getSosboard();
+        sosboard.getComments().remove(comment);
+        sosboard.setCommentcount(sosboard.getComments().size());
+
+        SOSBoardCommentRepository.delete(comment);
     }
+
+}

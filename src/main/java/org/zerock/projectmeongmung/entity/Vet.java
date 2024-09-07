@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Vet {
+public class Vet implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +60,43 @@ public class Vet {
 
     @OneToMany(mappedBy = "vet", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VetRecommendation> recommendations;
+
+    // 로그인 관련 필드 추가
+    @Column(nullable = false, unique = true)
+    private String username; // 사용자 ID
+
+    @Column(nullable = false)
+    private String password; // 비밀번호 (암호화된 상태로 저장)
+
+    @Column(nullable = false, unique = true)
+    private String email;  // 수의사 이메일 추가
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_VET")); // 수의사 역할 부여
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // 추가적인 조건으로 비활성화 처리 가능
+    }
+
+
 }
 ;
 

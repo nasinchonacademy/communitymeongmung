@@ -28,4 +28,5 @@ public class VetController {
         model.addAttribute("vets", vets);
         return "meongsoshtml/VetList"; // 수의사 목록을 출력할 템플릿 파일
     }
+
 }

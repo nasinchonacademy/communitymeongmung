@@ -19,7 +19,8 @@
                 <img th:src="${user != null and user.profilePhoto != null ? '/profiles/' + user.profilePhoto : '/image/tool/profilelogo.PNG'}" alt="Profile Photo" class="profile-image-bar"></a>
             </li>
             <li><a sec:authorize="isAuthenticated()" th:href="@{/mypage}">
-                <h3 th:text="${user.nickname}" class="profile-nickname-bar"></h3></a>
+                <h3 th:text="${user.nickname}" class="profile-nickname-bar"></h3>
+                <h5 th:if="${user != null and user.isVet}" class="vet-title" style="margin-bottom: 20px; margin-top: -22px; font-weight: bold">수의사님</h5></a>
             </li>
             <li><a sec:authorize="isAuthenticated()" th:href="@{/mypage}">마이 페이지</a></li>
             <li><a sec:authorize="isAuthenticated()" th:href="@{/mypageedit(isRadio2Selected=true)}">프로필 수정</a></li>

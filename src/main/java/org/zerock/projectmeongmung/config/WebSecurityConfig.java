@@ -32,8 +32,8 @@ public class WebSecurityConfig {
         return (web) ->
                 web
                         .ignoring()
-                //.requestMatchers(toH2Console())
-                .requestMatchers(new AntPathRequestMatcher("/static/**", "/resource/**")); // 특정 요청과 일치하는 url에 대한 엑세스를 설정
+                        //.requestMatchers(toH2Console())
+                        .requestMatchers(new AntPathRequestMatcher("/static/**", "/resource/**")); // 특정 요청과 일치하는 url에 대한 엑세스를 설정
     }
 
     // 특정 HTTP 요청에 대한 웹 기반 보안 구성

@@ -1,6 +1,7 @@
 package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.entity.Vet;
 import org.zerock.projectmeongmung.repository.UserRepository;
+import org.zerock.projectmeongmung.repository.VetRepository;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,6 +23,7 @@ import java.util.List;
 public class UserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final VetRepository vetRepository;
 
 
     public void updateUser(String uid, String nickname, String dogname, String profilePhoto, String dogbreed, Date dogbirthday) {
@@ -56,4 +60,6 @@ public class UserDetailService implements UserDetailsService {
                 authorities
         );
     }
+
+
 }
