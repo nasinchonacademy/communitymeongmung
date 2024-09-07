@@ -60,6 +60,7 @@ input.title {
     font-size: 14px;
     margin-left: 15px;
     margin-top: 5px;
+    width: 778px;
 }
 
 input.writer, input.regdate {
@@ -272,7 +273,7 @@ input.likecountTitle {
 
 input.viewcount {
     margin-right: 0px;
-    margin-left: 653px;
+    margin-left: 15px;
     width: 80px;
     font-size: 10px;
 }

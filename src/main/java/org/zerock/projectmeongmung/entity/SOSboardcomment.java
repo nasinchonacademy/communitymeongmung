@@ -2,6 +2,7 @@ package org.zerock.projectmeongmung.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 import java.util.List;
@@ -23,8 +24,9 @@ public class SOSboardcomment {
     @JoinColumn(name = "sosboardseq", nullable = false)
     private SOSboard sosboard;
 
-    @Column(nullable = false)
-    private int seq;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberid", nullable = false)
+    private User user;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String soscommentcontent;
@@ -37,5 +39,12 @@ public class SOSboardcomment {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date soscommentdelete;
+
+    @PrePersist
+    protected void onCreate() {
+        if (soscommentregtime == null) {
+            soscommentregtime = new Date(); // 기본값으로 현재 시각을 설정
+        }
+    }
 
 }

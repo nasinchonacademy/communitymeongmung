@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding: 20px;
+        }
+        .sidebar .list-group-item {
+            color: white;
+            background-color: #343a40;
+            border: none;
+        }
+        .sidebar .list-group-item:hover {
+            background-color: #495057;
+        }
+        .sidebar .active {
+            background-color: #495057;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar" >
+    <h4 class="text-white">관리자 메뉴</h4>
+    <div class="list-group">
+        <a th:href="@{/admin/user-management}" class="list-group-item list-group-item-action">사용자 관리</a>
+        <a th:href="@{/admin/site-settings}" class="list-group-item list-group-item-action">사이트 설정</a>
+        <a th:href="@{/admin/vetlist}" class="list-group-item list-group-item-action">수의사 관리</a>
+        <a th:href="@{/admin/reports}" class="list-group-item list-group-item-action">보고서 확인</a>
+        <a th:href="@{/admin/getproductlist}" class="list-group-item list-group-item-action">상품 관리 페이지</a>
+    </div>
+</div>
+</body>
+</html>

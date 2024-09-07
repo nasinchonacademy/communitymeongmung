@@ -23,7 +23,7 @@
             <div class="row">
               <div class="col-md-4" th:each="story : ${group}">
                 <div class="card mx-auto" style="width: 11.9rem;">
-                  <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
+                  <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
                   <div class="card-body p-2">
                     <h6 class="card-title" th:text="${story.title}">제목</h6>
                     <p class="card-text mb-1" style="font-size: 0.85rem;" th:text="${story.likecount} + ' Likes'">100 Likes</p>
@@ -88,7 +88,7 @@
                 </div>
               </div>
               <div class="story-image">
-                <img th:src="${story.picture != null ? story.picture : '/image/tool/storydefault.PNG'}" alt="story image" class="img-thumbnail">
+                <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" alt="story image" class="img-thumbnail">
               </div>
               <div class="story-comments">
                 <span th:text="${story.commentcount}">13</span> 댓글
