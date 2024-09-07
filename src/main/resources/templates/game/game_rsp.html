@@ -186,7 +186,8 @@
                     method: 'POST',
                     data: {
                         points: 30, // 이기면 얻는 젤리
-                        uid: uid // 동적 할당된 사용자 ID
+                        uid: uid, // 동적 할당된 사용자 ID
+                        gameType: 'rsp' // 가위바위보 게임임을 명시
                     },
                     success: function (response) {
                         console.log('젤리 적립 성공!');
@@ -212,13 +213,13 @@
         // 게임 하루에 한번만 하게 해주는 로직
         function checkIfGamePlayedToday() {
             const today = new Date().toISOString().slice(0, 10);
-            const lastPlayedDate = localStorage.getItem('lastPlayedDateRSP');
+            const lastPlayedDate = localStorage.getItem(`lastPlayedDateRSP_${uid}`); // uid를 추가해 기록
             return today === lastPlayedDate;
         }
 
         function setGamePlayedToday() {
             const today = new Date().toISOString().slice(0, 10);
-            localStorage.setItem('lastPlayedDateRSP', today);
+            localStorage.setItem(`lastPlayedDateRSP_${uid}`, today);
         }
 
         function initializeGame() {

@@ -41,7 +41,8 @@ public interface MeongStoryRepository extends JpaRepository<MeongStory, Long>, Q
 
 
 
-/*    @Query("SELECT m FROM MeongStory m WHERE (m.title LIKE %:keyword% OR m.content LIKE %:keyword%  LIKE %:keyword%) AND m.category = :category")*/
+    /*    @Query("SELECT m FROM MeongStory m WHERE (m.title LIKE %:keyword% OR m.content LIKE %:keyword%  LIKE %:keyword%) AND m.category = :category")*/
 
     /**/
 }
+

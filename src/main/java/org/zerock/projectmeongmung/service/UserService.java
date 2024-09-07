@@ -1,13 +1,19 @@
 package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.AddUserRequest;
+import org.zerock.projectmeongmung.entity.GamePoints;
 import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.repository.GamePointsRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -15,6 +21,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final GamePointsRepository gamePointsRepository;  // GamePointsRepository 주입
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원 정보 저장
@@ -109,6 +116,42 @@ public class UserService {
         return userRepository.save(user); // 사용자 정보 저장
     }
 
-//    public User findByEmail(String email) {
-//    }
+    // 사용자가 오늘 게임을 했는지 확인
+    public boolean hasPlayedToday(String uid, String gameType) {
+        User user = findByUid(uid);
+        Optional<GamePoints> lastGameOpt = gamePointsRepository.findTopByUserAndGameTypeOrderByTimePlayedDesc(user, gameType);
+
+        if (lastGameOpt.isPresent()) {
+            GamePoints lastGame = lastGameOpt.get();
+            LocalDate lastPlayedDate = lastGame.getTimePlayed().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate today = LocalDate.now();
+
+            return lastPlayedDate.isEqual(today); // 마지막으로 플레이한 날짜가 오늘인지 확인
+        }
+
+        return false; // 게임 기록이 없으면 오늘 게임을 하지 않은 것으로 간주
+
+    }
+
+    // 추가: 게임 후 게임 기록을 업데이트하는 메서드
+    @Transactional
+    public void updateGamePoints(String uid, String gameType, int points, int restCount) {
+        User user = findByUid(uid);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+        // 젤리 포인트 추가
+        user.addJellyPoints(points);
+
+        GamePoints gamePoints = GamePoints.builder()
+                .user(user)
+                .gameType(gameType)
+                .point(points)
+                .timePlayed(currentTime)
+                .restCount(restCount)
+                .build();
+
+        gamePointsRepository.save(gamePoints); // 새로운 게임 기록 저장
+        userRepository.save(user); // 사용자 업데이트 (포인트 변경 사항 저장)
+    }
+
 }

@@ -2,6 +2,7 @@ package org.zerock.projectmeongmung.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 

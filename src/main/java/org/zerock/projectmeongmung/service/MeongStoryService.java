@@ -49,3 +49,4 @@ public interface MeongStoryService {
 
     List<MeongStoryDTO> getTop5StoriesByLikeCount();
 }
+

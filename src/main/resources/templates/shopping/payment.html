@@ -6,7 +6,7 @@
     <title>제목 입력란</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- 부트스트랩 cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- 부트스트랩 아이콘 cdn -->
@@ -16,45 +16,14 @@
     <!--우편번호-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:src="@{js/roadAddress.js}"></script>
+    <script th:src="@{js/paymentPortOne.js}"></script>
     <!--포트원-->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
-<script>
-    // 포트원
-    var IMP = window.IMP;
-    IMP.init('imp73447046')
 
-    function requestPay() {
-        // 결제창 호출
-        IMP.request_pay(
-            {
-                // 파라미터 값 설정
-                pg: "kakaopay.TC0ONETIME",
-                pay_method: "card",
-                merchant_uid: "57008833-33004", // 상점 고유 주문번호
-                name: "포트원 테스트",
-                amount: 1004,
-                buyer_email: "good@portone.io",
-                buyer_name: "포트원 기술지원팀",
-                buyer_tel: "010-1234-5678",
-                buyer_addr: "서울특별시 강남구 삼성동",
-                buyer_postcode: "123-456",
-            },
-            function (rsp) {
-                if (rsp.success) {
-                    // 결제 성공
-                    form.action = "/payment_complete";
-                    form.submit(); // 폼 제출
-                } else {
-                    alert("결제에 실패하였습니다. 에러: " + rsp.error_msg);
-                }
-            });
-    }
-
-</script>
 <style>
     /* styles.css */
-    .container{
+    .container {
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -125,67 +94,71 @@
 <!-- 메인 컨텐츠 영역 -->
 
 
-    <div class="container">
-        <div class="oderinformation">
-            <h5>주문하신 상품 정보</h5>
-            <div class="product-info">
-                <p><strong>상품명:</strong> <span th:text="${product.pname}"></span></p>
-                <p><strong>가격:</strong> <span th:text="${product.pprice} + '원'"></span></p>
-                <p><strong>브랜드:</strong> <span th:text="${product.pcompany}"></span></p>
-                <img th:src="@{'/image/product/' + ${product.productphoto}}" alt="상품 이미지" class="img-fluid">
-            </div>
+<div class="container">
+    <div class="oderinformation">
+        <h5>주문하신 상품 정보</h5>
+        <div class="product-info">
+            <p><strong>상품명:</strong> <span th:text="${product.pname}"></span></p>
+            <p><strong>가격:</strong> <span th:text="${product.pprice} + '원'"></span></p>
+            <p><strong>브랜드:</strong> <span th:text="${product.pcompany}"></span></p>
+            <img th:src="@{'/image/product/' + ${product.productphoto}}" alt="상품 이미지" class="img-fluid">
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <h5>결제 포인트 정보</h5>
-        <div>
-            <div class="point">
-                현재 보유 중인 젤리: <span th:text="${jellyPoints}"></span> 개<br>
-                젤리 차감 후 결제 금액: <span th:text="${finalPrice}"></span> 원
-            </div>
+<div class="container">
+    <h5>결제 포인트 정보</h5>
+    <div>
+        <div class="point">
+            현재 보유 중인 젤리: <span th:text="${jellyPoints}"></span> 개<br>
+            젤리 차감 후 결제 금액: <span th:text="${finalPrice}"></span> 원
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <h1>결제 정보</h1>
+    <!--폼에 히든으로 제품아이디값 가지고 오기 -->
+    <form action="/payment_complete" method="POST">
+        <input type="hidden" id="productIdField" name="productId" th:value="${product.pid}">
+        <input type="hidden" id="totalprice" name="totalprice" th:value="${product.pprice}">
+
+        <div class="form-group">
+            <label for="resname">받는 사람 이름</label>
+            <input type="text" id="resname" name="resname" required maxlength="20">
+        </div>
+
+        <div class="form-group">
+            <label for="resphone">연락처</label>
+            <input type="text" id="resphone" name="resphone" required maxlength="20">
+        </div>
+
+        <div class="form-group">
+            <label>주소</label>
+            <input type="text" id="postcode" name="postcode" placeholder="우편번호">
+            <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+            <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소">
+            <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소">
+            <span id="guide" style="color:#999;display:none"></span><input type="text" id="detailaddress"
+                                                                           name="detailaddress" placeholder="상세주소">
+            <input type="text" id="extraaddress" name="extraaddress" placeholder="참고항목">
+        </div>
+
+        <div class="form-group">
+            <label for="resrequirement">요청 사항</label>
+            <input type="text" id="resrequirement" name="resrequirement" maxlength="100">
+        </div>
+
+        <div class="form-group">
+            <!--                <a th:href="@{/payment_complete}">-->
+            <!-- requestCardPay -->
+            <button type="button" onclick="requestPay()">카카오PAY 결제하기</button>
+            <button type="button" onclick="requestCardPay()">신용카드 결제하기</button>
 
         </div>
-    </div>
-
-    <div class="container">
-        <h1>결제 정보</h1>
-        <!--폼에 히든으로 제품아이디값 가지고 오기 -->
-        <form action="/payment_complete" method="POST">
-            <input type="hidden" id="productIdField" name="productId" th:value= "${product.pid}">
-            <input type="hidden" id="totalprice" name="totalprice" th:value="${product.pprice}">
-
-            <div class="form-group">
-                <label for="resname">받는 사람 이름</label>
-                <input type="text" id="resname" name="resname" required maxlength="20">
-            </div>
-
-            <div class="form-group">
-                <label for="resphone">연락처</label>
-                <input type="text" id="resphone" name="resphone" required maxlength="20">
-            </div>
-
-            <div class="form-group">
-                <label>주소</label>
-                <input type="text" id="postcode" name="postcode" placeholder="우편번호">
-                <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-                <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소">
-                <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소">
-                <span id="guide" style="color:#999;display:none"></span><input type="text" id="detailaddress" name="detailaddress" placeholder="상세주소">
-                <input type="text" id="extraaddress" name="extraaddress" placeholder="참고항목">
-            </div>
-
-            <div class="form-group">
-                <label for="resrequirement">요청 사항</label>
-                <input type="text" id="resrequirement" name="resrequirement" maxlength="100">
-            </div>
-
-            <div class="form-group">
-<!--                <a th:href="@{/payment_complete}">-->
-                    <button onclick="requestPay()" type="submit">카카오PAY 결제하기</button></a>
-            </div>
-        </form>
-    </div>
+    </form>
+</div>
 
 
 <!-- 푸터 영역 -->

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 @Table(name="member")

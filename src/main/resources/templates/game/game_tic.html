@@ -192,11 +192,11 @@
     };
 
     const savePlayTime = () => {
-        localStorage.setItem('lastPlayedttt', Date.now());
+        localStorage.setItem(`lastPlayedDateRSP_${uid}`, Date.now());
     }
 
     const canPlayToday = () => {
-        const lastPlayed = localStorage.getItem('lastPlayedttt');
+        const lastPlayed = localStorage.getItem(`lastPlayedDateRSP_${uid}`);
         if (!lastPlayed) return true;
         const lastPlayedDate = new Date(parseInt(lastPlayed));
         const today = new Date();
@@ -218,7 +218,8 @@
                     method: 'POST',
                     data: {
                         points: 50, // 이기면 얻는 젤리 포인트
-                        uid: uid // 사용자 ID
+                        uid: uid, // 사용자 ID
+                        gameType: 'ttt'
                     },
                     success: function (response) {
                         console.log('젤리 적립 성공!');
