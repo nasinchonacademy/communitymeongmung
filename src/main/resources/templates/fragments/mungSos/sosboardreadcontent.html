@@ -206,11 +206,21 @@
                     $.ajax({
                         url: '/sosboardlike',
                         type: 'POST',
+                        contentType: 'application/json',
                         data: JSON.stringify({ seq: seq }),
                         success: function(response) {
-                            $("#likecount").text(response.likecount);
+                            console.log(response);
+                            if (response.likecount !== undefined) {
+                                $("#likecount").text(response.likecount);
+                            } else {
+                                console.error('서버 응답에서 likecount를 찾을 수 없습니다.');
+                            }
+
+                            var today = new Date().toISOString().split('T')[0];
+                            localStorage.setItem('lastLikeDate', today);
                         },
                         error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
                             alert("이미 좋아요를 누른 게시물입니다.");
                         }
                     });
@@ -219,8 +229,11 @@
                 var likeButton = document.getElementById('likeButton');
                 if (likeButton) {
                     likeButton.addEventListener('click', handleLikeButtonClick);
+                } else {
+                    console.error('좋아요 버튼을 찾을 수 없습니다.');
                 }
 
+                // 페이지 로드 시 댓글 목록 불러오기
                 loadComments();
             });
 
