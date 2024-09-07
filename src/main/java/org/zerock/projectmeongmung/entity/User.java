@@ -72,6 +72,9 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private boolean admin = false;
 
+    @Column(name = "isvet", nullable = false)
+    private boolean vet = false;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "regdate", nullable = false, updatable = false)
     @CreatedDate
@@ -102,7 +105,7 @@ public class User implements UserDetails {
 
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,
-                String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint) {
+                String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint, boolean admin, boolean vet) {
         this.uid = uid;
         this.nickname = nickname;
         this.email = email;
@@ -120,6 +123,7 @@ public class User implements UserDetails {
         this.personalinfo = personalinfo;
         this.regDate = new Date();
         this.admin = false;
+        this.vet = false;
     }
 
 

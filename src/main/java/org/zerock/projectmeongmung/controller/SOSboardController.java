@@ -55,6 +55,7 @@ public class SOSboardController {
     private final SOSlilkeService slilkeService;
     private final SOSBoardCommentRepository sosboardCommentRepository;
 
+
     @GetMapping("/soshospitallist")
     public String listContent(
             @RequestParam(value = "current", defaultValue = "radio1") String current,
@@ -339,7 +340,7 @@ public class SOSboardController {
 
         try {
             // 댓글 삭제 로직 호출
-           sosboardService.deleteSOSboard(seq);
+            commentService.removeComment(commentId);
 
             // 성공적으로 처리되었음을 응답
             Map<String, Object> response = new HashMap<>();

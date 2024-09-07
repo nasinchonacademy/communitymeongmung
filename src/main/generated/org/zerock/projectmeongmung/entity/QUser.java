@@ -68,6 +68,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath uid = createString("uid");
 
+    public final BooleanPath vet = createBoolean("vet");
+
     public final DateTimePath<java.util.Date> withdrawaldate = createDateTime("withdrawaldate", java.util.Date.class);
 
     public QUser(String variable) {

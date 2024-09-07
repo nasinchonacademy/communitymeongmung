@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.projectmeongmung.dto.VetDTO;
 import org.zerock.projectmeongmung.entity.Vet;
 import org.zerock.projectmeongmung.entity.VetLog;
+import org.zerock.projectmeongmung.service.FileService;
 import org.zerock.projectmeongmung.service.VetLogService;
 import org.zerock.projectmeongmung.service.VetService;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")  // 클래스 레벨에서 기본 경로를 설정
@@ -23,6 +25,8 @@ public class VetAdminController {
     private VetService vetService;
     @Autowired
     private VetLogService vetLogService;
+    @Autowired
+    private FileController fileController;
 
     // 기본 관리자 페이지로 이동
     @GetMapping("/index")
@@ -69,17 +73,16 @@ public class VetAdminController {
         return "redirect:/admin/vetlist";
     }
 
-    // 수의사 수정 페이지로 이동
     @GetMapping("/vet/edit/{vetid}")
     public String editVet(@PathVariable Long vetid, Model model) {
         VetDTO vetDTO = vetService.getVetById(vetid);
 
-        // description을 하나의 문자열로 합침
-        if (vetDTO.getDescription() != null) {
-            String descriptionText = String.join("\n", vetDTO.getDescription());
-            model.addAttribute("descriptionText", descriptionText);  // 문자열로 합친 값을 모델에 추가
+        // description을 하나의 문자열로 합침, 줄바꿈 유지
+        if (vetDTO.getDescription() != null && !vetDTO.getDescription().isEmpty()) {
+            String descriptionText = String.join("\n", vetDTO.getDescription());  // 줄바꿈 유지
+            model.addAttribute("descriptionText", descriptionText);
         } else {
-            model.addAttribute("descriptionText", "");  // description이 null일 경우 빈 문자열
+            model.addAttribute("descriptionText", "");  // description이 null이거나 비어있을 경우 빈 문자열
         }
 
         model.addAttribute("vetDTO", vetDTO);
@@ -88,19 +91,26 @@ public class VetAdminController {
 
     // 수의사 수정 처리
     @PostMapping("/vet/edit/{vetid}")
-    public String updateVet(@PathVariable Long vetid, @ModelAttribute VetDTO vetDTO) throws IOException {
-        String descriptionText = vetDTO.getDescription().get(0);  // 텍스트 영역의 내용을 가져옴
-        List<String> descriptions = Arrays.asList(descriptionText.split("\n"));  // 여러 줄로 분리
-        vetDTO.setDescription(descriptions);  // 분리된 내용을 다시 저장
+    public String updateVet(@PathVariable Long vetid, @ModelAttribute VetDTO vetDTO,
+                            @RequestParam("description") String descriptionText) throws IOException {
+
+        // 저장할 때 description을 줄 단위로 분리하고 쉼표를 모두 제거하여 리스트에 저장
+        List<String> descriptions = Arrays.stream(descriptionText.split("\n"))
+                .map(line -> line.replaceAll(",", ""))  // 쉼표 제거
+                .map(String::trim)  // 각 줄 앞뒤 공백 제거
+                .filter(line -> !line.isEmpty())  // 빈 줄 제거
+                .collect(Collectors.toList());
+
+        vetDTO.setDescription(descriptions);  // 쉼표 제거된 내용을 다시 저장
+
+        // 프로필 사진이 업로드되었는지 확인하고 처리
+        if (vetDTO.getProfilePhoto() != null && !vetDTO.getProfilePhoto().isEmpty()) {
+            String profilePhotoFileName = fileController.saveProfilePhoto(vetDTO.getProfilePhoto());
+            vetDTO.setProfilePhotoPath(profilePhotoFileName);  // 새 프로필 사진 파일명 저장
+        }
+
         vetService.updateVet(vetid, vetDTO);
         return "redirect:/admin/vetlist";  // 수정 후 목록으로 이동
-    }
-
-    // 수의사 삭제 처리
-    @PostMapping("/vet/delete/{vetid}")
-    public String deleteVet(@PathVariable Long vetid) {
-        vetService.deleteVet(vetid);
-        return "redirect:/admin/vetlist";  // 삭제 후 목록으로 이동
     }
 
     @GetMapping("/details/{vetid}")

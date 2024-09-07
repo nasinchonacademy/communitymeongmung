@@ -1,9 +1,14 @@
 package org.zerock.projectmeongmung.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.VetDTO;
+import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.entity.Vet;
+import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.repository.VetRepository;
 import org.zerock.projectmeongmung.controller.FileController;
 
@@ -15,35 +20,53 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class VetService {
 
-    @Autowired
-    private VetRepository vetRepository;
+    private final VetRepository vetRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final FileController fileController;
 
-    @Autowired
-    private FileController fileController;
-
-    // 수의사 등록 메서드
+    // 수의사 등록 메서드 (User와 Vet 동시에 저장)
     public Vet registerVet(VetDTO vetDTO) throws IOException {
+        // 프로필 사진 저장 로직
         String profilePhotoFileName = null;
-
         if (vetDTO.getProfilePhoto() != null && !vetDTO.getProfilePhoto().isEmpty()) {
-            // 프로필 사진을 저장하고 파일명을 가져옴
             profilePhotoFileName = fileController.saveProfilePhoto(vetDTO.getProfilePhoto());
         }
 
-        // VetDTO를 Vet 엔티티로 변환 및 프로필 사진 파일 이름 설정
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(vetDTO.getPassword());  // 예시로 이름+123으로 기본 비밀번호 설정
+
+        // Vet 엔티티 생성
         Vet vet = Vet.builder()
                 .vetname(vetDTO.getVetname())
                 .animalhospitlename(vetDTO.getAnimalhospitlename())
-                .registerdate(vetDTO.getRegisterdate())  // String 처리
+                .registerdate(vetDTO.getRegisterdate())
                 .withdrawaldate(vetDTO.getWithdrawaldate() != null ? Timestamp.valueOf(vetDTO.getWithdrawaldate() + " 00:00:00") : null)
+                .email(vetDTO.getEmail())
                 .profilePhoto(profilePhotoFileName)
                 .description(vetDTO.getDescription())
-                .visibility(vetDTO.getVisibility())  // 초기 공개 여부 설정
+                .visibility(vetDTO.getVisibility())
+                .username(vetDTO.getUsername()) // 이메일을 사용자 ID로 사용
+                .password(encodedPassword)
                 .build();
 
-        return vetRepository.save(vet);
+        // User 엔티티에 정보 저장
+        User user = User.builder()
+                .uid(vetDTO.getUsername())
+                .email(vetDTO.getEmail())                  // 이메일
+                .nickname(vetDTO.getVetname())              // 닉네임을 수의사 이름으로 설정
+                .name(vetDTO.getVetname())                  // 이름도  수의사 이름으로 설정
+                .password(encodedPassword)                 // 암호화된 비밀번호
+                .profilePhoto(profilePhotoFileName)        // 프로필 사진
+                .vet(true)
+                .build();
+
+        // 저장
+        userRepository.save(user);
+        return vetRepository.save(vet);  // Vet 저장
     }
 
     // 수의사 정보 조회 메서드
@@ -145,9 +168,12 @@ public class VetService {
         return vets;
     }
 
+    @Transactional
+    public void deleteVet(String username) {
+        // 수의사 삭제
+        vetRepository.deleteByUsername(username);
 
-    // 수의사 삭제 메서드
-    public void deleteVet(Long vetid) {
-        vetRepository.deleteById(vetid);
+        // User 삭제
+        userRepository.deleteByUid(username);
     }
 }

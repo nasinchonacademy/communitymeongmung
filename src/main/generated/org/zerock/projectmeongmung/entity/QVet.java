@@ -24,6 +24,10 @@ public class QVet extends EntityPathBase<Vet> {
 
     public final ListPath<String, StringPath> description = this.<String, StringPath>createList("description", String.class, StringPath.class, PathInits.DIRECT2);
 
+    public final StringPath email = createString("email");
+
+    public final StringPath password = createString("password");
+
     public final StringPath profilePhoto = createString("profilePhoto");
 
     public final NumberPath<Integer> recommendationCount = createNumber("recommendationCount", Integer.class);
@@ -31,6 +35,8 @@ public class QVet extends EntityPathBase<Vet> {
     public final SetPath<VetRecommendation, QVetRecommendation> recommendations = this.<VetRecommendation, QVetRecommendation>createSet("recommendations", VetRecommendation.class, QVetRecommendation.class, PathInits.DIRECT2);
 
     public final StringPath registerdate = createString("registerdate");
+
+    public final StringPath username = createString("username");
 
     public final NumberPath<Long> vetid = createNumber("vetid", Long.class);
 

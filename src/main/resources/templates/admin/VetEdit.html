@@ -61,11 +61,13 @@
             <label for="animalhospitlename">동물 병원 이름</label>
             <input type="text" id="animalhospitlename" th:field="*{animalhospitlename}" placeholder="동물 병원 이름" required>
         </div>
+
         <div class="form-group">
             <label for="description">소개:</label>
             <!-- description 값을 textarea에서 보여주고 수정할 수 있도록 -->
-            <textarea th:text="${descriptionText}" name="description" class="form-control" rows="10" id="description"></textarea>
+            <textarea th:utext="${descriptionText}" name="description" class="form-control" rows="10" id="description"></textarea>
         </div>
+
         <div class="form-group">
             <label for="registerdate">등록 날짜</label>
             <input type="date" id="registerdate" th:field="*{registerdate}" placeholder="YYYY-MM-DD" required>
