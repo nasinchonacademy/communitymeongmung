@@ -7,15 +7,26 @@
             </div>
 
             <hr>
-            <div class="form-group">
-                <input type="text" class="title" name="title" th:value="${dto.title}" readonly>
-                <input type="text" class="viewcount" name="viewcount" th:value="'조회 ' + ${dto.viewcount}" readonly>
-                <input type="text" class="likecountTitle" name="viewcount" th:value="'좋아요 ' + ${dto.likecount}" readonly>
+            <div class="form-group1">
+                <span class="category" th:text="${dto.category == 'Category1' ? '애견 동반 장소' : (dto.category == 'Category2' ? '일상' : '기타')}"></span>
+                <input type="text" class="title2" name="title2" th:value="${dto.title}" readonly>
+                <input type="text" class="regdate" name="regdate"
+                       th:value="' |    ' + ${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
             </div>
 
             <div class="form-group">
-                <input type="text" class="writer" name="writer" th:value="${dto.nickname}" readonly>
-                <input type="text" class="regdate" name="regdate" th:value="'  |  '+${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                <input type="text" class="writer" name="writer"
+                       th:value="${dto.nickname}" readonly>
+                <span class="vlc">
+                    <input type="text" class="viewcount" name="viewcount"
+                           th:value="'조회 ' + ${dto.viewcount} + '  |  '" readonly>
+
+                    <input type="text" class="likecountTitle" name="likecount"
+                           th:value="'좋아요 ' + ${dto.likecount} + '  |  '" readonly>
+
+                    <input type="text" class="commentcountTitle" name="commentcount"
+                           th:value="'댓글 ' + ${dto.commentcount}" readonly>
+                </span>
             </div>
             <hr>
 

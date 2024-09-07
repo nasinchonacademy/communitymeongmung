@@ -58,12 +58,11 @@ img.dogdefault {
 input.title {
     font-weight: 900;
     font-size: 14px;
-    margin-left: 15px;
-    margin-top: 5px;
+    margin-bottom: 5px;
     width: 778px;
 }
 
-input.writer, input.regdate {
+input.writer     {
     font-size: 14px;
     margin-left: 15px;
 }
@@ -260,20 +259,89 @@ button.allboard{
 
 input.regdate {
     text-align: right;
-    margin-left: 690px;
+    /* margin-left: 690px; */
+    margin-right: 15px;
+    font-size: 12.6px;
+}
+
+
+
+input.commentcountTitle {
+    margin-right: 0px;
+    width: 42px;
+    font-size: 14px;
+    text-align: right;
 }
 
 input.likecountTitle {
     margin-right: 0px;
-    margin-left: -50px;
-    width: 50px;
+    width: 70px;
+    font-size: 14px;
     text-align: right;
-    font-size: 10px;
 }
 
 input.viewcount {
     margin-right: 0px;
+    width: 84px;
+    font-size: 14px;
+    text-align: right;
+}
+
+.vlc {
+    display: inline-block;
+    float: right;
+    margin-right: 15px;
+    pointer-events: none; /* 클릭과 포인터 이벤트 비활성화 */
+
+}
+.comment-profile-photo {
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.vet-comment {
+    border-left: 4px solid #007BFF;  /* 수의사 댓글은 왼쪽에 파란 테두리를 추가 */
+    background-color: #e8f4fd;       /* 수의사 댓글은 다른 배경색 */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.vet-badge {
+    background-color: #007BFF;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+input.category {
     margin-left: 15px;
-    width: 80px;
-    font-size: 10px;
+}
+
+.form-group1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category {
+    background-color: #f0f0f0;
+    padding: 0px 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 11px;
+}
+
+.title2 {
+    flex: 1;
+    padding-left: 2px;
+    font-weight: 900;
+    font-size: 14px;
+    margin-bottom: 5px;
+    width: 778px;
 }

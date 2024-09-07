@@ -92,6 +92,8 @@ public class MungStoryController {
         // 로그로 결과 확인
         log.info("Result: {}", result);
 
+        result.getDtoList().forEach(dto -> dto.setTitle(service.trimTitle(dto.getTitle())));
+
         // 모델에 결과 및 현재 페이지, 검색어를 설정
         model.addAttribute("result", result);
         model.addAttribute("current", current);
@@ -195,7 +197,7 @@ public class MungStoryController {
 
     public String saveBoardPhoto(MultipartFile file) throws IOException {
         // 저장할 경로 설정
-        String uploadDir = "/Users/yunakang/uploads/";
+        String uploadDir = "C:\\work\\uploads\\";
 
         // 파일명을 고유하게 하기 위해 UUID를 사용
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -312,7 +314,7 @@ public class MungStoryController {
         LocalDate today = LocalDate.now();
 
         // 데이터베이스에서 사용자 좋아요 기록 조회
-        boolean hasLikedToday = storyLikeService.hasLikedToday(currentUser, story, today);
+        boolean hasLikedToday = storyLikeService.hasLikedBefore(currentUser, story);
 
         if (hasLikedToday) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("하루에 한 번만 좋아요를 누를 수 있습니다.");
@@ -390,6 +392,8 @@ public class MungStoryController {
 
         log.info("Adding comment to story seq: " + seq);
 
+        serviceC.incrementCommentCount(seq);
+
         MeongStory story = meongStoryRepository.findById(seq).orElse(null);
 
         if (story == null) {
@@ -429,6 +433,8 @@ public class MungStoryController {
         try {
             // 댓글 삭제 로직 호출
             serviceC.removeComment(commentId);
+
+            serviceC.decrementCommentCount(seq);
 
             // 성공적으로 처리되었음을 응답
             Map<String, Object> response = new HashMap<>();

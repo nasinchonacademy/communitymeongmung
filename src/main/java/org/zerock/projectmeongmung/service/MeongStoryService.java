@@ -48,5 +48,7 @@ public interface MeongStoryService {
     void incrementViewCount(long seq);
 
     List<MeongStoryDTO> getTop5StoriesByLikeCount();
+
+    String trimTitle(String title);
 }
 

@@ -14,6 +14,7 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -204,6 +205,7 @@ public class MeongStoryServiceImpl implements MeongStoryService {
                 .deleted(entity.getDeleted())
                 .uid(entity.getUser().getUid())
                 .nickname(entity.getUser().getNickname())  // User의 nickname을 DTO에 설정
+                .commentcount(entity.getCommentcount())
                 .build();
     }
 
@@ -233,6 +235,30 @@ public class MeongStoryServiceImpl implements MeongStoryService {
     public List<MeongStoryDTO> getTop5StoriesByLikeCount() {
         List<MeongStory> topStories = meongStoryRepository.findTop5ByOrderByLikecountDesc();
         return topStories.stream().map(this::entityToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public String trimTitle(String title) {
+        if (title == null) {
+            return "";
+        }
+
+        // 28바이트 이상이면 자르고 "..." 추가
+        if (title.getBytes(StandardCharsets.UTF_8).length > 40) {
+            int byteCount = 0;
+            StringBuilder trimmedTitle = new StringBuilder();
+
+            for (char c : title.toCharArray()) {
+                byteCount += String.valueOf(c).getBytes(StandardCharsets.UTF_8).length;
+                if (byteCount > 40) {
+                    break;
+                }
+                trimmedTitle.append(c);
+            }
+            return trimmedTitle.toString() + " ...";
+        } else {
+            return title;
+        }
     }
 
 }

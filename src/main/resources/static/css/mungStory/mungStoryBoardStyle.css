@@ -172,3 +172,9 @@ table th {
     background-color: #59a585; /* 마우스를 올려도 색이 변하지 않도록 설정 */
     color: white; /* 텍스트 색상도 그대로 유지 */
 }
+
+/* 댓글 색 */
+
+span.commentcountTitle {
+    color: #939393;
+}
