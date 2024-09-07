@@ -25,20 +25,28 @@
     IMP.init('imp73447046')
 
     function requestPay() {
-        // 결제창 호출
+        // 사용자로부터 폼 데이터를 가져오기
+        var resname = document.getElementById('resname').value;
+        var resphone = document.getElementById('resphone').value;
+        var postcode = document.getElementById('postcode').value;
+        var roadaddress = document.getElementById('roadaddress').value;
+        var jibunaddress = document.getElementById('jibunaddress').value;
+        var totalprice = document.getElementById('totalprice').value;
+        var productname = document.querySelector('.product-info span').innerText; // 상품명 가져오기
+
+        // 포트원 결제창 호출
         IMP.request_pay(
             {
-                // 파라미터 값 설정
                 pg: "kakaopay.TC0ONETIME",
                 pay_method: "card",
-                merchant_uid: "57008833-33084", // 상점 고유 주문번호
-                name: "포트원 테스트",
-                amount: 1004,
-                buyer_email: "good@portone.io",
-                buyer_name: "포트원 기술지원팀",
-                buyer_tel: "010-1234-5678",
-                buyer_addr: "서울특별시 강남구 삼성동",
-                buyer_postcode: "123-456",
+                merchant_uid: "merchant_" + new Date().getTime(),  // 동적으로 생성된 주문번호
+                name: productname,  // 상품명
+                amount: totalprice,  // 결제할 금액
+                buyer_email: "example@example.com",  // 예시: 실제로는 사용자 이메일을 가져와야 함
+                buyer_name: resname,  // 받는 사람 이름
+                buyer_tel: resphone,  // 연락처
+                buyer_addr: roadaddress + " " + jibunaddress,  // 도로명 주소와 지번 주소를 합침
+                buyer_postcode: postcode,  // 우편번호
             },
             function (rsp) {
                 if (rsp.success) {
