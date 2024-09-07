@@ -123,15 +123,15 @@ public class SOSboardController {
     }
 
     @GetMapping("/sosboardread")
-    public String sosboardread(@RequestParam("sosboardseq") long sosboardseq,
+    public String sosboardread(@RequestParam("seq") long seq,
                                @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                                Model model,@RequestParam("current") String current,
                                RedirectAttributes redirectAttributes) {
 
         // 조회수 증가
-        sosboardService.increaseViewcount(sosboardseq);
+        sosboardService.increaseViewcount(seq);
 
-        SOSboardDTO sosdto = sosboardService.read(sosboardseq);
+        SOSboardDTO sosdto = sosboardService.read(seq);
 
         //현재 로그인한 사용자 닉네임을 model에 추가
         User user =(User)model.getAttribute("user");
@@ -144,7 +144,7 @@ public class SOSboardController {
         model.addAttribute("sosdto", sosdto);
 
         //댓글 목록 로드
-        List<SOSBoardCommentDto>  commentDtoList = commentService.getCommentsByBoardId(sosboardseq);
+        List<SOSBoardCommentDto>  commentDtoList = commentService.getCommentsByBoardId(seq);
         if (commentDtoList != null || commentDtoList.isEmpty()) {
             model.addAttribute("error", "No comments found for this story");
         }else{
@@ -155,40 +155,43 @@ public class SOSboardController {
     }
 
     @GetMapping("/sosboardedit")
-    public String sosboardedit(long seq,@RequestParam("requestDTO") PageRequestDTO requestDTO, Model model,
-                                @RequestParam("current") String current) {
-
+    public String sosboardedit(
+            long seq,
+            @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model,
+            @RequestParam("current") String current
+    ) {
         log.info(seq);
-        SOSboardDTO sosboardDTO = sosboardService.read(seq);
 
-        model.addAttribute("sosboardDTO", sosboardDTO);
+        SOSboardDTO dto = sosboardService.read(seq);
+
+        model.addAttribute("dto", dto);
         model.addAttribute("current", current);
 
-        return "meongsoshtml/sosboardedit";
+        return "meongsoshtml/sosqnaedit";
     }
 
     @PostMapping("/sosboardedit")
-    public String modifySosboard(Model model, SOSboardDTO sosboardDTO,
+    public String modifySosboard(Model model, SOSboardDTO dto,
                                  @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                                  Authentication authentication,  RedirectAttributes redirectAttributes,
-                                 @RequestParam("current") int current){
+                                 @RequestParam("current") String current){
 
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
 
         log.info("post modify...");
-        log.info("dto: " + sosboardDTO);
+        log.info("dto: " + dto);
 
-        sosboardService.modify(sosboardDTO);
+        sosboardService.modify(dto);
 
         redirectAttributes.addAttribute("page",requestDTO.getPage());
         redirectAttributes.addAttribute("type",requestDTO.getType());
         redirectAttributes.addAttribute("keyword",requestDTO.getKeyword());
         redirectAttributes.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
-        redirectAttributes.addAttribute("seq", sosboardDTO.getSosboardseq());
+        redirectAttributes.addAttribute("seq", dto.getSosboardseq());
 
-        return "redirect:/meongsoshtml/sosboardread";
+        return "redirect:/sosboardread";
     }
 
 
@@ -201,7 +204,7 @@ public class SOSboardController {
         // UID를 통해 사용자 정보를 가져옴
         User currentUser = userDetailService.findUserByUid(uid);
 
-        // 게시물 ID로 MeongStory 객체를 조회
+        // 게시물 ID로 sosboard 객체를 조회
         SOSboard sosboard = sosboardrepository.findById(request.getSeq()).orElse(null);
 
         if (sosboard == null) {
@@ -229,15 +232,15 @@ public class SOSboardController {
     public String remove(long seq,
                          RedirectAttributes redirectAttributes,
                          Model model,
-                         @RequestParam("current") int current){
+                         @RequestParam("current") String current){
         log.info("seq: " + seq);
 
         sosboardService.remove(seq);
 
-        redirectAttributes.addFlashAttribute("msg", seq);
+        redirectAttributes.addFlashAttribute("seq", seq);
         model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
 
-        return "redirect:/mungstory";
+        return "redirect:/soshospitallist";
     }
 
     // 댓글을 읽어오는 메서드

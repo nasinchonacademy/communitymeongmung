@@ -10,6 +10,8 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.BuyRepository;
 import org.zerock.projectmeongmung.repository.ProductRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BuyService {
@@ -47,5 +49,22 @@ public class BuyService {
     public Buy getOrderById(Long orderNo) {
         return buyRepository.findById(orderNo)
                 .orElseThrow(() -> new IllegalArgumentException("주문번호를 조회하지 못했습니다."));
+    }
+
+    public List<Buy> getOrdersByUser(User user) {
+        return buyRepository.findByUser(user);
+    }
+
+    // 주문 삭제
+    @Transactional
+    public void cancelOrder(Long orderNo) {
+        // 주문 번호
+        Buy buy = buyRepository.findById(orderNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
+        buy.setStatus("취소됨");
+
+        // 주문 삭제 처리
+        buyRepository.delete(buy);
     }
 }

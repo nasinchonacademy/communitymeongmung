@@ -37,7 +37,7 @@
                  alt="Story Photo" style="width:100px; height:70px;">
           </td>
           <td>
-            <a th:href="@{sosboardread/storyread(page=1, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, seq=${story1.sosboardseq})}"
+            <a th:href="@{/sosboardread(seq=${story1.sosboardseq}, page=${pageRequestDTO.page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current='radio2')}"
                th:text="${story1.title}"></a>
           </td>
           <td th:text="${story1.nickname}"></td>
@@ -55,7 +55,7 @@
                  alt="Story Photo" style="width:100px; height:70px;">
           </td>
           <td>
-            <a th:href="@{/sosboardread(sosboardseq=${story.sosboardseq}, page=${pageRequestDTO.page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current='radio2')}"
+            <a th:href="@{/sosboardread(seq=${story.sosboardseq}, page=${pageRequestDTO.page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current='radio2')}"
                th:text="${story.title}"></a>
 
           </td>
