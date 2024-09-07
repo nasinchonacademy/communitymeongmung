@@ -9,6 +9,7 @@
             <input type="hidden" name="likecount" th:value="${dto.likecount}">
             <input type="hidden" name="commentcount" th:value="${dto.commentcount}">
             <input type="hidden" name="viewcount" th:value="${dto.viewcount}">
+            <input type="hidden" name="picture" th:value="${dto.picture}">
             <input type="hidden" name="id" th:value="${user.id}">
             <input type="hidden" name="category" th:value="${(current == 2 || current == 3) ? (current == 2 ? 'Category1' : 'Category2') : 'Category1'}">
 

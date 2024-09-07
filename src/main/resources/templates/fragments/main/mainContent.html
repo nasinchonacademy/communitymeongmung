@@ -2,13 +2,59 @@
     <section>
         <div class="container2">
             <div class="text-block">
-                <p class="maintitle">송파구의 동물병원</p>
-                <p class="maincontent">본문 내용이 들어갈 부분입니다.</p>
-                <p class="maintitle2">추가 내용이 들어갈 부분입니다.</p>
+                <p class="maintitle">멍멍이 이야기로<br>뭉치는 공간, <span class="highlight-text">멍뭉</span></p>
+                <p class="maincontent">강아지 정보 포럼입니다. 현재는 송파구청 시범운영중이예요!</p>
             </div>
             <div class="image-block">
                 <img class="logoimg" src="/image/main/logoSizeup.png" alt="강아지 이미지">
             </div>
+        </div>
+
+        <div class="icon-container">
+            <a th:href="@{/mungstory}" class="text-link" id="mungstoryId">
+                <img id="mungstory" th:src="@{/image/main/free-icon-pawprints-685005.png}" alt="멍스토리">
+                <div class="text">멍 스토리</div>
+            </a>
+            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();" class="text-link" id="meongSosId">
+                <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
+                <div class="text">멍SOS</div>
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist}" class="text-link" id="meongSosId">
+                <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
+                <div class="text">멍SOS</div>
+            </a>
+            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();" class="text-link" id="hospitalId">
+                <img id="hospital" th:src="@{/image/main/free-icon-veterinary-clinic-16326535.png}" alt="지역별 동물병원">
+                <div class="text">지역별 동물병원</div>
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist}" class="text-link" id="hospitalId">
+                <img id="hospital" th:src="@{/image/main/free-icon-veterinary-clinic-16326535.png}" alt="지역별 동물병원">
+                <div class="text">지역별 동물병원</div>
+            </a>
+            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist(isRadio2Selected=true)}" th:onclick="return checkLogin();" class="text-link" id="sosTalkId">
+                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
+                <div class="text">SOS 상담</div>
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist(isRadio2Selected=true)}" class="text-link" id="sosTalkId">
+                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
+                <div class="text">SOS 상담</div>
+            </a>
+            <a sec:authorize="isAnonymous()" th:href="@{/game_list}" th:onclick="return checkLogin();" class="text-link" id="jellyQuestId">
+                <img id="jellyQuest" th:src="@{/image/main/free-icon-dog-2934856.png}" alt="젤리퀘스트">
+                <div class="text">젤리 퀘스트</div>
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/game_list}" class="text-link" id="jellyQuestId">
+                <img id="jellyQuest" th:src="@{/image/main/free-icon-dog-2934856.png}" alt="젤리퀘스트">
+                <div class="text">젤리 퀘스트</div>
+            </a>
+            <a sec:authorize="isAnonymous()" th:href="@{/productMain}" th:onclick="return checkLogin();" class="text-link" id="mungShoppingId">
+                <img id="mungShopping" th:src="@{/image/main/KakaoTalk_20240906_165913724_02.png}" alt="멍뭉쇼핑">
+                <div class="text">멍뭉쇼핑</div>
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/productMain}" class="text-link" id="mungShoppingId">
+                <img id="mungShopping" th:src="@{/image/main/KakaoTalk_20240906_165913724_02.png}" alt="멍뭉쇼핑">
+                <div class="text">멍뭉쇼핑</div>
+            </a>
         </div>
 
 
@@ -19,7 +65,8 @@
                 <!-- 각 상품을 링크로 감싸서 클릭 시 이동 -->
                 <a th:href="@{/mungstory/storyread(page=${1},
                              type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}" style="text-decoration: none; color: inherit;">
-                    <img th:src="@{${story.picture}}" alt="Story Image" class="product-image">
+                    <img th:src="${story.picture != null and !story.picture.isEmpty() ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}"
+                         alt="Story Image" class="product-image">
                     <div class="description">
                         <p th:text="'작성자: ' + ${story.nickname}"></p>
                         <h3 th:text="${story.title}"></h3>

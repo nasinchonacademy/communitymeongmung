@@ -24,8 +24,6 @@ public class QSOSboard extends EntityPathBase<SOSboard> {
 
     public final NumberPath<Integer> commentcount = createNumber("commentcount", Integer.class);
 
-    public final SetPath<SOSboardcomment, QSOSboardcomment> comments = this.<SOSboardcomment, QSOSboardcomment>createSet("comments", SOSboardcomment.class, QSOSboardcomment.class, PathInits.DIRECT2);
-
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.util.Date> deldate = createDateTime("deldate", java.util.Date.class);
@@ -34,7 +32,7 @@ public class QSOSboard extends EntityPathBase<SOSboard> {
 
     public final DateTimePath<java.util.Date> moddate = createDateTime("moddate", java.util.Date.class);
 
-    public final StringPath picture = createString("picture");
+    public final ArrayPath<byte[], Byte> picture = createArray("picture", byte[].class);
 
     public final DateTimePath<java.util.Date> regdate = createDateTime("regdate", java.util.Date.class);
 

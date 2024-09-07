@@ -37,15 +37,15 @@ public class MeongStoryRepositoryTest {
             User user = userOptional.get();
 
             // MeongStory 엔터티를 생성하고 해당 사용자와 연관시켜 저장
-            IntStream.rangeClosed(1, 35).forEach(i -> {
+            IntStream.rangeClosed(1, 100).forEach(i -> {
                 MeongStory meongStory = MeongStory.builder()
                         .title("카테고리1 입니다" + i)                   // 제목 설정
                         .content("Content" + i)                  // 내용 설정
-                        .likecount(i)                            // 좋아요 수 설정
-                        .commentcount(i)                         // 댓글 수 설정
+                        .likecount(0)                            // 좋아요 수 설정
+                        .commentcount(0)                         // 댓글 수 설정
                         .category("Category" + 1)                // 카테고리 설정
-                        .viewcount(i)                            // 조회수 설정
-                        .picture("/image/tool/storydefault.PNG") // 이미지 경로 설정
+                        .viewcount(0)                            // 조회수 설정
+                        .picture(null)        // 이미지 경로 설정
                         .user(user)                              // User 객체와 연관 설정
                         .build();
 

@@ -58,6 +58,6 @@ public class FileController {
 
     // 파일 경로를 생성하는 메서드
     public String getProfilePhotoPath(String filename) {
-        return Paths.get("/Users/yunakang/uploads/").resolve(filename).toString();
+        return Paths.get("C:\\work\\uploads\\").resolve(filename).toString();
     }
 }
