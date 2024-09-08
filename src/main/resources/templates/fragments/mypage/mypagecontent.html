@@ -25,7 +25,10 @@
                 <div class="card mx-auto" style="width: 11.9rem;">
                   <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
                   <div class="card-body p-2">
-                    <h6 class="card-title" th:text="${story.title}">제목</h6>
+                    <h6 class="card-title">
+                        <a th:text="${story.title}" th:href="@{/mungstory/storyread(page=${1}, type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}"></a>
+                    </h6>
+
                     <p class="card-text mb-1" style="font-size: 0.85rem;" th:text="${story.likecount} + ' Likes'">100 Likes</p>
                     <p class="card-text" style="font-size: 0.85rem;">
                       <span th:text="${story.content.length() > 10 ? story.content.substring(0, 10) + '...' : story.content}"></span>
@@ -75,7 +78,7 @@
               </div>
               <div class="story-content">
                 <div class="story-title">
-                  <a th:href="@{'/story/' + ${story.seq}}" th:text="${story.title}">제목</a>
+                  <a th:href="@{/mungstory/storyread(page=${1}, type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}" th:text="${story.title}">제목</a>
                 </div>
                 <div class="story-meta">
                   <small><img src="/image/tool/boardregtime.png"></small>

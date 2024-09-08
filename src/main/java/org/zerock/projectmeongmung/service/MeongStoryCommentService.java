@@ -6,8 +6,16 @@ import org.zerock.projectmeongmung.entity.StoryComment;
 import java.util.List;
 
 public interface MeongStoryCommentService {
+
     StoryCommentDto Commentread(Long seq);  // 반환 타입: StoryCommentDto
+
     List<StoryCommentDto> getCommentsByStorySeq (Long seq);
+
     void CommentRegister(StoryCommentDto commentDto);  // 반환 타입: void
+
     void removeComment(Long commentId);
+
+    void incrementCommentCount(long seq);
+
+    void decrementCommentCount(long seq);
 }

@@ -20,9 +20,13 @@ public class StoryLikeService {
     @Autowired
     private MeongStoryRepository meongStoryRepository; // 게시물의 좋아요 수를 업데이트할 수 있는 repository
 
-    public boolean hasLikedToday(User user, MeongStory storySeq, LocalDate today) {
-        return storyLikeRepository.existsByUserAndStorySeqAndLikeDate(user, storySeq, today);
+    public boolean hasLikedBefore(User user, MeongStory storySeq) {
+        // 사용자가 이전에 해당 게시물에 좋아요를 눌렀는지 확인
+        return storyLikeRepository.existsByUserAndStorySeq(user, storySeq);
     }
+
+
+
 
     public void saveLikeRecord(User user, MeongStory storySeq, LocalDate today) {
         StoryLike storyLike = new StoryLike();

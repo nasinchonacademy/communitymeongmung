@@ -3,6 +3,7 @@ package org.zerock.projectmeongmung.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.zerock.projectmeongmung.dto.StoryCommentDto;
+import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.StoryComment;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.StoryCommentRepository;
@@ -64,5 +65,22 @@ public class MeongStoryCommentServiceImpl implements MeongStoryCommentService {
     public void removeComment(Long commentId) {
         storyCommentRepository.deleteById(commentId);  // 댓글 ID로 댓글 삭제
     }
+
+    @Override
+    public void incrementCommentCount(long seq) {
+        MeongStory story = meongStoryRepository.findById(seq)
+                .orElseThrow(() -> new RuntimeException("Story not found with seq: " + seq));
+        story.setCommentcount(story.getCommentcount() + 1); // viewcount 증가
+        meongStoryRepository.save(story); // 업데이트
+    }
+
+    @Override
+    public void decrementCommentCount(long seq) {
+        MeongStory story = meongStoryRepository.findById(seq)
+                .orElseThrow(() -> new RuntimeException("Story not found with seq: " + seq));
+        story.setCommentcount(story.getCommentcount() - 1); // viewcount 증가
+        meongStoryRepository.save(story); // 업데이트
+    }
+
 
 }

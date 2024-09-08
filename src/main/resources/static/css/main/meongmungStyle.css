@@ -238,9 +238,10 @@
 }
 
 .highlight-text {
-    color: #ffb658; /* 원하는 색상으로 변경 */
+    color: #ffb658;
     font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
-
+    font-size: 80px;
+    margin-left: -8px;
 }
 
 
@@ -270,7 +271,7 @@
 .text-block {
     margin-right: 20px;
     margin-top: 50px;
-    max-width: 423px;
+    max-width: 492px;
     /* display: flex; */
     /* vertical-align: middle; */
 }
