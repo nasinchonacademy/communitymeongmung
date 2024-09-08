@@ -1,13 +1,15 @@
 <main class="content" th:fragment="content">
     <section>
         <div class="container2">
-            <div class="text-block">
-                <p class="maintitle">멍멍이 이야기로<br>뭉치는 공간, <span class="highlight-text">멍뭉!</span></p>
-                <p class="maincontent">강아지 정보 포럼입니다. 현재는 송파구청 시범운영중이예요!</p>
-            </div>
             <div class="image-block">
                 <img class="logoimg" src="/image/main/logoSizeup.png" alt="강아지 이미지">
             </div>
+            <div class="text-block">
+                <p class="maintitle">멍멍이 이야기로</p>
+                    <p class="maintitle2">뭉치는 공간, <span class="highlight-text">멍뭉!</span></p>
+                <p class="maincontent">강아지 정보 포럼입니다. 현재는 송파구청 시범운영중이예요!</p>
+            </div>
+
         </div>
 
         <div class="icon-container">
@@ -56,6 +58,42 @@
                 <div class="text">멍뭉쇼핑</div>
             </a>
         </div>
+
+
+        <div class="container">
+            <a class="aTag1">
+                <img src="/image/main/rollet1.png" class="d-block w-100" alt="...">
+            </a>
+
+            <div class="bn">
+                <!-- carousel code here -->
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" data-bs-interval="3000">
+                            <a href="#">
+                                <img src="/image/main/bn3.png" class="d-block w-100" alt="...">
+                            </a>
+                        </div>
+                        <div class="carousel-item" data-bs-interval="3000">
+                            <a href="#">
+                                <img src="/image/main/bn4.png" class="d-block w-100" alt="...">
+                            </a>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
 
 
         <h6>이번 주 놓치기 아쉬운 멍스토리!!</h6>
