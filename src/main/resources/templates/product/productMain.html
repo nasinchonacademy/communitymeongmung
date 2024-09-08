@@ -28,36 +28,65 @@
         overflow: auto;
         background-color: rgba(0, 0, 0, 0.7);
         display: none;
+        animation: fadeIn 0.4s ease;
     }
 
     #modalBody {
-        width: 400px;
-        height: 600px;
+        /*width: 500px;*/
+        /*height: 700px;*/
+        /*padding: 40px;*/
+        /*margin: 0 auto;*/
+        /*border: 1px solid #777;*/
+        /*background-color: #fff;*/
+        /*border-radius: 16px;*/
+        /*text-align: center;*/
+        width: 500px;
+        height: auto;
         padding: 40px;
         margin: 0 auto;
-        border: 1px solid #777;
+        border: 1px solid #ddd;
         background-color: #fff;
         border-radius: 16px;
         text-align: center;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.4s ease;
     }
 
     #closeBtn {
-        float: right;
+        /*float: right;*/
+        /*font-weight: bold;*/
+        /*color: #777;*/
+        /*font-size: 25px;*/
+        /*cursor: pointer;*/
+        position: absolute;
+        top: 20px;
+        right: 20px;
         font-weight: bold;
-        color: #777;
+        color: #aaa;
         font-size: 25px;
         cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    #closeBtn:hover {
+        color: #333;
     }
 
     #modalProductImage {
-        width: 300px;
+        /*width: 300px;*/
+        /*height: 300px;*/
+        width: 100%;
+        max-width: 300px;
         height: 300px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-bottom: 20px;
     }
 
     .modal-buttons {
         display: flex;
         justify-content: space-around;
-        margin-top: 20px;
+        margin-top: 30px;
     }
 
     .modal-buttons button {
@@ -67,6 +96,7 @@
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        width: 48%;
     }
 
     .modal-buttons button:hover {
@@ -77,6 +107,7 @@
     .buy-button {
         background-color: #56c395;
         color: white;
+        font-weight: bold;
     }
 
     .buy-button:hover {
@@ -86,6 +117,7 @@
     .cart-button {
         background-color: #17a7ec;
         color: white;
+        font-weight: bold;
     }
 
     .cart-button:hover {
@@ -94,8 +126,61 @@
 
     .card-img-top {
         width: 100%; /* 컨테이너 너비에 맞게 */
-        height: 200px; /* 원하는 고정 높이 */
+        height: 250px; /* 원하는 고정 높이 */
         object-fit: cover; /* 이미지가 왜곡되지 않게 */
+    }
+
+    #product-card {
+        width: 270px;
+    }
+
+    #modalProductTitle {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    #modalProductPrice {
+        font-size: 20px;
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    #modalProductDescription {
+        font-size: 16px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .block1-2 {
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* 모달 애니메이션 */
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes slideUp {
+        from {transform: translateY(100px); opacity: 0;}
+        to {transform: translateY(0); opacity: 1;}
+    }
+
+    .category-btn {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background-color: #56c395;
+        color: white;
+        cursor: pointer;
+    }
+
+    .category-btn:hover {
+        background-color: #3a9f73;
     }
 
 </style>
@@ -114,10 +199,17 @@
             <img th:src="@{/image/product/banner1.png}" alt="상품" id="banner01">
         </div>
 
-        <div class="block1-2">
-            <div class="intro-text">
-                <h5>우리 멍뭉이들을 위해 준비한 상품이에요</h5>
+        <!-- 카테고리 버튼 영역 -->
+        <div class="container my-4">
+            <div class="d-flex justify-content-center">
+                <a href="/productMain" class="category-btn">All</a>
+                <a href="/productMain?category=bag" class="category-btn">Bag</a>
+                <a href="/productMain?category=care" class="category-btn">Care</a>
+                <a href="/productMain?category=food" class="category-btn">Food</a>
             </div>
+        </div>
+
+        <div class="block1-2">
             <div class="row row-cols-1 row-cols-md-3 g-3">
                 <div class="col" th:each="product : ${products}">
                     <button type="button" class="cardbtn" th:data-product-id="${product.pid}">
@@ -160,19 +252,7 @@
             </div>
         </div>
 
-        <div class="block1-3">
-            <nav aria-label="Page navigation example" id="paging-bar">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
-        </div>
+
     </div>
 </div>
 <!-- 푸터 영역 -->
