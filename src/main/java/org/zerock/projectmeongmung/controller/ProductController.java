@@ -29,10 +29,28 @@ public class ProductController {
         this.fileService = fileService;
     }
 
+//    @GetMapping("/productMain")
+//    public String product(Model model) {
+//        List<Product> products = productService.getAllProducts();
+//        model.addAttribute("products", products);
+//        return "product/productMain";
+//    }
+
+    // 전체 또는 카테고리별 상품 조회
     @GetMapping("/productMain")
-    public String product(Model model) {
-        List<Product> products = productService.getAllProducts();
+    public String product(@RequestParam(value = "category", required = false) String category, Model model) {
+        List<Product> products;
+
+        // 카테고리 선택이 없는 경우 전체 상품을 보여줌
+        if (category == null || category.isEmpty()) {
+            products = productService.getAllProducts();
+        } else {
+            products = productService.getProductsByCategory(category);
+        }
+
         model.addAttribute("products", products);
+        model.addAttribute("selectedCategory", category);  // 선택된 카테고리를 모델에 추가
+
         return "product/productMain";
     }
 
