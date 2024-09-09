@@ -61,8 +61,8 @@
 
 
         <div class="container">
-            <a class="aTag1">
-                <img src="/image/main/rollet1.png" class="d-block w-100" alt="...">
+            <a class="aTag1" th:href="@{/game_list}">
+                <img src="/image/main/game1.png" name="event1" class="event1" alt="...">
             </a>
 
             <div class="bn">
@@ -70,12 +70,12 @@
                 <div id="carouselExample" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="carousel-item active" data-bs-interval="3000">
-                            <a href="#">
+                            <a href="/mungstory">
                                 <img src="/image/main/bn3.png" class="d-block w-100" alt="...">
                             </a>
                         </div>
                         <div class="carousel-item" data-bs-interval="3000">
-                            <a href="#">
+                            <a href="/soshospitallist">
                                 <img src="/image/main/bn4.png" class="d-block w-100" alt="...">
                             </a>
                         </div>
@@ -116,11 +116,22 @@
         </div>
         <div class="dogMoll">
             <br>
-            <h6>인기있는 강아지 간식!!</h6>
-            <a href="#">
-                <img id="card" th:src="@{/image/main/contentCard.png}" alt="카드">
-            </a>
+            <h6>인기있는 강아지 상품</h6>
+            <div class="product-container">
+                <div class="product" th:each="products : ${products}">
+                    <!-- 각 상품을 링크로 감싸서 클릭 시 이동 -->
+                    <a th:href="@{/productMain}" style="text-decoration: none; color: inherit;">
+                        <img th:src="${'/image/product/' + products.productphoto}"
+                             alt="products Image" class="product-image">
+                        <div class="description">
+                            <p th:text="${products.pname}"></p>
+                            <h3 th:text="${products.pdescription}"></h3>
+                            <p th:text="'카테고리: ' + ${products.pcategory}"></p>
+                            <p th:text="${products.pprice} + '원' "></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
-
     </section>
 </main>
