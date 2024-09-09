@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 <main class="commentContent" th:fragment="commentContent" id="commentContent">
     <div>
         <ul id="commentList">
-            <li th:each="comment : ${commentDtoList}">
-                <form>
-                <!-- 댓글 ID를 숨긴 input 태그로 전송 -->
-                <input type="hidden" name="commentId" th:value="${comment.Id}">
-                <input type="hidden" name="seq" th:value="${comment.seq}">
-                <!--<button type="submit" class="btn btn-danger removeBtn">댓글 삭제</button>-->
-                </form>
-
+            <!-- 댓글 리스트 -->
+            <li data-comment-id="${comment.commentId}">
+                <div class="comment-block">
+                    <div class="comment-left">
+                        <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo">
+                        <div class="comment-info">
+                            <span id="commentnickname">${comment.nickname}</span>
+                            <span id="commentcontent">${comment.commentcontent}</span>
+                        </div>
+                    </div>
+                    <div class="comment-right">
+                        <span id="commentdate" class="comment-date">${comment.regdate}</span>
+                        <button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>
+                    </div>
+                </div>
             </li>
         </ul>
         <p th:if="${#lists.isEmpty(commentDtoList)}">작성된 댓글이 없습니다.</p>
     </div>
 
+    <!-- 댓글 입력란 -->
     <div class="commentButton">
-            <input type="hidden" name="seq" value="${dto.seq}">
-            <input type="hidden" name="userId" value="${userId}"> <!-- 사용자 ID 추가 -->
-            <div>
-                <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
-                <button type="button" class="commentreg" onclick="validateAndSubmitComment()">등록</button>
-            </div>
+        <input type="hidden" name="seq" value="${dto.seq}">
+        <input type="hidden" name="userId" value="${userId}"> <!-- 사용자 ID 추가 -->
+        <div>
+
+            <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
+            <button type="button" class="commentreg" onclick="validateAndSubmitComment()">등록</button>
+        </div>
     </div>
 </main>
 </body>

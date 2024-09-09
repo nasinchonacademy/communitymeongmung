@@ -1,14 +1,16 @@
 package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.VetDTO;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.entity.Vet;
+import org.zerock.projectmeongmung.entity.VetRecommendation;
 import org.zerock.projectmeongmung.repository.UserRepository;
+import org.zerock.projectmeongmung.repository.VetRecommendationRepository;
 import org.zerock.projectmeongmung.repository.VetRepository;
 import org.zerock.projectmeongmung.controller.FileController;
 
@@ -16,17 +18,20 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VetService {
 
     private final VetRepository vetRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final FileController fileController;
+    private final VetRecommendationRepository vetRecommendationRepository;
 
     // 수의사 등록 메서드 (User와 Vet 동시에 저장)
     public Vet registerVet(VetDTO vetDTO) throws IOException {
@@ -175,5 +180,41 @@ public class VetService {
 
         // User 삭제
         userRepository.deleteByUid(username);
+    }
+
+
+    public boolean recommendVet(User user, Long vetId) {
+        // 수의사가 존재하는지 확인
+        Vet vet = vetRepository.findById(vetId)
+                .orElseThrow(() -> new RuntimeException("수의사를 찾을 수 없습니다."));
+
+        // 사용자가 이미 해당 수의사를 추천했는지 확인
+        boolean alreadyRecommended = vetRecommendationRepository.existsByUserAndVet(user, vet);
+
+        if (alreadyRecommended) {
+            return false; // 이미 추천한 경우 false 반환
+        }
+
+        // 새로운 추천 저장
+        VetRecommendation recommendation = VetRecommendation.builder()
+                .user(user)
+                .vet(vet)
+                .recommendDate(new Date())
+                .build();
+
+        vetRecommendationRepository.save(recommendation);
+
+        // 수의사 추천 수 증가
+        vet.setRecommendationCount(vet.getRecommendationCount() + 1);
+        vetRepository.save(vet);
+
+        return true; // 추천 성공
+    }
+
+
+
+    public Vet getVetByUserId(Long userId) {
+        // Optional에서 값을 안전하게 추출
+        return vetRepository.findByUserId(userId).orElse(null);
     }
 }

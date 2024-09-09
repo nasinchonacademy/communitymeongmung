@@ -50,7 +50,7 @@ public class QSOSboardlikecount extends EntityPathBase<SOSboardlikecount> {
 
     public QSOSboardlikecount(Class<? extends SOSboardlikecount> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new QUser(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new QUser(forProperty("member"), inits.get("member")) : null;
         this.sosboard = inits.isInitialized("sosboard") ? new QSOSboard(forProperty("sosboard"), inits.get("sosboard")) : null;
     }
 

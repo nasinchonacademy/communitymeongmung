@@ -5,13 +5,31 @@
   <div>
     <ul id="commentList">
       <li th:each="comment : ${commentDtoList}">
-        <form>
-          <!-- 댓글 ID를 숨긴 input 태그로 전송 -->
-          <input type="hidden" name="commentId" th:value="${comment.Id}">
-          <input type="hidden" name="seq" th:value="${comment.seq}">
-          <!--<button type="submit" class="btn btn-danger removeBtn">댓글 삭제</button>-->
-        </form>
+        <div class="comment-block">
+          <!-- 왼쪽: 프로필 사진, 이름, 댓글 내용 -->
+          <div class="comment-left">
+            <img th:src="${comment.profilePhoto != null ? '/profiles/' + comment.profilePhoto : '/image/default-profile.png'}"
+                 alt="Profile Photo" class="comment-profile-photo" width="40" height="40"
+                 th:onclick="${comment.isVet ? 'showVetModal(' + comment.userId + ')' : ''}"
+                 style="cursor: pointer;">
 
+            <!-- 이름 및 수의사 뱃지, 댓글 내용 -->
+            <div class="comment-info">
+              <span class="comment-nickname" th:text="${comment.nickname}" style="font-weight: bold;"></span>
+              <span th:if="${comment.isVet}" class="vet-badge" style="margin-left: 5px;">수의사</span>
+              <div class="comment-content" th:text="${comment.commentcontent}" style="margin-top: 5px;"></div>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 날짜, 삭제 버튼 -->
+          <div class="comment-right">
+            <span class="comment-date" th:text="${#dates.format(comment.regdate, 'yyyy/MM/dd HH:mm')}"></span>
+            <button class="commentremoveBtn" th:if="${userNickname == comment.nickname}"
+                    data-comment-id="${comment.commentId}" data-seq="${comment.seq}"
+                    onclick="deleteComment(${comment.commentId}, ${comment.seq})" style="margin-left: 10px;">X</button>
+          </div>
+        </div>
+        <hr>
       </li>
     </ul>
     <p th:if="${#lists.isEmpty(commentDtoList)}">작성된 댓글이 없습니다.</p>
@@ -21,7 +39,7 @@
     <input type="hidden" name="seq" value="${dto.seq}">
     <input type="hidden" name="userId" value="${userId}"> <!-- 사용자 ID 추가 -->
     <div>
-      <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
+      <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="댓글을 입력하세요"></textarea>
       <button type="button" class="commentreg" onclick="validateAndSubmitComment()">등록</button>
     </div>
   </div>

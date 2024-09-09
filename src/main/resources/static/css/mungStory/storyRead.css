@@ -176,6 +176,8 @@ button.commentremoveBtn {
 }
 span#commentdate {
     margin-right: 15px;
+    width: 110px;
+    color: #888;
 }
 
 hr:not([size]) {
@@ -194,9 +196,10 @@ textarea#boardcontent {
 button.commentreg {
     width: 74px;
     margin-right: 15px;
-    height: 50px;
+    height: 45px;
     border: none;
     border-radius: 3px;
+    color: white;
     background-color: #6BC7A0;
 }
 
@@ -260,6 +263,7 @@ button.allboard{
 input.regdate {
     text-align: right;
     /* margin-left: 690px; */
+    float: right;
     margin-right: 15px;
     font-size: 12.6px;
 }
@@ -294,28 +298,6 @@ input.viewcount {
     pointer-events: none; /* 클릭과 포인터 이벤트 비활성화 */
 
 }
-.comment-profile-photo {
-    border-radius: 50%;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-.vet-comment {
-    border-left: 4px solid #007BFF;  /* 수의사 댓글은 왼쪽에 파란 테두리를 추가 */
-    background-color: #e8f4fd;       /* 수의사 댓글은 다른 배경색 */
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.vet-badge {
-    background-color: #007BFF;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    margin-left: 10px;
-}
 
 input.category {
     margin-left: 15px;
@@ -344,4 +326,127 @@ input.category {
     font-size: 14px;
     margin-bottom: 5px;
     width: 778px;
+}
+
+.comment-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+
+.comment-left {
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-info {
+    margin-left: 10px;
+}
+
+.comment-nickname {
+    font-weight: bold;
+}
+
+.comment-content {
+}
+
+.comment-right {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-items: center;
+    margin-top: 5px;
+}
+
+.comment-date {
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.commentremoveBtn {
+    background-color: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+#boardcontent{
+    height: 50px;
+}
+
+/* 수의사 뱃지 스타일 */
+.vet-badge {
+    background-color: #7ce8a6;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+/* 수의사 댓글 배경 효과 */
+.vet-comment {
+    background-color: #f5fff8; /* 약간의 초록빛 효과 */
+    border-left: 3px solid #7ce8a6; /* 초록색 테두리 */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.vet-profile {
+    display: flex;
+    align-items: flex-start;
+}
+.vet-photo {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
+}
+.vet-info {
+    margin-left: 15px;
+}
+.vet-name {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+.vet-clinic {
+    font-size: 1rem;
+    color: #666;
+}
+.vet-description-container {
+    margin-top: 15px;
+    width: 100%;
+}
+.vet-description {
+    padding-left: 0;
+    list-style-type: none;
+    margin: 0;
+}
+.vet-description li {
+    margin-bottom: 10px;
+}
+.vet-description li::before {
+    content: '•';
+    margin-right: 8px;
+    color: #007bff;
+}
+.modal-body {
+    font-size: 1rem;
+}
+
+.recommend-btn{
+    border-radius: 5px;
+    background-color: #00c292;
+    color: white;
+    width: 110px;
+    height: 40px;
+    border: none;
+}
+
+.recommendation-count {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #007bff;
+    font-weight: bold;
 }

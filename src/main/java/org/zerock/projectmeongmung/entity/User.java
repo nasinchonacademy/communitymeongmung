@@ -1,5 +1,7 @@
 package org.zerock.projectmeongmung.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -103,6 +105,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SOSboardlikecount> soslikes;  // SOSboardlikecount와의 관계
 
+    @OneToOne
+    @JoinColumn(name = "vet_id")
+    private Vet vetinfo;
+
+
 
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,
@@ -124,7 +131,7 @@ public class User implements UserDetails {
         this.personalinfo = personalinfo;
         this.regDate = new Date();
         this.admin = false;
-        this.vet = false;
+        this.vet = vet;
     }
 
 

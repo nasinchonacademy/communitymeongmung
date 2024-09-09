@@ -1,7 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
-    <body>
     <div id="content">
         <div class="mainContent1">
+            <!-- 게시글 정보 -->
             <div class="form-group">
                 <input type="hidden" class="seq" name="seq" th:value="${sosdto.sosboardseq}" readonly>
             </div>
@@ -20,6 +23,7 @@
             </div>
             <hr>
 
+            <!-- 이미지 및 좋아요 버튼 -->
             <div class="pictureAndlikecount">
                 <div class="form-groupPicture">
                     <img class="dogdefault" th:src="${sosdto.picture != null ? '/profiles/' + sosdto.picture : '/image/tool/storydefault.PNG'}" alt="Profile Photo" style="width:927px;">
@@ -29,27 +33,26 @@
                     <textarea class="content" name="content" th:text="${sosdto.content}" readonly></textarea>
                 </div>
 
-                <div class="form-group">
-                    <input type="hidden" class="modified" name="modified"
-                           th:value="${#dates.format(sosdto.moddate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-                </div>
-
                 <button id="likeButton" class="likeButton" th:attr="data-seq=${sosdto.sosboardseq}">좋아요
-                    <span id="likecount" th:text="${sosdto.likecount}">0</span>
-                    <div id="heartAnimationContainer"></div>
+                    <span class="likecount" th:text="${sosdto.likecount}">0</span>
+                    <div class="heartAnimationContainer"></div>
                 </button>
-
-                <div class="form-group">
-                    <input type="text" class="writer" name="writer" th:value="${sosdto.nickname}" readonly>
-                </div>
             </div>
 
             <hr>
 
-            <!-- 댓글 섹션 시작 -->
-            <th:block th:replace="fragments/mungSos/sosboardCommentContent :: commentContent"></th:block>
-            <!-- 댓글 섹션 끝 -->
+            <!-- 댓글 등록 섹션 -->
+            <div class="comment-input-section">
+                <textarea id="boardcontent" placeholder="댓글을 입력하세요"></textarea>
+                <button class="commentreg" onclick="validateAndSubmitComment()">댓글 등록</button>
+            </div>
 
+            <!-- 댓글 섹션 -->
+            <div id="commentSection">
+                <ul id="commentList"></ul>
+            </div>
+
+            <!-- 게시글 수정 및 삭제 버튼 -->
             <div class="modifyAndDelete" th:if="${user.nickname == sosdto.nickname}">
                 <a class="edit-link"
                    th:href="@{/sosboardedit(seq=${sosdto.sosboardseq}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}">
@@ -77,6 +80,7 @@
             </div>
         </div>
 
+        <!-- 사용자 정보 -->
         <input type="hidden" class="userIdClass2" id="userIdClass2" th:value="${user.Id}" />
         <input type="hidden" class="userIdClass2" id="userNicknameHidden" th:value="${user.nickname}" />
 
@@ -84,17 +88,7 @@
             var userNickname = document.getElementById('userNicknameHidden').value;
 
             document.addEventListener('DOMContentLoaded', function() {
-                let isFirstLoad = true;
-
-                const textarea = document.querySelector('textarea.content');
-                function autoResizeTextarea() {
-                    textarea.style.height = 'auto';
-                    textarea.style.height = textarea.scrollHeight + 'px';
-                }
-
-                textarea.addEventListener('input', autoResizeTextarea);
-                autoResizeTextarea();
-
+                // 댓글 로드
                 function loadComments() {
                     var seq = document.querySelector("input[name='seq']").value;
 
@@ -103,23 +97,37 @@
                         type: 'GET',
                         data: { seq: seq },
                         success: function(response) {
+                            const commentList = document.getElementById('commentList');
+                            commentList.innerHTML = '';  // 기존 댓글 리스트를 지움
+
                             response.forEach(function(comment) {
-                                let modifiedText = (comment.regdate !== comment.modified) ? ' (수정됨)' : '';
                                 let deleteButton = '';
 
+                                // 사용자가 작성한 댓글일 경우에만 삭제 버튼 노출
                                 if (userNickname === comment.nickname) {
-                                    deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>`;
+                                    deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${response.commentId}, ${response.seq})">X</button>`;
                                 }
 
-                                $("#commentList").append(
-                                    `<li data-comment-id="${comment.commentId}">
-                                        <span id="commentnickname">${comment.nickname}</span>
-                                        <span id="commentcontent">${comment.commentcontent}</span>
-                                        <span id="commentdate">${comment.regdate}${modifiedText}</span>
-                                        ${deleteButton}
-                                        <hr>
-                                    </li>`
-                                );
+                                let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
+                                let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
+
+                                const commentItem = document.createElement('li');
+                                commentItem.innerHTML = `
+                                    <div class="comment-block">
+                                        <div class="comment-left">
+                                            <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo" width="40" height="40" data-userid="${comment.userid}" style="cursor: pointer;">
+                                            <div class="comment-info">
+                                                <span class="comment-nickname">${comment.nickname} ${vetBadge}</span>
+                                                <div class="comment-content">${comment.commentcontent}</div>
+                                            </div>
+                                        </div>
+                                        <div class="comment-right">
+                                            <span class="comment-date">${comment.regdate}</span>
+                                            ${deleteButton}
+                                        </div>
+                                    </div>
+                                    <hr>`;
+                                commentList.appendChild(commentItem);
                             });
                         },
                         error: function(xhr, status, error) {
@@ -128,31 +136,91 @@
                     });
                 }
 
-                window.deleteComment = function(commentId, seq) {
-                    if (!confirm('댓글을 삭제하시겠습니까?')) return;
+                // 클릭 이벤트 처리
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('comment-profile-photo')) {
+                        const userId = event.target.getAttribute('data-userid');
+                        console.log("클릭된 userId: ", userId);
+                        if (userId) {
+                            showVetModal(userId);  // userId로 모달 열기
+                        } else {
+                            console.error("userId가 정의되지 않았습니다.");
+                        }
+                    }
+                });
 
+                window.showVetModal = function(userId) {
                     $.ajax({
-                        url: '/soscommentremove',
-                        type: 'POST',
-                        contentType: 'application/x-www-form-urlencoded',
-                        data: { commentId: commentId, seq: seq },
-                        success: function(response) {
-                            $(`li[data-comment-id='${commentId}']`).remove();
+                        url: '/vet/byUser/' + userId, // userId를 사용하여 올바른 URL로 요청
+                        method: 'GET',
+                        success: function(data) {
+                            $('#vetPhoto').attr('src', data.profilePhoto ? '/profiles/' + data.profilePhoto : '/image/default-profile.png');
+                            $('#vetName').text(data.vetname);
+                            $('#vetClinic').text(data.animalhospitlename);
+
+                            $('#vetDescription').empty();
+                            data.description.forEach(item => {
+                                $('#vetDescription').append('<li class="list-group-item">' + item + '</li>');
+                            });
+
+                            // 추천 수 업데이트
+                            $('#recommendationCount').text(data.recommendationCount);
+
+                            $('#vetModal').modal('show');
+
+                            $('#recommendBtn').off('click').on('click', function() {
+                                $.ajax({
+                                    url: '/vet/recommend',
+                                    method: 'POST',
+                                    data: { vetId: userId }, // userId를 vetId로 사용
+                                    success: function(response) {
+                                        alert(response);
+                                        // 추천 수 업데이트
+                                        $('#recommendationCount').text(parseInt($('#recommendationCount').text()) + 1);
+                                    },
+                                    error: function() {
+                                        alert('이미 추천이 완료되었습니다.');
+                                    }
+                                });
+                            });
                         },
-                        error: function(xhr, status, error) {
-                            console.error("댓글 삭제 실패:", xhr.responseText);
-                            alert("댓글 삭제 중 문제가 발생했습니다.");
+                        error: function() {
+                            alert('수의사 정보를 가져오는 데 실패했습니다.');
                         }
                     });
-                }
+                };
 
-                window.validateAndSubmitComment = function() {
-                    if (isFirstLoad) {
-                        isFirstLoad = false;
-                        return;
+                // 댓글 삭제
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('commentremoveBtn')) {
+                        const commentId = event.target.getAttribute('data-comment-id');
+                        const seq = event.target.getAttribute('data-seq');
+
+                        if (confirm('댓글을 삭제하시겠습니까?')) {
+                            $.ajax({
+                                url: '/soscommentremove',  // 댓글 삭제 API URL
+                                type: 'POST',
+                                data: {  commentId: commentId, seq: seq
+                                },
+                                success: function(response) {
+                                    alert("댓글이 삭제되었습니다.");  // 삭제 성공 메시지
+                                    // 해당 댓글 삭제
+                                    event.target.closest('li').remove();
+                                },
+                                error: function(xhr, status, error) {
+                                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                                }
+                            });
+                        }
                     }
+                });
 
-                    var content = document.getElementById("boardcontent").value.trim();
+
+
+
+                // 댓글 추가
+                window.validateAndSubmitComment = function() {
+                    const content = document.getElementById("boardcontent").value.trim();
                     if (content === "") {
                         alert("댓글을 입력해주세요.");
                         return;
@@ -164,42 +232,21 @@
                     $.ajax({
                         url: '/sosaddcomment',
                         type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded',
                         data: {
                             seq: seq,
                             commentcontent: content,
                             userId: userId
                         },
                         success: function(response) {
-                            var regdate = response.regdate || '등록일 없음';
-                            var modified = response.modified || '수정일 없음';
-                            let modifiedText = (regdate !== modified) ? ' (수정됨)' : '';
-
-                            if (response.commentcount !== undefined && response.nickname !== undefined) {
-                                $("#commentList").append(
-                                    `<li data-comment-id="${response.commentId}">
-                                        <span id="commentnickname">${response.nickname}</span>
-                                        <span id="commentcontent">${content}</span>
-                                        <span id="commentdate">${regdate}${modifiedText}</span>
-                                        <button class="commentremoveBtn" data-comment-id="${response.commentId}" data-seq="${response.seq}" onclick="deleteComment(${response.commentId}, ${response.seq})">X</button>
-                                        <hr class="commenthr">
-                                    </li>`
-                                );
-                                $("#boardcontent").val("");
-                            } else {
-                                console.error('서버 응답에서 commentcount 또는 nickname을 찾을 수 없습니다.');
-                            }
+                            document.getElementById("boardcontent").value = "";  // 댓글 입력창 초기화
+                            loadComments();  // 댓글 추가 후 다시 로드
                         },
                         error: function(xhr, status, error) {
                             alert("댓글을 추가하는데 문제가 발생했습니다.");
                         }
                     });
-                }
-
-                var commentButton = document.querySelector('.commentreg');
-                if (commentButton) {
-                    commentButton.addEventListener('click', validateAndSubmitComment);
-                }
-
+                };
                 function handleLikeButtonClick(event) {
                     event.preventDefault();
 
@@ -208,6 +255,7 @@
                     $.ajax({
                         url: '/sosboardlike',
                         type: 'POST',
+                        contentType: 'application/json',
                         data: JSON.stringify({ seq: seq }),
                         success: function(response) {
                             $("#likecount").text(response.likecount);
@@ -223,13 +271,49 @@
                     likeButton.addEventListener('click', handleLikeButtonClick);
                 }
 
-                loadComments();
+                loadComments();  // 페이지 로드 시 댓글 목록 불러오기
             });
+
 
             function confirmDelete() {
                 return confirm("글을 삭제하시겠습니까?");
             }
         </script>
+
+        <!-- 수의사 정보 모달 -->
+        <div id="vetModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">수의사 정보</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="vet-profile">
+                            <img id="vetPhoto" src="" alt="Veterinarian Photo" class="vet-photo">
+                            <div class="vet-info">
+                                <h6 id="vetName" class="vet-name">이름</h6>
+                                <p id="vetClinic" class="vet-clinic">동물병원</p>
+                                <div class="recommendation-count">
+                                    <span><img src="/image/tool/recommend.png" style="width: 27px; height: auto">추천 수: </span><strong id="recommendationCount">0</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vet-description-container">
+                            <ul id="vetDescription" class="vet-description">
+                                <!-- Description items will be added here -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="recommendBtn" class="recommend-btn">수의사 추천</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    </body>
 </main>
+</body>
+</html>

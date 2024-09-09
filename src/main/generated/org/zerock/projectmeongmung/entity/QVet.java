@@ -36,6 +36,8 @@ public class QVet extends EntityPathBase<Vet> {
 
     public final StringPath registerdate = createString("registerdate");
 
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
+
     public final StringPath username = createString("username");
 
     public final NumberPath<Long> vetid = createNumber("vetid", Long.class);

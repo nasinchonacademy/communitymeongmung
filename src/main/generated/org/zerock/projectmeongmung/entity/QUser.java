@@ -18,7 +18,13 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = 1836714100L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QUser user = new QUser("user");
+
+    public final BooleanPath admin = createBoolean("admin");
+
+    public final SetPath<SOSboardcomment, QSOSboardcomment> comments = this.<SOSboardcomment, QSOSboardcomment>createSet("comments", SOSboardcomment.class, QSOSboardcomment.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.util.Date> dogbirthday = createDateTime("dogbirthday", java.util.Date.class);
 
@@ -58,24 +64,37 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<SOSboard, QSOSboard> sosBoards = this.<SOSboard, QSOSboard>createList("sosBoards", SOSboard.class, QSOSboard.class, PathInits.DIRECT2);
 
+    public final SetPath<SOSboardlikecount, QSOSboardlikecount> soslikes = this.<SOSboardlikecount, QSOSboardlikecount>createSet("soslikes", SOSboardlikecount.class, QSOSboardlikecount.class, PathInits.DIRECT2);
+
     public final BooleanPath termuse = createBoolean("termuse");
 
     public final StringPath uid = createString("uid");
 
     public final BooleanPath vet = createBoolean("vet");
 
+    public final QVet vetinfo;
+
     public final DateTimePath<java.util.Date> withdrawaldate = createDateTime("withdrawaldate", java.util.Date.class);
 
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
+        this(User.class, forVariable(variable), INITS);
     }
 
     public QUser(Path<? extends User> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QUser(PathMetadata metadata, PathInits inits) {
+        this(User.class, metadata, inits);
+    }
+
+    public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.vetinfo = inits.isInitialized("vetinfo") ? new QVet(forProperty("vetinfo")) : null;
     }
 
 }
