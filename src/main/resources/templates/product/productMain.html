@@ -32,14 +32,6 @@
     }
 
     #modalBody {
-        /*width: 500px;*/
-        /*height: 700px;*/
-        /*padding: 40px;*/
-        /*margin: 0 auto;*/
-        /*border: 1px solid #777;*/
-        /*background-color: #fff;*/
-        /*border-radius: 16px;*/
-        /*text-align: center;*/
         width: 500px;
         height: auto;
         padding: 40px;
@@ -53,11 +45,6 @@
     }
 
     #closeBtn {
-        /*float: right;*/
-        /*font-weight: bold;*/
-        /*color: #777;*/
-        /*font-size: 25px;*/
-        /*cursor: pointer;*/
         position: absolute;
         top: 20px;
         right: 20px;
@@ -184,13 +171,30 @@
     }
 
     #banner01 {
+        width: 100%;
+        height: auto;
         position: relative;
     }
 
     .game-btn {
-        position: absolute;
-        top: 85px;
-        left: 95px;
+        /*position: absolute;*/
+        position: fixed;  /* 고정된 위치 */
+        top: 76%;
+        left: 65%;
+        transform: translate(-50%, -50%);
+        background-color: #f4ce53;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .game-btn:hover {
+        background-color: #ffae43;
     }
 
 </style>
