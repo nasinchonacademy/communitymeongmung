@@ -117,7 +117,6 @@
     margin-bottom: 15px;
 }
 
-
 /*카드*/
 
 /* 구글 폰트 추가 */
@@ -154,17 +153,7 @@
                 /*    color: #ffffff;*/
                 /*}*/
 
-                .container {
-                    width: 1045px;
-                    height: 434px;
-                    transition: all 0.1s;
-                    margin-bottom: 10px;
-                    margin-top: -80px;
-                    margin-left: -25px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                }
+
 
                 .overlay {
                     position: absolute;
@@ -447,4 +436,107 @@ img.event1 {
 
 div#carouselExample {
     height: 478px;
+}
+
+.product2 {
+    position: relative;
+    display: inline-block;
+    overflow: hidden; /* 이미지 영역 밖은 보이지 않게 설정 */
+}
+
+.product2-image {
+    width: 208px;
+    height: 209px;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.description2 > p {
+    font-size: 18px;
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Godo', sans-serif;
+    color: #6f6f6f;
+}
+
+.description2 > h3 {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.product2 {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 30px;
+    height: 258px;
+    width: 207px;
+    margin-left: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product2-container {
+    text-align: right;
+    height: 235px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.product2.product2-2 {
+    margin-top: 30px;
+}
+
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+    height: 282px;
+    margin-top: 96px;
+}
+
+.container {
+    width: 1045px;
+    height: 434px;
+    transition: all 0.1s;
+    margin-bottom: 40px;
+    margin-top: -45px;
+    margin-left: -25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    width: 273px;
+    margin-right: 10px;
+}
+
+.event1 {
+    width: 100%; /* 이미지 크기를 부모에 맞게 설정 */
+    height: auto; /* 비율 유지 */
+}
+
+.aTag1 {
+    position: absolute;
+    top: 95px;
+    left: 0px;
+    width: 259px;
+    height: 284px;
+    background-color: rgba(255, 255, 255, 0.1);
+    z-index: 10;
+}
+
+.image-container img {
+    pointer-events: none; /* 이미지가 클릭되지 않도록 설정 */
+}
+
+.dogMoll {
+    margin-top: 48px;
+}
+
+img.footerpng-image {
+    margin-left: -328px;
+    margin-top: -221px;
+    opacity: 0.5;
 }
