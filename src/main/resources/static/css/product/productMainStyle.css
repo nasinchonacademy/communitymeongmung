@@ -1,31 +1,30 @@
+@import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+
+* {
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
 .block1-2 {
-    /* background-color: #b3e5fc; */
     margin-bottom: 30px;
     border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
+    padding: 30px;
 }
 
 #product-card {
     border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
-
 }
 
 #brand {
-    color:#989898;
+    color: #989898;
     font-weight: bold;
     font-size: 13px;
 }
-
 
 #old-price {
-    color:#989898;
-    text-decoration:line-through;
+    color: #989898;
+    text-decoration: line-through;
     font-size: 13px;
-}
-
-#discount {
-    font-weight: bold;
-    color: tomato;
 }
 
 #banner01 {
@@ -33,10 +32,6 @@
     margin-bottom: 30px;
     border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
-}
-
-.block1-2 {
-    padding: 30px;
 }
 
 .block1-3 {
@@ -53,37 +48,7 @@
     background-color: #ffffff;
 }
 
-
-
-#product-card {
-    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
-
-}
-
-#brand {
-    color:#989898;
-    font-weight: bold;
-}
-
-#old-price {
-    color:#989898;
-    text-decoration:line-through;
-}
-
-#discount {
-    font-weight: bold;
-    color: tomato;
-}
-
-#banner01 {
-    width: 100%;
-    margin-bottom: 30px;
-    border-radius: 8px; /* 블록에 약간의 둥근 모서리 추가 */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 블록에 그림자 추가 */
-}
-
 .container {
-    display: flex;
     max-width: 1000px;
     margin: 0 auto;
 }
@@ -104,7 +69,7 @@
 #modalBody {
     width: 500px;
     height: 300px;
-    padding: 30px 30px;
+    padding: 30px;
     margin: 0 auto;
     border: 1px solid #777;
     background-color: #fff;
@@ -117,3 +82,208 @@
     font-size: 25px;
     cursor: pointer;
 }
+
+#modalWrap {
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+#modalBody {
+    width: 500px;
+    height: auto;
+    padding: 40px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.4s ease;
+}
+
+#closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-weight: bold;
+    color: #aaa;
+    font-size: 25px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#closeBtn:hover {
+    color: #333;
+}
+
+#modalProductImage {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.modal-buttons button {
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 48%;
+}
+
+.modal-buttons button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.buy-button {
+    background-color: #56c395;
+    color: white;
+    font-weight: bold;
+}
+
+.buy-button:hover {
+    background-color: #3a9f73;
+}
+
+.cart-button {
+    background-color: #17a7ec;
+    color: white;
+    font-weight: bold;
+}
+
+.cart-button:hover {
+    background-color: #0f7cb8;
+}
+
+.card-img-top {
+    width: 100%; /* 컨테이너 너비에 맞게 */
+    height: 250px; /* 원하는 고정 높이 */
+    object-fit: cover; /* 이미지가 왜곡되지 않게 */
+}
+
+#product-card {
+    width: 270px;
+}
+
+#modalProductTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#modalProductPrice {
+    font-size: 20px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+#modalProductDescription {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.block1-2 {
+    padding: 20px;
+    text-align: center;
+}
+
+/* 모달 애니메이션 */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideUp {
+    from {transform: translateY(100px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+}
+
+/* 카테고리 버튼 스타일 */
+.category-btn {
+    margin: 10px;
+    padding: 10px 25px;
+    border: 1px solid #56c395;
+    border-radius: 30px;
+    background-color: #56c395;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none; /* 밑줄 제거 */
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    background-color: #3a9f73;
+    border-color: #3a9f73;
+}
+
+.category-btn i {
+    margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+/* Flexbox로 카테고리 버튼 가운데 정렬 */
+#category-items {
+    display: flex;
+    justify-content: center; /* 버튼을 가운데 정렬 */
+    flex-wrap: wrap; /* 화면이 좁을 때 버튼을 줄바꿈 */
+    margin-top: 20px;
+}
+
+/* 이미지 컨테이너와 버튼 위치 고정 */
+#banner01-container {
+    position: relative; /* 부모 컨테이너를 relative로 설정 */
+    display: inline-block;
+}
+
+#banner01 {
+    width: 100%;
+    height: auto;
+}
+
+.game-btn {
+    position: absolute;
+    top: 63%;
+    left: 30%;
+    transition: background-color 0.3s ease;
+    background-color: #f4ce53;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.game-btn:hover {
+    background-color: #ffae43;
+}
+
+.card-title {
+    margin: 10px;
+}
+

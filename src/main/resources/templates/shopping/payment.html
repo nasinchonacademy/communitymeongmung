@@ -23,64 +23,128 @@
 
 <style>
     /* styles.css */
+
+    @import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+
+    * {
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
+    @font-face {
+        font-family: 'HakgyoansimDunggeunmisoTTF-B';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+    }
+
     .container {
         background-color: #fff;
-        padding: 20px;
+        padding: 30px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        width: 100%;
+        max-width: 1000px;
+        /*width: 100%;*/
+        margin: 20px auto;
+    }
+
+    .container-payment {
+        margin: 0 auto; /* 중앙으로 정렬 */
+        text-align: center; /* 내부 글씨 정렬 */
+        max-width: 600px; /* 너비 제한 */
     }
 
     h1 {
         margin-bottom: 20px;
-        font-size: 24px;
+        font-size: 27px;
         text-align: center;
+        font-family: 'HakgyoansimDunggeunmisoTTF-B';
+        color: #7a7a7a;
     }
 
     h5 {
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        margin-top: 20px;
         text-align: center;
+        font-size: 25px;
+        font-family: 'HakgyoansimDunggeunmisoTTF-B';
+        color: #7a7a7a;
     }
 
     .point {
         text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
     }
 
     .form-group {
         margin-bottom: 15px;
+        text-align: left;
     }
 
     label {
         display: block;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         font-weight: bold;
     }
 
     input[type="text"],
     input[type="number"],
-    input[type="datetime-local"] {
+    input[type="tel"] {
         width: 100%;
-        padding: 8px;
+        padding: 12px;
         box-sizing: border-box;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 16px;
     }
 
     button[type="submit"] {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         background-color: #56c395;
         color: #fff;
         border: none;
         border-radius: 5px;
         font-size: 18px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
     button[type="submit"]:hover {
         background-color: #3a9875;
+    }
+
+    .product-info {
+        display: flex;
+        align-items: center; /* 텍스트와 이미지의 세로 정렬을 맞추기 위함 */
+        justify-content: space-between; /* 이미지와 텍스트 사이의 공간 */
+        margin-bottom: 20px;
+    }
+
+    .product-info-text {
+        flex: 1; /* 텍스트 영역이 더 많이 차지하도록 */
+        padding-right: 15px; /* 이미지와 텍스트 사이에 여백 추가 */
+    }
+
+    .img-fluid {
+        width: 300px; /* 원하는 이미지 크기 지정 */
+        height: 300px;
+        border-radius: 8px; /* 이미지에 둥근 모서리 추가 (선택 사항) */
+        object-fit: cover;
+    }
+
+    .form-control:invalid {
+        border-color: #dc3545;
+    }
+
+    .form-control:invalid:focus {
+        box-shadow: 0 0 5px 1px rgba(220, 53, 69, 0.75);
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
     }
 
 </style>
@@ -98,9 +162,11 @@
     <div class="oderinformation">
         <h5>주문하신 상품 정보</h5>
         <div class="product-info">
+            <div class="product-info-text">
             <p><strong>상품명:</strong> <span th:text="${product.pname}"></span></p>
             <p><strong>가격:</strong> <span th:text="${product.pprice} + '원'"></span></p>
             <p><strong>브랜드:</strong> <span th:text="${product.pcompany}"></span></p>
+            </div>
             <img th:src="@{'/image/product/' + ${product.productphoto}}" alt="상품 이미지" class="img-fluid">
         </div>
     </div>
@@ -118,46 +184,50 @@
 </div>
 
 <div class="container">
+    <div class="container-payment">
     <h1>결제 정보</h1>
     <!--폼에 히든으로 제품아이디값 가지고 오기 -->
-    <form action="/payment_complete" method="POST">
+    <form action="/payment_complete" method="POST" id="paymentForm" novalidate>
         <input type="hidden" id="productIdField" name="productId" th:value="${product.pid}">
         <input type="hidden" id="totalprice" name="totalprice" th:value="${product.pprice}">
 
         <div class="form-group">
             <label for="resname">받는 사람 이름</label>
-            <input type="text" id="resname" name="resname" required maxlength="20">
+            <input type="text" id="resname" name="resname" class="form-control" required maxlength="20">
+            <div class="error-message" id="nameError"></div>
         </div>
 
         <div class="form-group">
             <label for="resphone">연락처</label>
-            <input type="text" id="resphone" name="resphone" required maxlength="20">
+            <input type="tel" id="resphone" name="resphone" class="form-control" required pattern="\d{3}-\d{4}-\d{4}" title="연락처는 000-0000-0000 형식이어야 합니다.">
+            <div class="error-message" id="phoneError"></div>
         </div>
 
         <div class="form-group">
             <label>주소</label>
-            <input type="text" id="postcode" name="postcode" placeholder="우편번호">
-            <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-            <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소">
-            <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소">
+            <input type="text" id="postcode" name="postcode" placeholder="우편번호" class="form-control" required>
+            <input type="button" class="btn btn-secondary mt-2" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+            <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소" class="form-control" required>
+            <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소" class="form-control">
             <span id="guide" style="color:#999;display:none"></span><input type="text" id="detailaddress"
-                                                                           name="detailaddress" placeholder="상세주소">
-            <input type="text" id="extraaddress" name="extraaddress" placeholder="참고항목">
+                                                                           name="detailaddress" placeholder="상세주소" class="form-control">
+            <input type="text" id="extraaddress" name="extraaddress" placeholder="참고항목" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="resrequirement">요청 사항</label>
-            <input type="text" id="resrequirement" name="resrequirement" maxlength="100">
+            <input type="text" id="resrequirement" name="resrequirement" maxlength="100" class="form-control" placeholder="없을 시 '없음'이라고 적어주세요.">
         </div>
 
         <div class="form-group">
             <!--                <a th:href="@{/payment_complete}">-->
             <!-- requestCardPay -->
-            <button type="button" onclick="requestPay()">카카오PAY 결제하기</button>
-            <button type="button" onclick="requestCardPay()">신용카드 결제하기</button>
+            <button type="button" onclick="requestPay()" class="btn btn-warning mt-3">카카오PAY 결제하기</button>
+            <button type="button" onclick="requestCardPay()" class="btn btn-primary mt-3">신용카드 결제하기</button>
 
         </div>
     </form>
+    </div>
 </div>
 
 
