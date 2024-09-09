@@ -38,7 +38,7 @@
             </li>
 
                 <li>
-                    <a sec:authorize="isAnonymous()" href="#" th:onclick="return checkLogin();">리워드</a>
+                    <a sec:authorize="isAnonymous()" th:href="@{/game_list}" th:onclick="return checkLogin();">리워드</a>
                     <a sec:authorize="isAuthenticated()" href="#">리워드</a>
                     <ul class="submenu">
                         <li><a sec:authorize="isAnonymous()" th:href="@{/game_list}" th:onclick="return checkLogin();">젤리 퀘스트</a></li>
