@@ -8,13 +8,20 @@
 
 <div class="container">
 
+  <!-- 좋아요 누른 게시물 -->
   <div class="liked_story_container">
     <div class="liked_story">
       <div class="liked_story_titlelink">
         <h2>좋아요 누른 게시물</h2>
         <a href="/mypagelikedlist">목록으로 보기</a>
       </div>
-      <div id="carouselLikedStories" class="carousel slide">
+
+      <!-- 좋아요한 게시글이 없을 경우 메시지 표시 -->
+      <div th:if="${#lists.isEmpty(partitionedStories)}">
+        <p>좋아요한 게시글이 없습니다.</p>
+      </div>
+
+      <div th:unless="${#lists.isEmpty(partitionedStories)}" id="carouselLikedStories" class="carousel slide">
         <div class="carousel-inner">
           <!-- 슬라이드 아이템을 동적으로 생성 -->
           <div th:each="group, groupStat : ${partitionedStories}"
@@ -26,7 +33,9 @@
                   <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
                   <div class="card-body p-2">
                     <h6 class="card-title">
-                        <a th:text="${story.title}" th:href="@{/mungstory/storyread(page=${1}, type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}"></a>
+                      <a th:text="${story.title.length() > 12 ? story.title.substring(0, 12) + '...' : story.title}"
+                         th:href="@{/mungstory/storyread(page=${1}, type=${''}, keyword=${''}, current=${1}, seq=${story.seq})}">
+                      </a>
                     </h6>
 
                     <p class="card-text mb-1" style="font-size: 0.85rem;" th:text="${story.likecount} + ' Likes'">100 Likes</p>
@@ -62,12 +71,19 @@
     </div>
   </div>
 
+  <!-- 내가 쓴 글 -->
   <div class="written_stories">
     <div class="written_stories_title">
       <h2>내가 쓴 글</h2>
       <a href="/mypapeWritelist">글 목록 보기</a>
     </div>
-    <div id="storyCarousel" class="carousel slide" data-bs-ride="carousel">
+
+    <!-- 작성한 게시글이 없을 경우 메시지 표시 -->
+    <div th:if="${#lists.isEmpty(partitionedwrittenStories)}">
+      <p>작성한 게시글이 없습니다.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(partitionedwrittenStories)}" id="storyCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <!-- 5개씩 목록을 묶어 슬라이드로 구성 -->
         <div th:each="chunk, chunkStat : ${partitionedwrittenStories}" th:classappend="${chunkStat.index == 0} ? ' active' : ''" class="carousel-item">
@@ -112,35 +128,43 @@
     </div>
   </div>
 
+  <!-- 장바구니 확인 -->
   <div class="cart">
     <h2>장바구니 확인!</h2>
-    <div>
-      <ul th:if="${likedStories != null}" class="grid-container">
-        <li th:each="story, iterStat : ${likedStories}" th:if="${iterStat.index < 5}" class="grid-item">
+    <div th:if="${cartItems != null}">
+      <ul class="grid-container">
+        <!-- 장바구니에 상품이 있을 때만 출력 -->
+        <li th:each="cartItem, iterStat : ${cartItems}" th:if="${iterStat.index < 5}" class="grid-item">
           <div class="cart_box">
             <div class="cart_element">
-              <a th:href="@{'/story/view/' + ${story.seq}}" th:text="'제목: '+${story.title.length() > 6 ? story.title.substring(0,6)+'...':story.title}" class="cart_titlebox">제목 없음</a>
-              <a th:text="'내용: '+${story.content.length() > 4 ? story.content.substring(0,4)+'..':story.content}" class="cart_titlebox">제목 없음</a>
-              <a th:text="'작성일: '+${#temporals.format(story.regdate, 'MM월dd일')}"></a>
-              <a th:text="'좋아요 수: '+ ${story.viewcount}" class="cart_count"></a>
-              <a th:text="'조회 수: '+ ${story.likecount}" class="cart_count"></a>
+              <!-- 상품명 -->
+              <a th:href="@{'/product/view/' + ${cartItem.product.pid}}"
+                 th:text="'상품명: '+${cartItem.product.name.length() > 10 ? cartItem.product.name.substring(0,10)+'...' : cartItem.product.name}"
+                 class="cart_titlebox">상품 없음</a>
+              <!-- 수량 -->
+              <a th:text="'수량: ' + ${cartItem.amount}" class="cart_titlebox">수량 없음</a>
+              <!-- 가격 -->
+              <a th:text="'가격: ' + ${cartItem.price}" class="cart_titlebox">가격 없음</a>
+              <!-- 총 가격 (수량 * 가격) -->
+              <a th:text="'총 가격: ' + ${cartItem.amount * cartItem.price}" class="cart_count">총 가격 없음</a>
             </div>
             <div class="cart_content_linkbox">
-              <a th:href="@{'/story/edit/' + ${story.seq}}" class="cart_content_link_edit">수정하기</a>
-              <a th:href="@{'/story/delete/' + ${story.seq}}" class="cart_content_link_delete">삭제하기</a>
+              <!-- 수정 및 삭제 링크 -->
+              <a th:href="@{'/cart/edit/' + ${cartItem.product.pid}}" class="cart_content_link_edit">수정하기</a>
+              <a th:href="@{'/cart/delete/' + ${cartItem.product.pid}}" class="cart_content_link_delete">삭제하기</a>
             </div>
           </div>
         </li>
-        <div class="cart_getwritelist">
-          <a href="/mypapeWritelist" >
+        <!-- 장바구니에 상품이 있을 때만 추가 상품 버튼 출력 -->
+        <div th:if="${not #lists.isEmpty(cartItems)}" class="cart_getwritelist">
+          <a href="/productlist">
             <img th:src="${'/image/tool/addstory.PNG'}" alt="사진">
           </a>
         </div>
       </ul>
-
-      <li th:if="${#lists.isEmpty(likedStories)}" class="no-articles">작성된 글이 없습니다.</li>
     </div>
+    <!-- 장바구니에 상품이 없을 때 메시지 출력 -->
+    <li th:if="${#lists.isEmpty(cartItems)}" class="no-articles">장바구니가 비어 있습니다.</li>
   </div>
+
 </div>
-
-

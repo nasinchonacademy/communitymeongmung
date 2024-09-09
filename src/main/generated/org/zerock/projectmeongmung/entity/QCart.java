@@ -52,7 +52,7 @@ public class QCart extends EntityPathBase<Cart> {
         super(type, metadata, inits);
         this.id = inits.isInitialized("id") ? new QCartId(forProperty("id")) : null;
         this.product = inits.isInitialized("product") ? new QProduct(forProperty("product")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

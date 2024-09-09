@@ -366,6 +366,7 @@ public class MungStoryController {
             commentData.put("commentId", comment.getCommentid());  // 댓글 ID 추가
             commentData.put("seq", seq);  // 게시글 ID 추가
             commentData.put("nickname", comment.getUser().getNickname());
+            commentData.put("profilePhoto", comment.getUser().getProfilePhoto()); // 프로필 사진 추가
             commentData.put("commentcontent", comment.getCommentcontent());
 
             // regdate와 modified 날짜를 MM/dd/HH/mm/ss 형식으로 포맷

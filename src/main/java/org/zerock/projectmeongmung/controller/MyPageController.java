@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zerock.projectmeongmung.dto.MeongStoryDTO;
 import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.PageResultDTO;
+import org.zerock.projectmeongmung.entity.Cart;
 import org.zerock.projectmeongmung.entity.GamePoints;
 import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.User;
@@ -61,10 +62,10 @@ public class MyPageController {
         // 작성 글 가져오기
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
         List<List<MeongStory>> partitionedwrittenStories = partitionList(writtenStories, 5);
-
+        List<Cart> cartItems = myPageService.getCartItems(user);
 
         model.addAttribute("partitionedwrittenStories", partitionedwrittenStories);
-
+        model.addAttribute("cartItems", cartItems);  // 장바구니 리스트 추가
 
         return "mypage/mypage";
     }

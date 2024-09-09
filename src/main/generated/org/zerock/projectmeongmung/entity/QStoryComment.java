@@ -60,7 +60,7 @@ public class QStoryComment extends EntityPathBase<StoryComment> {
     public QStoryComment(Class<? extends StoryComment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.story = inits.isInitialized("story") ? new QMeongStory(forProperty("story"), inits.get("story")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

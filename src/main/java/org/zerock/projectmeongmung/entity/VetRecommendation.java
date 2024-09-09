@@ -1,5 +1,6 @@
 package org.zerock.projectmeongmung.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,10 +22,12 @@ public class VetRecommendation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", nullable = false)
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vetid", nullable = false)
+    @JsonIgnore
     private Vet vet;
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -1,5 +1,8 @@
 package org.zerock.projectmeongmung.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,6 +73,8 @@ public class Vet implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String email;  // 수의사 이메일 추가
+
+    private Long userId; // 사용자 ID 필드
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

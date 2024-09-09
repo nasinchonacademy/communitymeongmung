@@ -54,6 +54,7 @@ public class SOSboardController {
     private final SOSboardRepository sosboardrepository;
     private final SOSlilkeService slilkeService;
     private final SOSBoardCommentRepository sosboardCommentRepository;
+    private final VetController vetController;
 
 
     @GetMapping("/soshospitallist")
@@ -263,12 +264,14 @@ public class SOSboardController {
 
         List<Map<String, Object>> commentDataList = comments.stream().map(comment -> {
             Map<String, Object> commentData = new HashMap<>();
-            commentData.put("commentId", comment.getCommentid());  // 댓글 ID 추가
-            commentData.put("seq", seq);  // 게시글 ID 추가
+            commentData.put("commentId", comment.getCommentid());
+            commentData.put("seq", seq);
             commentData.put("nickname", comment.getUser().getNickname());
+            commentData.put("isVet", comment.getUser().isVet()); // 수의사 여부 추가
+            commentData.put("userid", comment.getUser().getId());
+            commentData.put("profilePhoto", comment.getUser().getProfilePhoto()); // 프로필 사진 추가
             commentData.put("commentcontent", comment.getSoscommentcontent());
 
-            // regdate와 modified 날짜를 MM/dd/HH/mm/ss 형식으로 포맷
             String regdate = formatter.format(comment.getSoscommentregtime());
             String modified = comment.getSoscommentupdate() != null
                     ? formatter.format(comment.getSoscommentupdate())
