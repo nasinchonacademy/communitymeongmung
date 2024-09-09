@@ -40,6 +40,12 @@ public class ProductService {
         return productRepository.findAll(); // DB에서 모든 제품 가지고 오기
     }
 
+    // 카테고리별 제품 조회
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByPcategory(category);
+    }
+
+
     // 제품 업데이트
     public void updateProduct(Long productId, String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
         Product product = productRepository.findById(productId)
