@@ -183,6 +183,16 @@
         background-color: #3a9f73;
     }
 
+    #banner01 {
+        position: relative;
+    }
+
+    .game-btn {
+        position: absolute;
+        top: 85px;
+        left: 95px;
+    }
+
 </style>
 
 <body>
@@ -196,16 +206,17 @@
 <div class="container" th:fragment="content">
     <div class="content1">
         <div class="block1-1">
-            <img th:src="@{/image/product/banner1.png}" alt="상품" id="banner01">
+            <img th:src="@{/image/product/shopBanner.png}" alt="상품" id="banner01">
+            <a href="/game_list"><button class="game-btn" type="button">부족한 젤리 포인트 받으러 가기</button></a>
         </div>
 
         <!-- 카테고리 버튼 영역 -->
         <div class="container my-4">
             <div class="d-flex justify-content-center">
                 <a href="/productMain" class="category-btn">All</a>
-                <a href="/productMain?category=bag" class="category-btn">Bag</a>
-                <a href="/productMain?category=care" class="category-btn">Care</a>
-                <a href="/productMain?category=food" class="category-btn">Food</a>
+                <a href="/productMain?category=food" class="category-btn">간식</a>
+                <a href="/productMain?category=care" class="category-btn">영양제</a>
+                <a href="/productMain?category=bag" class="category-btn">이동가방</a>
             </div>
         </div>
 
