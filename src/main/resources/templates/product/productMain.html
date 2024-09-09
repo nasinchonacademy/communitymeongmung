@@ -15,186 +15,6 @@
     <link th:href="@{css/basic.css}" rel="stylesheet">
 </head>
 
-<style>
-    /* CSS 코드 */
-    #modalWrap {
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: none;
-        animation: fadeIn 0.4s ease;
-    }
-
-    #modalBody {
-        /*width: 500px;*/
-        /*height: 700px;*/
-        /*padding: 40px;*/
-        /*margin: 0 auto;*/
-        /*border: 1px solid #777;*/
-        /*background-color: #fff;*/
-        /*border-radius: 16px;*/
-        /*text-align: center;*/
-        width: 500px;
-        height: auto;
-        padding: 40px;
-        margin: 0 auto;
-        border: 1px solid #ddd;
-        background-color: #fff;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        animation: slideUp 0.4s ease;
-    }
-
-    #closeBtn {
-        /*float: right;*/
-        /*font-weight: bold;*/
-        /*color: #777;*/
-        /*font-size: 25px;*/
-        /*cursor: pointer;*/
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-weight: bold;
-        color: #aaa;
-        font-size: 25px;
-        cursor: pointer;
-        transition: color 0.3s;
-    }
-
-    #closeBtn:hover {
-        color: #333;
-    }
-
-    #modalProductImage {
-        /*width: 300px;*/
-        /*height: 300px;*/
-        width: 100%;
-        max-width: 300px;
-        height: 300px;
-        border-radius: 8px;
-        object-fit: cover;
-        margin-bottom: 20px;
-    }
-
-    .modal-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 30px;
-    }
-
-    .modal-buttons button {
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 48%;
-    }
-
-    .modal-buttons button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .buy-button {
-        background-color: #56c395;
-        color: white;
-        font-weight: bold;
-    }
-
-    .buy-button:hover {
-        background-color: #3a9f73;
-    }
-
-    .cart-button {
-        background-color: #17a7ec;
-        color: white;
-        font-weight: bold;
-    }
-
-    .cart-button:hover {
-        background-color: #0f7cb8;
-    }
-
-    .card-img-top {
-        width: 100%; /* 컨테이너 너비에 맞게 */
-        height: 250px; /* 원하는 고정 높이 */
-        object-fit: cover; /* 이미지가 왜곡되지 않게 */
-    }
-
-    #product-card {
-        width: 270px;
-    }
-
-    #modalProductTitle {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    #modalProductPrice {
-        font-size: 20px;
-        color: #777;
-        margin-bottom: 20px;
-    }
-
-    #modalProductDescription {
-        font-size: 16px;
-        color: #555;
-        line-height: 1.5;
-    }
-
-    .block1-2 {
-        padding: 20px;
-        text-align: center;
-    }
-
-    /* 모달 애니메이션 */
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
-    }
-
-    @keyframes slideUp {
-        from {transform: translateY(100px); opacity: 0;}
-        to {transform: translateY(0); opacity: 1;}
-    }
-
-    .category-btn {
-        margin: 5px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        background-color: #56c395;
-        color: white;
-        cursor: pointer;
-    }
-
-    .category-btn:hover {
-        background-color: #3a9f73;
-    }
-
-    #banner01 {
-        position: relative;
-    }
-
-    .game-btn {
-        position: absolute;
-        top: 85px;
-        left: 95px;
-    }
-
-</style>
-
 <body>
 <!-- 헤더 영역 -->
 <th:block th:replace="fragments/nav :: header"></th:block>
@@ -205,18 +25,18 @@
 <!-- 메인 컨텐츠 영역 -->
 <div class="container" th:fragment="content">
     <div class="content1">
-        <div class="block1-1">
+        <div id="banner01-container">
             <img th:src="@{/image/product/shopBanner.png}" alt="상품" id="banner01">
             <a href="/game_list"><button class="game-btn" type="button">부족한 젤리 포인트 받으러 가기</button></a>
         </div>
 
         <!-- 카테고리 버튼 영역 -->
         <div class="container my-4">
-            <div class="d-flex justify-content-center">
-                <a href="/productMain" class="category-btn">All</a>
-                <a href="/productMain?category=food" class="category-btn">간식</a>
-                <a href="/productMain?category=care" class="category-btn">영양제</a>
-                <a href="/productMain?category=bag" class="category-btn">이동가방</a>
+            <div id="category-items">
+                <a href="/productMain" class="category-btn" id="category-btn-all"><i class="bi bi-list"></i>All</a>
+                <a href="/productMain?category=food" class="category-btn" id="category-btn-food"><i class="bi bi-egg-fried"></i>간식</a>
+                <a href="/productMain?category=care" class="category-btn" id="category-btn-care"><i class="bi bi-capsule"></i>영양제</a>
+                <a href="/productMain?category=bag" class="category-btn" id="category-btn-bag"><i class="bi bi-bag"></i>이동가방</a>
             </div>
         </div>
 
