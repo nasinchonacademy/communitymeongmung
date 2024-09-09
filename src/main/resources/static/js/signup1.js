@@ -34,14 +34,17 @@ let isUidChecked = false;
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
 
-
-            if (uid.length < 1 || uid.length > 20) {
-                alert('아이디는 3자 이상 20자 이하이어야 합니다.');
+            // 아이디 검증: 4자 이상, 20자 이하, 알파벳과 숫자 조합 허용
+            const uidPattern = /^[a-zA-Z0-9]{4,20}$/;
+            if (!uidPattern.test(uid)) {
+                alert('아이디는 4자 이상 20자 이하의 영문자와 숫자 조합이어야 합니다.');
                 return false;
             }
 
-            if (password.length < 1 || password.length > 20) {
-                alert('비밀번호는 8자 이상 20자 이하이어야 합니다.');
+            // 비밀번호 검증: 8자 이상, 20자 이하, 최소 하나의 문자, 숫자, 특수 문자 포함
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+            if (!passwordPattern.test(password)) {
+                alert('비밀번호는 8자 이상 20자 이하이어야 하며, 최소 하나의 문자, 숫자, 특수 문자를 포함해야 합니다.');
                 return false;
             }
 

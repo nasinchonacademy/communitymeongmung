@@ -2,6 +2,7 @@ package org.zerock.projectmeongmung.dto;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.zerock.projectmeongmung.entity.Vet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +26,8 @@ public class VetDTO {
     private String password;        // 수의사 로그인 비밀번호 (암호화되기 전의 원본 비밀번호)
     private String email;
     private List<String> description = new ArrayList<>();
+
+    public VetDTO(Vet vet) {
+    }
 }
 

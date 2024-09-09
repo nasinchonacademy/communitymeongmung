@@ -49,7 +49,7 @@ public class QStoryLike extends EntityPathBase<StoryLike> {
     public QStoryLike(Class<? extends StoryLike> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.storySeq = inits.isInitialized("storySeq") ? new QMeongStory(forProperty("storySeq"), inits.get("storySeq")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

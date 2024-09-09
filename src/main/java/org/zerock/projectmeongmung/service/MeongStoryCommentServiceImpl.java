@@ -41,7 +41,7 @@ public class MeongStoryCommentServiceImpl implements MeongStoryCommentService {
         // 댓글 등록 로직
         StoryComment storyComment = StoryComment.builder()
                 .commentcontent(commentDto.getCommentcontent())
-                .user(userRepository.findById(commentDto.getId())
+                .user(userRepository.findById(commentDto.getUserId())
                         .orElseThrow(() -> new RuntimeException("User not found")))
                 .story(meongStoryRepository.findById(commentDto.getSeq())
                         .orElseThrow(() -> new RuntimeException("Story not found")))
@@ -54,7 +54,7 @@ public class MeongStoryCommentServiceImpl implements MeongStoryCommentService {
     private StoryCommentDto entityToDto(StoryComment storyComment) {
         return StoryCommentDto.builder()
                 .commentid(storyComment.getCommentid())
-                .id(storyComment.getUser().getId())  // User의 ID
+                .userId(storyComment.getUser().getId())  // User의 ID
                 .nickname(storyComment.getUser().getNickname()) // User의 닉네임
                 .seq(storyComment.getStory().getSeq())  // Story의 seq
                 .commentcontent(storyComment.getCommentcontent())
