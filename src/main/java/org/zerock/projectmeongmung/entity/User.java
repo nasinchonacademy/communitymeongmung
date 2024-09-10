@@ -1,7 +1,6 @@
 package org.zerock.projectmeongmung.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -9,8 +8,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Timestamp;
-import java.time.LocalDate;
 import java.util.*;
 
 @Table(name="member")
@@ -49,6 +46,7 @@ public class User implements UserDetails {
     @Column(name="Profilephoto")
     private String profilePhoto;
 
+
     @Column(name="dogbirthday")
     private Date dogbirthday;
 
@@ -74,11 +72,11 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private boolean admin = false;
 
+    @Column(name = "Active", nullable =false)
+    private boolean active;
+
     @Column(name = "isvet", nullable = false)
     private boolean vet = false;
-
-
-
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "regdate", nullable = false, updatable = false)
@@ -107,15 +105,16 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SOSboardlikecount> soslikes;  // SOSboardlikecount와의 관계
 
-    @OneToOne
-    @JoinColumn(name = "vet_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Vet vetinfo;
+
+
 
 
 
     @Builder
     public User(String uid, String nickname, String email, String password, String name, String dogname, String dogbreed, String profilePhoto, Date dogbirthday,
-                String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint, boolean admin, boolean vet) {
+                String dogmeeting , boolean marketsns, boolean locservice, boolean termuse,boolean personalinfo, int jellypoint, boolean admin, boolean vet, Vet vetinfo, boolean active) {
         this.uid = uid;
         this.nickname = nickname;
         this.email = email;
@@ -134,7 +133,10 @@ public class User implements UserDetails {
         this.regDate = new Date();
         this.admin = false;
         this.vet = vet;
+        this.vetinfo=vetinfo;
+        this.active = true;
     }
+
 
     //권한 반환
     @Override
@@ -196,4 +198,5 @@ public class User implements UserDetails {
             throw new IllegalArgumentException("젤리가 부족해 추가 결제 금액이 발생합니다.");
         }
     }
+
 }

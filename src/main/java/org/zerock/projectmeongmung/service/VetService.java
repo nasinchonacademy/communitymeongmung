@@ -1,14 +1,17 @@
 package org.zerock.projectmeongmung.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.VetDTO;
+import org.zerock.projectmeongmung.entity.SOSboardcomment;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.entity.Vet;
 import org.zerock.projectmeongmung.entity.VetRecommendation;
+import org.zerock.projectmeongmung.repository.SOSBoardCommentRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.repository.VetRecommendationRepository;
 import org.zerock.projectmeongmung.repository.VetRepository;
@@ -17,10 +20,9 @@ import org.zerock.projectmeongmung.controller.FileController;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +34,8 @@ public class VetService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final FileController fileController;
     private final VetRecommendationRepository vetRecommendationRepository;
+    private final SOSBoardCommentRepository sosBoardCommentRepository;
 
-    // 수의사 등록 메서드 (User와 Vet 동시에 저장)
     public Vet registerVet(VetDTO vetDTO) throws IOException {
         // 프로필 사진 저장 로직
         String profilePhotoFileName = null;
@@ -42,11 +44,27 @@ public class VetService {
         }
 
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(vetDTO.getPassword());  // 예시로 이름+123으로 기본 비밀번호 설정
+        String encodedPassword = passwordEncoder.encode(vetDTO.getPassword()); // 예시로 이름+123으로 기본 비밀번호 설정
 
-        // Vet 엔티티 생성
+        // User 엔티티 생성
+        User user = User.builder()
+                .uid(vetDTO.getUsername())
+                .email(vetDTO.getEmail()) // 이메일
+                .nickname(vetDTO.getVetname()) // 닉네임을 수의사 이름으로 설정
+                .name(vetDTO.getVetname()) // 이름도 수의사 이름으로 설정
+                .password(encodedPassword) // 암호화된 비밀번호
+                .profilePhoto(profilePhotoFileName) // 프로필 사진
+                .vet(true)
+                .build();
+
+        // 저장 (User 먼저 저장)
+        User savedUser = userRepository.save(user);
+
+        // Vet 엔티티 생성 (User 엔티티의 ID를 참조)
         Vet vet = Vet.builder()
                 .vetname(vetDTO.getVetname())
+                .password(encodedPassword) // 암호화된 비밀번호
+                .username(vetDTO.getUsername())
                 .animalhospitlename(vetDTO.getAnimalhospitlename())
                 .registerdate(vetDTO.getRegisterdate())
                 .withdrawaldate(vetDTO.getWithdrawaldate() != null ? Timestamp.valueOf(vetDTO.getWithdrawaldate() + " 00:00:00") : null)
@@ -54,24 +72,11 @@ public class VetService {
                 .profilePhoto(profilePhotoFileName)
                 .description(vetDTO.getDescription())
                 .visibility(vetDTO.getVisibility())
-                .username(vetDTO.getUsername()) // 이메일을 사용자 ID로 사용
-                .password(encodedPassword)
+                .user(savedUser) // User 엔티티와 연관 설정
                 .build();
 
-        // User 엔티티에 정보 저장
-        User user = User.builder()
-                .uid(vetDTO.getUsername())
-                .email(vetDTO.getEmail())                  // 이메일
-                .nickname(vetDTO.getVetname())              // 닉네임을 수의사 이름으로 설정
-                .name(vetDTO.getVetname())                  // 이름도  수의사 이름으로 설정
-                .password(encodedPassword)                 // 암호화된 비밀번호
-                .profilePhoto(profilePhotoFileName)        // 프로필 사진
-                .vet(true)
-                .build();
-
-        // 저장
-        userRepository.save(user);
-        return vetRepository.save(vet);  // Vet 저장
+        // Vet 저장
+        return vetRepository.save(vet);
     }
 
     // 수의사 정보 조회 메서드
@@ -136,9 +141,6 @@ public class VetService {
     }
 
 
-
-
-
     // 수의사 공개/비공개 상태 수동 토글 처리
     public void toggleVisibility(Long vetid) {
         Optional<Vet> vetOpt = vetRepository.findById(vetid);
@@ -174,47 +176,74 @@ public class VetService {
     }
 
     @Transactional
-    public void deleteVet(String username) {
-        // 수의사 삭제
-        vetRepository.deleteByUsername(username);
-
-        // User 삭제
-        userRepository.deleteByUid(username);
-    }
-
-
-    public boolean recommendVet(User user, Long vetId) {
-        // 수의사가 존재하는지 확인
+    public void deleteVet(Long vetId) {
+        // Vet 엔티티를 먼저 조회
         Vet vet = vetRepository.findById(vetId)
-                .orElseThrow(() -> new RuntimeException("수의사를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 수의사를 찾을 수 없습니다."));
 
-        // 사용자가 이미 해당 수의사를 추천했는지 확인
-        boolean alreadyRecommended = vetRecommendationRepository.existsByUserAndVet(user, vet);
-
-        if (alreadyRecommended) {
-            return false; // 이미 추천한 경우 false 반환
+        // Vet과 연관된 User 엔티티의 vetinfo 필드를 null로 설정
+        User user = vet.getUser();
+        if (user != null) {
+            user.setVetinfo(null); // vetinfo 필드를 null로 설정
+            userRepository.save(user); // User 정보 저장
         }
 
-        // 새로운 추천 저장
-        VetRecommendation recommendation = VetRecommendation.builder()
-                .user(user)
-                .vet(vet)
-                .recommendDate(new Date())
-                .build();
-
-        vetRecommendationRepository.save(recommendation);
-
-        // 수의사 추천 수 증가
-        vet.setRecommendationCount(vet.getRecommendationCount() + 1);
-        vetRepository.save(vet);
-
-        return true; // 추천 성공
+        // Vet 삭제
+        vetRepository.delete(vet);
     }
-
 
 
     public Vet getVetByUserId(Long userId) {
-        // Optional에서 값을 안전하게 추출
-        return vetRepository.findByUserId(userId).orElse(null);
+        // 사용자를 Optional로부터 추출
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 사용자의 vetinfo 필드 반환
+        Vet vet = user.getVetinfo();
+
+        if (vet == null) {
+            throw new RuntimeException("사용자와 연결된 수의사를 찾을 수 없습니다.");
+        }
+
+        return vet;
     }
+
+    @Transactional
+    public SOSboardcomment getCommentById(Long commentId) {
+        return sosBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public void recommendVet(Long vetId, Long commentId, Long userId, User currentUser) {
+        // 댓글에서 수의사 정보 추출 (commentId 사용)
+        SOSboardcomment comment = getCommentById(commentId); // commentId로 댓글 정보 가져오기
+        User commentUser = comment.getUser(); // 댓글 작성자 정보
+        Vet vet = commentUser.getVetinfo(); // 댓글 작성자가 수의사일 경우 수의사 정보 추출
+
+        if (vet == null) {
+            throw new RuntimeException("수의사를 찾을 수 없습니다.");
+        }
+
+        // 현재 로그인한 사용자가 이미 추천했는지 확인
+        boolean alreadyRecommended = vetRecommendationRepository.existsByUserUidAndVetVetid(currentUser.getUid(), vetId);
+
+        if (alreadyRecommended) {
+            throw new RuntimeException("이미 추천한 수의사입니다.");
+        }
+
+        // 추천 객체 생성 및 저장
+        VetRecommendation recommendation = VetRecommendation.builder()
+                .vet(vet) // 수의사 정보
+                .user(currentUser) // 추천한 사용자 정보
+                .recommendDate(new Date())
+                .build();
+
+        vetRecommendationRepository.save(recommendation); // 추천 저장
+
+        // 추천 카운트 증가
+        vet.setRecommendationCount(vet.getRecommendationCount() + 1);
+        vetRepository.save(vet); // 변경된 추천 카운트 저장
+    }
+
 }
