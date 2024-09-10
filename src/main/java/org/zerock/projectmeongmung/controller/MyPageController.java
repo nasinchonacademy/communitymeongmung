@@ -54,7 +54,6 @@ public class MyPageController {
 
 
         model.addAttribute("likedStories", likedStories);
-
         model.addAttribute("partitionedStories", partitionedStories);
 
         // 젤리 포인트 가져오기
@@ -65,11 +64,11 @@ public class MyPageController {
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
         List<List<MeongStory>> partitionedwrittenStories = partitionList(writtenStories, 5);
 //        List<Cart> cartItems = myPageService.getCartItems(user);
+        model.addAttribute("partitionedwrittenStories", partitionedwrittenStories);
 
         // 장바구니 항목 가져오기
         List<Cart> cartItems = cartService.getCartItems(user);
 
-        model.addAttribute("partitionedwrittenStories", partitionedwrittenStories);
         model.addAttribute("cartItems", cartItems);  // 장바구니 리스트 추가
 
         return "mypage/mypage";

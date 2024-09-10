@@ -55,11 +55,11 @@ public class GameController {
     public String gameRsp(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUid(userDetails.getUsername());
 
-        // 오늘 이미 게임을 했는지 확인
-        if (userService.hasPlayedToday(user.getUid(), "rsp")) {
-            model.addAttribute("message", "오늘은 이미 게임을 하셨습니다. 내일 다시 시도해주세요.");
-            return "game/game_list"; // 이미 게임을 한 경우, 목록 페이지로 리다이렉션
-        }
+//        // 오늘 이미 게임을 했는지 확인
+//        if (userService.hasPlayedToday(user.getUid(), "rsp")) {
+//            model.addAttribute("message", "오늘은 이미 게임을 하셨습니다. 내일 다시 시도해주세요.");
+//            return "game/game_list"; // 이미 게임을 한 경우, 목록 페이지로 리다이렉션
+//        }
         model.addAttribute("user", user);
         return "game/game_rsp";
     }

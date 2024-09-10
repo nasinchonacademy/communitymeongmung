@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>제목 입력란</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- 부트스트랩 cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- 부트스트랩 아이콘 cdn -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <!--기본 css-->
-    <link th:href="@{/css/basic.css}" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/basic.css">
+
+    <!-- 헤더 영역 -->
+    <th:block th:replace="/fragments/nav :: header"></th:block>
+
+    <!-- SNB 영역 -->
+    <th:block th:replace="/fragments/nav :: navMenu"></th:block>
+
 </head>
 
 <style>
@@ -110,210 +111,204 @@
 
 </style>
 <body>
-<!-- 헤더 영역 -->
-<th:block th:replace="/fragments/nav :: header"></th:block>
+<!-- 메인 컨텐츠 영역 -->
+<div class="game">
+    <div class="mytitle">
+        <h1> 가위 바위 보 </h1>
+        <p class="result-display"> 아래 버튼을 눌러 게임 결과를 확인해보세요! </p>
+    </div>
 
-<!-- SNB 영역 -->
-<th:block th:replace="/fragments/nav :: navMenu"></th:block>
-
-    <!-- 메인 컨텐츠 영역 -->
-    <div class="game">
-        <div class="mytitle">
-            <h1> 가위 바위 보 </h1>
-            <p class="result-display"> 아래 버튼을 눌러 게임 결과를 확인해보세요! </p>
+    <div class="img-container">
+        <div class="info">
+            <img th:src="@{/image/game/r.png}" alt="가위모양 손 사진" id="rps1">
+            <p>user</p>
         </div>
 
-        <div class="img-container">
-            <div class="info">
-                <img th:src="@{/image/game/r.png}" alt="가위모양 손 사진" id="rps1">
-                <p>user</p>
-            </div>
+        <span>VS</span>
 
-            <span>VS</span>
-
-            <div class="info">
-                <img th:src="@{/image/game/r.png}" alt="가위모양 손 사진" id="rps2">
-                <p>computer</p>
-            </div>
-        </div>
-
-        <div class="button-container">
-            <button id="sbtn" class="rps-button"> 가위</button>
-            <button id="rbtn" class="rps-button"> 바위</button>
-            <button id="pbtn" class="rps-button"> 보</button>
+        <div class="info">
+            <img th:src="@{/image/game/r.png}" alt="가위모양 손 사진" id="rps2">
+            <p>computer</p>
         </div>
     </div>
 
-    <div class="gameDetail">
-        <img th:src="@{../image/game/rsp.png}" class="gameImage" alt="gameImage">
+    <div class="button-container">
+        <button id="sbtn" class="rps-button"> 가위</button>
+        <button id="rbtn" class="rps-button"> 바위</button>
+        <button id="pbtn" class="rps-button"> 보</button>
     </div>
+</div>
 
-    <!-- 푸터 영역 -->
-    <th:block th:replace="/fragments/nav :: footer"></th:block>
+<div class="gameDetail">
+    <img th:src="@{../image/game/rsp.png}" class="gameImage" alt="gameImage">
+</div>
 
-    <script>
-        const rspArr = ['r', 's', 'p'];
-        const uid = '[[${user.uid}]]'; // ''을 넣어야만 인식한다.
+<!-- 푸터 영역 -->
+<th:block th:replace="/fragments/nav :: footer"></th:block>
 
-        // 전역 변수로 이미지 경로를 설정
-        const imagePath = '/image/game/';
+<script>
+    const rspArr = ['r', 's', 'p'];
+    const uid = '[[${user.uid}]]'; // ''을 넣어야만 인식한다.
 
-        let score = 0;
-        let win = 0;
-        let lose = 0;
+    // 전역 변수로 이미지 경로를 설정
+    const imagePath = '/image/game/';
 
-        function winningRate() {
-            if (win !== 0) {
-                return (win / (win + lose)) * 100;
-            }
-            return 0;
+    let score = 0;
+    let win = 0;
+    let lose = 0;
+
+    function winningRate() {
+        if (win !== 0) {
+            return (win / (win + lose)) * 100;
+        }
+        return 0;
+    }
+
+    function rps(userName, userChoice, computer) {
+        const resultDisplay = document.querySelector('.result-display');
+        let result = '';
+
+        if (userChoice === 's' && computer === 'p'
+            || userChoice === 'r' && computer === 's'
+            || userChoice === 'p' && computer === 'r') {
+            result = '승리! 젤리 30개가 적립되었어요.';
+            win += 1;
+            score += 1;
+
+            // 젤리 포인트 서버로 전송
+            $.ajax({
+                url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
+                method: 'POST',
+                data: {
+                    points: 30, // 이기면 얻는 젤리
+                    uid: uid, // 동적 할당된 사용자 ID
+                    gameType: 'rsp' // 가위바위보 게임임을 명시
+                },
+                success: function (response) {
+                    console.log('젤리 적립 성공!');
+                },
+                error: function (xhr, status, error) {
+                    console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                }
+            });
+
+        } else if (userChoice === "s" && computer === 'r'
+            || userChoice === "r" && computer === 'p'
+            || userChoice === "p" && computer === 's') {
+            result = '아쉽네요. 다음에 또 도전해보세요!';
+            lose += 1;
+            score -= 1;
+        } else {
+            result = '무승부';
         }
 
-        function rps(userName, userChoice, computer) {
-            const resultDisplay = document.querySelector('.result-display');
-            let result = '';
+        resultDisplay.textContent = `결과: ${result}`;
+    }
 
-            if (userChoice === 's' && computer === 'p'
-                || userChoice === 'r' && computer === 's'
-                || userChoice === 'p' && computer === 'r') {
-                result = '승리! 젤리 30개가 적립되었어요.';
-                win += 1;
-                score += 1;
+    // 게임 하루에 한번만 하게 해주는 로직
+    function checkIfGamePlayedToday() {
+        const today = new Date().toISOString().slice(0, 10);
+        const lastPlayedDate = localStorage.getItem(`lastPlayedDateRSP_${uid}`); // uid를 추가해 기록
+        return today === lastPlayedDate;
+    }
 
-                // 젤리 포인트 서버로 전송
-                $.ajax({
-                    url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
-                    method: 'POST',
-                    data: {
-                        points: 30, // 이기면 얻는 젤리
-                        uid: uid, // 동적 할당된 사용자 ID
-                        gameType: 'rsp' // 가위바위보 게임임을 명시
-                    },
-                    success: function (response) {
-                        console.log('젤리 적립 성공!');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('포인트 적립 중 오류가 발생했습니다.', error);
-                    }
-                });
+    function setGamePlayedToday() {
+        const today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem(`lastPlayedDateRSP_${uid}`, today);
+    }
 
-            } else if (userChoice === "s" && computer === 'r'
-                || userChoice === "r" && computer === 'p'
-                || userChoice === "p" && computer === 's') {
-                result = '아쉽네요. 다음에 또 도전해보세요!';
-                lose += 1;
-                score -= 1;
-            } else {
-                result = '무승부';
-            }
-
-            resultDisplay.textContent = `결과: ${result}`;
-        }
-
-        // 게임 하루에 한번만 하게 해주는 로직
-        function checkIfGamePlayedToday() {
-            const today = new Date().toISOString().slice(0, 10);
-            const lastPlayedDate = localStorage.getItem(`lastPlayedDateRSP_${uid}`); // uid를 추가해 기록
-            return today === lastPlayedDate;
-        }
-
-        function setGamePlayedToday() {
-            const today = new Date().toISOString().slice(0, 10);
-            localStorage.setItem(`lastPlayedDateRSP_${uid}`, today);
-        }
-
-        function initializeGame() {
-            if (checkIfGamePlayedToday()) {
-                disableButtons();
-                document.querySelector('.result-display').textContent = "오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.";
-            }
-        }
-
-        function disableButtons() {
-            const rpsButtons = document.querySelectorAll('.rps-button');
-            rpsButtons.forEach(button => button.disabled = true);
-        }
-
-        const rps1 = document.querySelector('#rps1');
-        let i = 0;
-        let intervalId1 = setInterval(function () {
-            rps1.src = imagePath + `${rspArr[i % 3]}.png`;
-            i += 1;
-        }, 100);
-
-        const rps2 = document.querySelector('#rps2');
-        let j = 0;
-        let intervalId2 = setInterval(function () {
-            rps2.src = imagePath + `${rspArr[j % 3]}.png`;
-            j += 1;
-        }, 120);
-
-        const sbtn = document.querySelector('#sbtn');
-        sbtn.addEventListener('click', function () {
-            if (checkIfGamePlayedToday()) {
-                alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
-                return;
-            }
-
-            clearInterval(intervalId1);
-            clearInterval(intervalId2);
-
-            rps1.src = imagePath + 's.png'; // imagePath 절대경로 지정!!!!!
-
-            const computer = Math.floor(Math.random() * 3);
-            rps2.src = imagePath + rspArr[computer] + '.png';
-
-            rps('유나', 's', rspArr[computer]);
-
-            setGamePlayedToday();
+    function initializeGame() {
+        if (checkIfGamePlayedToday()) {
             disableButtons();
-        });
+            document.querySelector('.result-display').textContent = "오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.";
+        }
+    }
 
-        const rbtn = document.querySelector('#rbtn');
-        rbtn.addEventListener('click', function () {
-            if (checkIfGamePlayedToday()) {
-                alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
-                return;
-            }
+    function disableButtons() {
+        const rpsButtons = document.querySelectorAll('.rps-button');
+        rpsButtons.forEach(button => button.disabled = true);
+    }
 
-            clearInterval(intervalId1);
-            clearInterval(intervalId2);
+    const rps1 = document.querySelector('#rps1');
+    let i = 0;
+    let intervalId1 = setInterval(function () {
+        rps1.src = imagePath + `${rspArr[i % 3]}.png`;
+        i += 1;
+    }, 100);
 
-            rps1.src = imagePath + 'r.png';
+    const rps2 = document.querySelector('#rps2');
+    let j = 0;
+    let intervalId2 = setInterval(function () {
+        rps2.src = imagePath + `${rspArr[j % 3]}.png`;
+        j += 1;
+    }, 120);
 
-            const computer = Math.floor(Math.random() * 3);
-            rps2.src = imagePath + rspArr[computer] + '.png';
+    const sbtn = document.querySelector('#sbtn');
+    sbtn.addEventListener('click', function () {
+        if (checkIfGamePlayedToday()) {
+            alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
+            return;
+        }
 
-            rps('유나', 'r', rspArr[computer]);
+        clearInterval(intervalId1);
+        clearInterval(intervalId2);
 
-            setGamePlayedToday();
-            disableButtons();
-        });
+        rps1.src = imagePath + 's.png'; // imagePath 절대경로 지정!!!!!
 
-        const pbtn = document.querySelector('#pbtn');
-        pbtn.addEventListener('click', function () {
-            if (checkIfGamePlayedToday()) {
-                alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
-                return;
-            }
+        const computer = Math.floor(Math.random() * 3);
+        rps2.src = imagePath + rspArr[computer] + '.png';
 
-            clearInterval(intervalId1);
-            clearInterval(intervalId2);
+        rps('유나', 's', rspArr[computer]);
 
-            rps1.src = imagePath + 'p.png';
+        setGamePlayedToday();
+        disableButtons();
+    });
 
-            const computer = Math.floor(Math.random() * 3);
-            rps2.src = imagePath + rspArr[computer] + '.png';
+    const rbtn = document.querySelector('#rbtn');
+    rbtn.addEventListener('click', function () {
+        if (checkIfGamePlayedToday()) {
+            alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
+            return;
+        }
 
-            rps('유나', 'p', rspArr[computer]);
+        clearInterval(intervalId1);
+        clearInterval(intervalId2);
 
-            setGamePlayedToday();
-            disableButtons();
-        });
+        rps1.src = imagePath + 'r.png';
 
-        // Initialize game status on page load
-        initializeGame();
+        const computer = Math.floor(Math.random() * 3);
+        rps2.src = imagePath + rspArr[computer] + '.png';
 
-    </script>
-    </body>
-    </html>
+        rps('유나', 'r', rspArr[computer]);
+
+        setGamePlayedToday();
+        disableButtons();
+    });
+
+    const pbtn = document.querySelector('#pbtn');
+    pbtn.addEventListener('click', function () {
+        if (checkIfGamePlayedToday()) {
+            alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
+            return;
+        }
+
+        clearInterval(intervalId1);
+        clearInterval(intervalId2);
+
+        rps1.src = imagePath + 'p.png';
+
+        const computer = Math.floor(Math.random() * 3);
+        rps2.src = imagePath + rspArr[computer] + '.png';
+
+        rps('유나', 'p', rspArr[computer]);
+
+        setGamePlayedToday();
+        disableButtons();
+    });
+
+    // Initialize game status on page load
+    initializeGame();
+
+</script>
+</body>
+</html>

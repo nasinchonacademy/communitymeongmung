@@ -19,7 +19,11 @@
         var enterMsg={"type" : "ENTER","roomId":[[${room.roomId}]],"nickname":"chee","msg":""}; //nickname은  글쓸때 수정하자.
         socket.send(JSON.stringify(enterMsg));
     }
-    let socket = new WebSocket("ws://106.249.191.8:9990/ws/chat");
+
+           // let socket = new WebSocket("ws://localhost:9990/ws/chat");
+           //      let socket = new WebSocket("ws://106.249.191.8:9990/ws/chat");
+    let socket = new WebSocket("ws://[2001:4860:7:50e::fe]:9990/ws/chat");
+
 
     socket.onopen = function (e) {
         console.log('open server!')
@@ -46,13 +50,13 @@
     //메세지 보내기 버튼 눌렀을 떄..
     function sendMsg() {
         let content=document.querySelector('.content').value;
-         var talkMsg={"type" : "TALK","roomId":[[${room.roomId}]] ,"sender":"chee","msg":content};
-       socket.send(JSON.stringify(talkMsg));
+        var talkMsg={"type" : "TALK","roomId":[[${room.roomId}]] ,"nickname":"chee","msg":content};
+        socket.send(JSON.stringify(talkMsg));
     }
 
     function quit(){
-         var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"sender":"chee","msg":""};
-       socket.send(JSON.stringify(quitMsg));
+        var quitMsg={"type" : "QUIT","roomId":[[${room.roomId}]] ,"nickname":"chee","msg":""};
+        socket.send(JSON.stringify(quitMsg));
         socket.close();
         location.href="/chat/chatList";
     }

@@ -132,6 +132,7 @@
             success: function(response) {
                 // 서버로부터 받아온 데이터를 사용하여 모달 창에 표시
                 modalTitle.textContent = response.pname;
+                modalTitle.setAttribute("data-product-id", productId); // 모달에 productId 속성 설정
                 modalPrice.textContent = response.pprice + '원';
                 modalImage.src = '/image/product/' + response.productphoto;
                 modalDescription.textContent = response.pdescription;
@@ -149,7 +150,7 @@
                 };
 
                 cartButton.onclick = function() {
-                    const amount = 1; // 수량을 하드코딩했지만, 필요에 따라 변경 가능
+                    const amount = 1; // 기본 수량 1개
 
                     // 장바구니에 상품 추가하는 함수
                         $.ajax({
@@ -157,7 +158,7 @@
                             method: 'POST',
                             contentType: 'application/json',
                             data: JSON.stringify({
-                                productId: modalProductTitle.getAttribute("data-product-id"), // 이미 모달에 로드된 productId를 가져옴
+                                productId: productId, // 이미 모달에 로드된 productId를 가져옴
                                 amount: amount// 기본 수량 1로 설정
                             }),
                             success: function(response) {
