@@ -1,7 +1,7 @@
 <div class="header_point">
   <div class="points">
     <a href="/mypagejellylist" class="button_getjellylist" type="button">보유 젤리: <span th:text="${jelly}+ ' 개  &gt;'">500</span> </a>
-    <a type="button" class="button_orderlist">주문내역 확인하기 &gt;</a>
+    <a href="/get_order_list" type="button" class="button_orderlist">주문내역 확인하기 &gt;</a>
   </div>
   <div class="button-background"></div>
 </div>
@@ -159,7 +159,7 @@
         </li>
         <!-- 장바구니에 상품이 있을 때만 추가 상품 버튼 출력 -->
         <div th:if="${not #lists.isEmpty(cartItems)}" class="cart_getwritelist">
-          <a href="/productlist">
+          <a href="/productMain">
             <img th:src="${'/image/tool/addstory.PNG'}" alt="사진">
           </a>
         </div>

@@ -7,7 +7,7 @@
             <div class="text-block">
                 <p class="maintitle">멍멍이 이야기로</p>
                     <p class="maintitle2">뭉치는 공간, <span class="highlight-text">멍뭉!</span></p>
-                <p class="maincontent">강아지 정보 포럼입니다. 현재는 송파구청 시범운영중이예요!</p>
+                <p class="maincontent">멍멍이들의 모든 이야기가 모인 곳, 멍뭉이에 오신 걸 환영해요</p>
             </div>
 
         </div>
@@ -19,11 +19,11 @@
             </a>
             <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();" class="text-link" id="meongSosId">
                 <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
-                <div class="text">멍SOS</div>
+                <div class="text">SOS 상담</div>
             </a>
             <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist}" class="text-link" id="meongSosId">
                 <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
-                <div class="text">멍SOS</div>
+                <div class="text">SOS 상담</div>
             </a>
             <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();" class="text-link" id="hospitalId">
                 <img id="hospital" th:src="@{/image/main/free-icon-veterinary-clinic-16326535.png}" alt="지역별 동물병원">
@@ -35,11 +35,11 @@
             </a>
             <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist(isRadio2Selected=true)}" th:onclick="return checkLogin();" class="text-link" id="sosTalkId">
                 <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
-                <div class="text">SOS 상담</div>
+                <div class="text">멍뭉전문가</div>
             </a>
             <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist(isRadio2Selected=true)}" class="text-link" id="sosTalkId">
                 <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
-                <div class="text">SOS 상담</div>
+                <div class="text">멍뭉전문가</div>
             </a>
             <a sec:authorize="isAnonymous()" th:href="@{/game_list}" th:onclick="return checkLogin();" class="text-link" id="jellyQuestId">
                 <img id="jellyQuest" th:src="@{/image/main/free-icon-dog-2934856.png}" alt="젤리퀘스트">
@@ -97,7 +97,7 @@
 
 
 
-        <h6>이번 주 놓치기 아쉬운 멍스토리!!</h6>
+        <h6>이번 주 놓치기 아쉬운 멍스토리</h6>
         <!-- topStories 리스트를 5개 출력 -->
         <div class="product-container">
             <div class="product" th:each="story : ${topStories}">
@@ -117,7 +117,7 @@
         </div>
         <div class="dogMoll">
             <br>
-            <h6>인기있는 강아지 상품</h6>
+            <h6>자주 찾게 되는 멍뭉 필수템</h6>
             <div class="product2-container">
                 <div class="product2" th:each="product, iterStat : ${products}"
                      th:classappend="'product2-' + (${iterStat.index} + 1)">
@@ -138,6 +138,7 @@
 
             <div class="footerPng">
                 <img th:src="@{/image/main/mainfooter.png}" alt="Product Image" class="footerpng-image">
+                <img th:src="@{/image/main/mainfooter2.png}" alt="Product Image2" class="footerpng2-image">
             </div>
 
         </div>

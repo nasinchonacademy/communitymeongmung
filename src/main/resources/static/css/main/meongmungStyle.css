@@ -22,8 +22,8 @@
 
 .content h6 {
     margin-right: auto;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
 }
 
@@ -275,7 +275,7 @@
 
 p.maincontent {
     margin-top: 10px;
-    font-size: 16.7px;
+    font-size: 19px;
     color: #cbcbcb;
     font-family: 'Godo', sans-serif;
     text-align: right;
@@ -400,15 +400,15 @@ a.aTag1 {
     align-items: flex-start;
 }
 
-.aTag1 {
-    width: 100px;
-    display: inline-block;
-    text-align: center;
-    height: 270px;
-    width: 270px;
-    margin-right: 15px;
-    border-radius: 12px;
-}
+/*.aTag1 {*/
+/*    width: 100px;*/
+/*    display: inline-block;*/
+/*    text-align: center;*/
+/*    height: 270px;*/
+/*    width: 270px;*/
+/*    margin-right: 15px;*/
+/*    border-radius: 20px;*/
+/*}*/
 
 .bn {
     width: 80%; /* 배너 영역 크기 조정 가능 */
@@ -473,11 +473,12 @@ div#carouselExample {
     width: 207px;
     margin-left: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ffff
 }
 
 .product2-container {
     text-align: right;
-    height: 235px;
+    height: 300px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -537,14 +538,38 @@ div#carouselExample {
 
 .footerPng {
     position: relative; /* 부모 컨테이너를 기준으로 자식 요소 배치 */
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    /*height: 100px; !* 푸터 영역의 높이 설정 *!*/
 }
 
 img.footerpng-image {
     position: absolute; /* 이미지 위치를 절대값으로 설정 */
-    top: -400px; /* 원하는 위치로 이동 */
-    left: -55px; /* 원하는 위치로 이동 */
-    width: 350px;
-    height: 300px;
+    top: -430px; /* 원하는 위치로 이동 */
+    left: -75px; /* 원하는 위치로 이동 */
+    width: 420px;
+    height: 350px;
     opacity: 0.5;
     z-index: -1; /* 이미지가 텍스트 뒤에 위치하도록 설정 */
+}
+
+img.footerpng2-image {
+    /*position: absolute; !* 이미지 위치를 절대값으로 설정 *!*/
+    /*top: -880px; !* 원하는 위치로 이동 *!*/
+    /*left: -720px;*/
+    /*opacity: 0.5;*/
+    /*z-index: -10; !* 이미지가 텍스트 뒤에 위치하도록 설정 *!*/
+    position: absolute; /* 이미지 위치를 절대값으로 설정 */
+    top: -360px; /* 원하는 위치로 이동 */
+    left: 0; /* 왼쪽을 0으로 설정하여 화면의 왼쪽 끝에서 시작 */
+    width: 100%; /* 너비를 100%로 설정하여 양옆을 꽉 채움 */
+    height: auto; /* 비율을 유지하면서 높이 자동 조정 */
+    opacity: 0.5; /* 투명도 조정으로 배경 이미지처럼 보이도록 설정 */
+    z-index: -10; /* 이미지가 텍스트 뒤에 위치하도록 설정 */
+}
+
+.h6, h6 {
+    font-size: 24px;
+    color: #6e6e6e;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }

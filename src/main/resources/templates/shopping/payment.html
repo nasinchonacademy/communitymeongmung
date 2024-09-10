@@ -64,7 +64,7 @@
     <!--폼에 히든으로 제품아이디값 가지고 오기 -->
     <form action="/payment_complete" method="POST" id="paymentForm" novalidate>
         <input type="hidden" id="productIdField" name="productId" th:value="${product.pid}">
-        <input type="hidden" id="totalprice" name="totalprice" th:value="${product.pprice}">
+        <input type="hidden" id="totalprice" name="totalprice" th:value="${finalPrice}">
 
         <div class="form-group">
             <label for="resname">받는 사람 이름</label>
