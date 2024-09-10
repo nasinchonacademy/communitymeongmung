@@ -1,16 +1,14 @@
-.notice {
-    background-color: #ff7a7a;
+/*.notice {
     position: fixed;
     right: calc(3%);
     bottom: 50px;
-    width: 100px;
-    height: 100px;
-    z-index: 50;
     border-radius: 50px;
-}
-.notice-container {
-    width: 100%;
-    height: 100%;
+}*/
+
+.btn-open-modal {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,12 +20,113 @@
     height: 100%;
     text-align: center;
     line-height: 100px; /* 텍스트 수직 정렬을 위한 설정 */
-    color: white; /* 텍스트 색상 */
-    font-size: 16px; /* 텍스트 크기 */
-    text-decoration: none; /* 기본 링크 밑줄 제거 */
-    background-color: transparent; /* 기본 배경 제거 */
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: transparent;
 }
 
 .noticeAtag:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* 호버 시 배경색 */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+
+
+
+.modal {
+    position: fixed; /* 화면 전체를 덮는 모달 */
+    visibility: hidden; /* 처음에는 숨김 처리 */
+    opacity: 0; /* 투명도 0으로 시작 */
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    transition: opacity 0.5s ease, visibility 0s 0.5s; /* 0.5초 동안 투명도 변화 */
+}
+
+.modal_body {
+    position: fixed;
+    right: calc(3%);
+    bottom: calc(50px + 100px);
+    background-color: white;
+    min-height: 500px;
+    max-width: 358px;
+    border-radius: 44px;
+    display: flex;
+    text-align: center;
+    padding: 20px;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    pointer-events: none;
+    user-select: text; /* 텍스트 선택 가능 */
+}
+
+.modal.modalOpen {
+    visibility: visible; /* 보이도록 설정 */
+    opacity: 1; /* 투명도 100% */
+    transition: opacity 0.5s ease; /* 투명도 애니메이션 */
+}
+
+/* 모달이 열릴 때 애니메이션 */
+.modal.modalOpen .modal_body {
+    opacity: 1;
+    transform: translateY(0);  /* 원래 위치로 이동 */
+    pointer-events: auto;  /* 클릭 가능 */
+}
+
+.modal_body > ul > li {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+button.modalOpen {
+    position: fixed;
+    height: 80px;
+    width: 80px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: calc(10%);
+    bottom: 50px;
+    background-color: #ffdede;
+    border: none;
+    cursor: pointer;
+    z-index: 50;
+    transition: background-color 0.3s ease;
+}
+
+button.modalOpen:hover {
+    background-color: #ffe5e5; /* 호버 시 약간 밝은 색 */
+}
+
+li {
+    list-style: none;  /* 기본 리스트 스타일(점, 숫자 등) 제거 */
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
 }

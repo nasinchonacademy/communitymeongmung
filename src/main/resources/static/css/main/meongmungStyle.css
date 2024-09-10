@@ -487,11 +487,11 @@ div#carouselExample {
     margin-top: 30px;
 }
 
-[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+/*[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
     cursor: pointer;
     height: 282px;
     margin-top: 96px;
-}
+}*/
 
 .container {
     width: 1045px;

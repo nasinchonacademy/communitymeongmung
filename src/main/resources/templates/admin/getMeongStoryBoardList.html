@@ -159,7 +159,7 @@
 
                 <td>
                     <form class="delete-form"
-                          th:action="@{/admin/remove(seq=${story.seq})}"
+                          th:action="@{/admin/remove(seq=${story.seq}, title=${story.title}, nickname=${story.nickname}, uid=${story.uid})}"
                           method="post"
                           style="display:inline;"
                           onsubmit="return confirmDelete()">
@@ -187,7 +187,7 @@
         </ul>
 
         <div class="writeBtn">
-            <a th:href="@{/mungstory/storywirte}" class="writeBtnAtag">글쓰기</a>
+            <a th:href="@{/admin/getStorywirte}" class="writeBtnAtag">글쓰기</a>
         </div>
     </div>
 
