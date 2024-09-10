@@ -7,6 +7,7 @@ import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.dto.SOSboardDTO;
 import org.zerock.projectmeongmung.entity.SOSboard;
 import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.repository.SOSBoardLikeRepository;
 import org.zerock.projectmeongmung.repository.SOSboardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,8 @@ public class SOSboardService {
     private SOSboardRepository repository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SOSBoardLikeRepository sosBoardLikeRepository;
 
     public Optional<SOSboardDTO> getSOSboardById(Long id) {
         return repository.findById(id)
@@ -121,7 +124,14 @@ public class SOSboardService {
 
     }
 
-    public void remove(Long sosboardseq) {repository.deleteById(sosboardseq);}
+    public void remove(Long sosboardseq) {
+        SOSboard sosboard = repository.findById(sosboardseq)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found: " + sosboardseq));
+
+        // 좋아요와 관련된 항목 삭제
+        sosBoardLikeRepository.deleteBySosboard(sosboard);
+        repository.deleteById(sosboardseq);  // 게시물 삭제
+    }
 
     public void modify( SOSboardDTO dto) {
         SOSboard entity = repository.findById(dto.getSosboardseq())

@@ -174,7 +174,7 @@ public class MyPageController {
                                     @RequestParam(value = "page",defaultValue = "1") int page,
                                     @RequestParam(value = "size", defaultValue = "10") int size,
                                     @RequestParam(value = "type", required = false) String type,
-                                    @RequestParam(value = "keywword", required = false) String keywword,
+                                    @RequestParam(value = "keyword", required = false) String keyword,
                                     PageRequestDTO pageRequestDTO) {
 
         String username = authentication.getName();
@@ -183,11 +183,11 @@ public class MyPageController {
         pageRequestDTO.setPage(page);
         pageRequestDTO.setSize(size);
         pageRequestDTO.setType(type);
-        pageRequestDTO.setKeyword(keywword);
+        pageRequestDTO.setKeyword(keyword);
 
         PageResultDTO<MeongStoryDTO, MeongStory> result;
 
-        result = meongStoryService.getAllItems(pageRequestDTO);
+        result = myPageService.getWrittenStories(user,pageRequestDTO);
 
         model.addAttribute("result", result);
         model.addAttribute("pageRequestDTO", pageRequestDTO);
@@ -200,12 +200,27 @@ public class MyPageController {
     }
 
     @GetMapping("/mypagelikedlist")
-    public String showLikedlistPage(Model model,Authentication authentication) {
+    public String showLikedlistPage(Model model,Authentication authentication,
+                                    @RequestParam(value = "page",defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size,
+                                    @RequestParam(value = "type", required = false) String type,
+                                    @RequestParam(value = "keyword", required = false) String keyword,
+                                    PageRequestDTO pageRequestDTO) {
+
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
 
-        List<MeongStory> likedStories = myPageService.getLikedStories(user);
-        model.addAttribute("likedStories", likedStories);;
+        pageRequestDTO.setPage(page);
+        pageRequestDTO.setSize(size);
+        pageRequestDTO.setType(type);
+        pageRequestDTO.setKeyword(keyword);
+
+        PageResultDTO<MeongStoryDTO, MeongStory> result;
+
+        result = myPageService.getLikedStories2(user,pageRequestDTO);
+
+        model.addAttribute("result", result);
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
 
         return "mypage/mypagelikedlist";
     }

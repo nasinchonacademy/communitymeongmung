@@ -105,9 +105,21 @@ public class Vet implements UserDetails {
     }
 
 
+
+
     public User getUser() {
         return this.user;  // User 필드를 반환
     }
+
+    @Transient
+    public int getCommentCount() {
+        if (this.user != null && this.user.getComments() != null) {
+            return this.user.getComments().size(); // 해당 수의사와 연결된 사용자가 작성한 댓글 수
+        }
+        return 0;
+    }
+
+
 }
 ;
 

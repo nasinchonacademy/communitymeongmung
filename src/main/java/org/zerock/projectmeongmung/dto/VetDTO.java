@@ -26,6 +26,8 @@ public class VetDTO {
     private String password;        // 수의사 로그인 비밀번호 (암호화되기 전의 원본 비밀번호)
     private String email;
     private List<String> description = new ArrayList<>();
+    private int recommendationCount;
+    private int commentCount;
 
     public VetDTO(Vet vet) {
     }

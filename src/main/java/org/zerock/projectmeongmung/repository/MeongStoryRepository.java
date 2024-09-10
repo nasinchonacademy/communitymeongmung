@@ -10,6 +10,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.zerock.projectmeongmung.entity.MeongStory;
+import org.zerock.projectmeongmung.entity.User;
 
 import java.util.List;
 
@@ -19,6 +20,11 @@ public interface MeongStoryRepository extends JpaRepository<MeongStory, Long>, Q
     List<MeongStory> findByUserId(Long userId);
     Page<MeongStory> findByCategory(String category, Pageable pageable);
     List<MeongStory> findTop5ByOrderByLikecountDesc();
+
+    // 좋아요한 게시물을 사용자와 페이징 정보로 검색
+    @Query("SELECT m FROM MeongStory m JOIN m.likes l WHERE l.user = :user AND m.title LIKE CONCAT('%', :keyword, '%')")
+    Page<MeongStory> findByLikesUser(@Param("user") User user, @Param("keyword") String keyword, Pageable pageable);
+
 
 
     @Modifying
@@ -39,7 +45,7 @@ public interface MeongStoryRepository extends JpaRepository<MeongStory, Long>, Q
     @Query("SELECT m FROM MeongStory m WHERE m.category = 'Category2' AND (m.title LIKE CONCAT('%', :keyword, '%') OR m.content LIKE CONCAT('%', :keyword, '%'))")
     Page<MeongStory> searchDailyItemsByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-
+    Page<MeongStory> findByUserAndTitleContaining(User user, String keyword, Pageable pageable);
 
     /*    @Query("SELECT m FROM MeongStory m WHERE (m.title LIKE %:keyword% OR m.content LIKE %:keyword%  LIKE %:keyword%) AND m.category = :category")*/
 

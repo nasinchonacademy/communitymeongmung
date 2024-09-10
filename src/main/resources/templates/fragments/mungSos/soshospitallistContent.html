@@ -1,31 +1,50 @@
 <div id="sosPageContent" >
 
-    <div >
-        <div>
-            <div class="vatcard">
-                <h1>SOS 상담을 통해 언제 어디서나 수의사에게 물어보세요</h1>
-                <div class="vat_card">
-                    <a th:href="@{/soshospitallist/sosqnaboard}">
-                        <h2>알러지 증상일까요</h2>
-                        <h3 class="h3class">점점 피부가 빨갛게 붓고 오돌토돌 알러지같이 ...</h3>
-                        <h4>수의사 답변 확인하기</h4>
-                    </a>
-                    <a th:href="@{/#}" class="text_align">
-                        <h2>계곡 다녀온 후 열이 나요 ㅠ</h2>
-                        <h3 class="h3class">지난 주 토요일 강아지와 계곡에 다녀왔는데 ...</h3>
-                        <h4>수의사 답변 확인하기</h4>
-                    </a>
-                    <a th:href="@{/#}">
-                        <h2>강아지가 미용을 하고 난 후 걷지 못해요</h2>
-                        <h3 class="h3class">미용을 하고 난 후 산책을 가면 몇 보 걷다가 주저 ...</h3>
-                        <h4>수의사 답변 확인하기</h4>
-                    </a>
+    <!-- 이달의 수의사 섹션 -->
+    <div class="container mt-4">
+        <h2 class="text-center mb-4" style="font-weight: bold; color: #2980b9;">이달의 수의사</h2>
+
+        <div class="row">
+            <div th:each="vet, iterStat : ${vets}" class="col-md-4 mb-4">
+                <div class="vet-card">
+                    <!-- 수의사 프로필 사진 -->
+                    <img th:src="${vet.profilePhoto != null ? '/profiles/' + vet.profilePhoto : '/image/default_vet.png'}"
+                         class="card-img-top" alt="Vet Photo">
+                    <div class="vet-card-body">
+                        <!-- 순위에 따라 뱃지 추가 (1등, 2등, 3등) -->
+                        <div class="vet-badge" th:if="${iterStat.index == 0}" style="background-color: gold;">
+                            🥇 1등
+                        </div>
+                        <div class="vet-badge" th:if="${iterStat.index == 1}" style="background-color: silver;">
+                            🥈 2등
+                        </div>
+                        <div class="vet-badge" th:if="${iterStat.index == 2}" style="background-color: #af9d83;">
+                            🥉 3등
+                        </div>
+
+                        <!-- 수의사 이름 -->
+                        <h5 class="vet-card-title" th:text="${vet.vetname}">수의사 이름</h5>
+                        <!-- 동물 병원 이름 -->
+                        <p class="vet-hospital-name" th:text="${vet.animalhospitlename}">동물 병원 이름</p>
+                    </div>
+                    <div class="vet-card-footer">
+                        <!-- 추천수 표시 -->
+                        <div class="vet-stats">
+                            <span class="vet-recommend-count" th:text="${vet.recommendationCount}">0</span> 추천
+                        </div>
+                        <!-- 댓글수 표시 -->
+                        <div class="vet-stats">
+                            <span class="vet-comment-count" th:text="${vet.commentCount}">0</span> 댓글
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <div class="vatmap">
+
+    <div class="vatmap">
             <style>
                 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
                 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}

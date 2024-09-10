@@ -22,11 +22,21 @@ public class QVet extends EntityPathBase<Vet> {
 
     public static final QVet vet = new QVet("vet");
 
+    public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
+
+    public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
+
     public final StringPath animalhospitlename = createString("animalhospitlename");
+
+    public final CollectionPath<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>> authorities = this.<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>>createCollection("authorities", org.springframework.security.core.GrantedAuthority.class, SimplePath.class, PathInits.DIRECT2);
+
+    public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
 
     public final ListPath<String, StringPath> description = this.<String, StringPath>createList("description", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
+
+    public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath password = createString("password");
 
