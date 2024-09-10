@@ -535,8 +535,16 @@ div#carouselExample {
     margin-top: 48px;
 }
 
+.footerPng {
+    position: relative; /* 부모 컨테이너를 기준으로 자식 요소 배치 */
+}
+
 img.footerpng-image {
-    margin-left: -328px;
-    margin-top: -221px;
+    position: absolute; /* 이미지 위치를 절대값으로 설정 */
+    top: -400px; /* 원하는 위치로 이동 */
+    left: -55px; /* 원하는 위치로 이동 */
+    width: 350px;
+    height: 300px;
     opacity: 0.5;
+    z-index: -1; /* 이미지가 텍스트 뒤에 위치하도록 설정 */
 }
