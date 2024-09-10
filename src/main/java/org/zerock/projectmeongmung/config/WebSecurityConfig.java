@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung",
                                 "/mungstory","/mungstory/storyread/**", "/mungstory/mungstoryAll", "/",
                                 "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**","/mungstory/comments",
-                                "/api/check-duplicate", "/read-csv","/profiles/**" ) // 여기서 /read-csv를 추가합니다
+                                "/api/check-duplicate", "/read-csv","/profiles/**","/ws/**", "/chat/**"  ) // 여기서 /read-csv를 추가합니다
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())

@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +30,5 @@ public class AddUserRequest {
     private boolean termuse;
     private boolean personalinfo;
     private int jellypoint;
+    private List<String> notices;
 }

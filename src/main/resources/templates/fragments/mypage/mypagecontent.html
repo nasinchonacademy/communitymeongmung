@@ -134,24 +134,26 @@
     <div th:if="${cartItems != null}">
       <ul class="grid-container">
         <!-- 장바구니에 상품이 있을 때만 출력 -->
-        <li th:each="cartItem, iterStat : ${cartItems}" th:if="${iterStat.index < 5}" class="grid-item">
+        <li th:each="cartItems, iterStat : ${cartItems}" th:if="${iterStat.index < 5}" class="grid-item">
           <div class="cart_box">
             <div class="cart_element">
+
+              <img th:src="${cartItems.product.productphoto != null ? '/image/product/' + cartItems.product.productphoto : '/image/tool/storydefault.png'}"
+                   alt="상품 이미지" class="cart-product-image"/>
               <!-- 상품명 -->
-              <a th:href="@{'/product/view/' + ${cartItem.product.pid}}"
-                 th:text="'상품명: '+${cartItem.product.name.length() > 10 ? cartItem.product.name.substring(0,10)+'...' : cartItem.product.name}"
+              <a th:href="@{'/product/view/' + ${cartItems.product.pid}}"
+                 th:text="'상품명: '+${cartItems.product.pname.length() > 10 ? cartItems.product.pname.substring(0,15)+'...' : cartItems.product.pname}"
                  class="cart_titlebox">상품 없음</a>
               <!-- 수량 -->
-              <a th:text="'수량: ' + ${cartItem.amount}" class="cart_titlebox">수량 없음</a>
+<!--              <a th:text="'수량: ' + ${cartItems.amount}" class="cart_titlebox">수량 없음</a>-->
               <!-- 가격 -->
-              <a th:text="'가격: ' + ${cartItem.price}" class="cart_titlebox">가격 없음</a>
+              <p th:text="'가격: ' + ${cartItems.price}" class="cart_titlebox">가격 없음</p>
               <!-- 총 가격 (수량 * 가격) -->
-              <a th:text="'총 가격: ' + ${cartItem.amount * cartItem.price}" class="cart_count">총 가격 없음</a>
+<!--              <a th:text="'총 가격: ' + ${cartItems.amount * cartItems.price}" class="cart_count">총 가격 없음</a>-->
             </div>
             <div class="cart_content_linkbox">
-              <!-- 수정 및 삭제 링크 -->
-              <a th:href="@{'/cart/edit/' + ${cartItem.product.pid}}" class="cart_content_link_edit">수정하기</a>
-              <a th:href="@{'/cart/delete/' + ${cartItem.product.pid}}" class="cart_content_link_delete">삭제하기</a>
+              <!-- 삭제 링크 -->
+              <a href="#" th:onclick="'deleteCartItem(' + ${cartItems.product.pid} + ')'" class="cart_content_link_delete">삭제하기</a>
             </div>
           </div>
         </li>
@@ -168,3 +170,24 @@
   </div>
 
 </div>
+
+<script>
+  function deleteCartItem(productId) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      fetch(`/cart/delete/${productId}`, {
+        method: 'DELETE'
+      })
+              .then(response => {
+                if (response.ok) {
+                  alert('상품이 장바구니에서 삭제되었습니다.');
+                  window.location.reload();  // 페이지 새로고침
+                } else {
+                  alert('상품 삭제 중 오류가 발생했습니다.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+    }
+  }
+</script>

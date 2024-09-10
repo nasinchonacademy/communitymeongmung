@@ -10,7 +10,7 @@
 
             <hr>
             <div class="form-group1">
-                <span class="category" th:text="${dto.category == 'Category1' ? '애견 동반 장소' : (dto.category == 'Category2' ? '일상' : '기타')}"></span>
+                <span class="category" th:text="${dto.category == 'Category1' ? '애견 동반 장소' : (dto.category == 'Category2' ? '일상' : (dto.category == 'Category3' ? '공지사항' : '기타'))}"></span>
                 <input type="text" class="title2" name="title2" th:value="${dto.title}" readonly>
                 <input type="text" class="regdate" name="regdate"
                        th:value="' |    ' + ${#temporals.format(dto.regdate, 'yyyy/MM/dd HH:mm:ss')}" readonly>

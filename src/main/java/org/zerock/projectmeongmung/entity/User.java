@@ -49,7 +49,6 @@ public class User implements UserDetails {
     @Column(name="Profilephoto")
     private String profilePhoto;
 
-
     @Column(name="dogbirthday")
     private Date dogbirthday;
 
@@ -77,6 +76,9 @@ public class User implements UserDetails {
 
     @Column(name = "isvet", nullable = false)
     private boolean vet = false;
+
+
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "regdate", nullable = false, updatable = false)
@@ -133,7 +135,6 @@ public class User implements UserDetails {
         this.admin = false;
         this.vet = vet;
     }
-
 
     //권한 반환
     @Override
@@ -195,5 +196,4 @@ public class User implements UserDetails {
             throw new IllegalArgumentException("젤리가 부족해 추가 결제 금액이 발생합니다.");
         }
     }
-
 }

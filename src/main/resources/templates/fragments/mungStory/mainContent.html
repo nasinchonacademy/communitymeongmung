@@ -38,7 +38,13 @@
             <!-- 반복문으로 story 객체 리스트 순회 -->
             <tr th:each="story : ${result.dtoList}">
                 <!-- 카테고리 -->
-                <td th:text="${story.category == 'Category1' ? '애견 동반 장소' : (story.category == 'Category2' ? '일상' : '기타')}"></td>
+                <td>
+                    <div class="noticeCate" th:classappend="${story.category == 'Category3' ? 'highlight-text' : ''}"
+                         th:text="${story.category == 'Category1' ? '애견 동반 장소' : (story.category == 'Category2' ? '일상' : (story.category == 'Category3' ? '공지사항' : '기타'))}">
+                    </div>
+                </td>
+
+
                 <!-- 사진 (스토리에 사진이 있으면 그 사진을, 없으면 기본 이미지 표시) -->
 
                 <td>

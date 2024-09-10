@@ -74,8 +74,8 @@
                     <p id="modalProductDescription">제품 설명</p>
                     <!-- 추가된 버튼들 -->
                     <div class="modal-buttons">
-<!--                        <a th:href="@{/payment}"><button class="buy-button" id="buyButton">젤리로 구매하기</button></a>-->
-<!--                        <a th:href="@{/mypage}"><button class="cart-button" id="cartButton">장바구니</button></a>-->
+                        <!--                        <a th:href="@{/payment}"><button class="buy-button" id="buyButton">젤리로 구매하기</button></a>-->
+                        <!--                        <a th:href="@{/mypage}"><button class="cart-button" id="cartButton">장바구니</button></a>-->
                         <button class="buy-button" id="buyButton">젤리로 구매하기</button>
                         <button class="cart-button" id="cartButton">장바구니</button>
                     </div>
@@ -132,6 +132,7 @@
             success: function(response) {
                 // 서버로부터 받아온 데이터를 사용하여 모달 창에 표시
                 modalTitle.textContent = response.pname;
+                modalTitle.setAttribute("data-product-id", productId); // 모달에 productId 속성 설정
                 modalPrice.textContent = response.pprice + '원';
                 modalImage.src = '/image/product/' + response.productphoto;
                 modalDescription.textContent = response.pdescription;
@@ -149,8 +150,27 @@
                 };
 
                 cartButton.onclick = function() {
-                    // 장바구니 `/mypage/add?productId=${productId}`
-                    window.location.href = `/mypage`;
+                    const amount = 1; // 기본 수량 1개
+
+                    // 장바구니에 상품 추가하는 함수
+                        $.ajax({
+                            url: '/cart/add', // 장바구니에 상품을 추가하는 API
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                productId: productId, // 이미 모달에 로드된 productId를 가져옴
+                                amount: amount// 기본 수량 1로 설정
+                            }),
+                            success: function(response) {
+                                alert('상품이 장바구니에 추가되었습니다.');
+                                // 장바구니 추가 후 mypage로 이동
+                                window.location.href = '/mypage';
+                            },
+                            error: function(error) {
+                                alert('장바구니 추가 중 오류가 발생했습니다.');
+                                console.error('장바구니 추가 오류:', error);
+                            }
+                        });
                 };
 
                 // 모달 창 표시
