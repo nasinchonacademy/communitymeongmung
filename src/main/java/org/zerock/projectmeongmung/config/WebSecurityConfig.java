@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                                 "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**","/mungstory/comments",
                                 "/api/check-duplicate", "/read-csv","/profiles/**","/ws/**", "/chat/**"  ) // 여기서 /read-csv를 추가합니다
                         .permitAll()
+                        .requestMatchers("/cart/**").authenticated()  // 장바구니 접근은 인증된 사용자만 가능
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin

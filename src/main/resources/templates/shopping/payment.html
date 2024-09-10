@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!--기본 css-->
     <link th:href="@{css/basic.css}" rel="stylesheet">
+    <link th:href="@{css/product/paymentStyle.css}" rel="stylesheet">
     <!--우편번호-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:src="@{js/roadAddress.js}"></script>
@@ -21,133 +22,7 @@
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
 
-<style>
-    /* styles.css */
 
-    @import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
-
-    * {
-        font-family: 'Nanum Gothic', sans-serif;
-    }
-
-    @font-face {
-        font-family: 'HakgyoansimDunggeunmisoTTF-B';
-        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-    }
-
-    .container {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 1000px;
-        /*width: 100%;*/
-        margin: 20px auto;
-    }
-
-    .container-payment {
-        margin: 0 auto; /* 중앙으로 정렬 */
-        text-align: center; /* 내부 글씨 정렬 */
-        max-width: 600px; /* 너비 제한 */
-    }
-
-    h1 {
-        margin-bottom: 20px;
-        font-size: 27px;
-        text-align: center;
-        font-family: 'HakgyoansimDunggeunmisoTTF-B';
-        color: #7a7a7a;
-    }
-
-    h5 {
-        margin-bottom: 30px;
-        margin-top: 20px;
-        text-align: center;
-        font-size: 25px;
-        font-family: 'HakgyoansimDunggeunmisoTTF-B';
-        color: #7a7a7a;
-    }
-
-    .point {
-        text-align: center;
-        font-size: 18px;
-        margin-bottom: 20px;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-        text-align: left;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="tel"] {
-        width: 100%;
-        padding: 12px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 16px;
-    }
-
-    button[type="submit"] {
-        width: 100%;
-        padding: 12px;
-        background-color: #56c395;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #3a9875;
-    }
-
-    .product-info {
-        display: flex;
-        align-items: center; /* 텍스트와 이미지의 세로 정렬을 맞추기 위함 */
-        justify-content: space-between; /* 이미지와 텍스트 사이의 공간 */
-        margin-bottom: 20px;
-    }
-
-    .product-info-text {
-        flex: 1; /* 텍스트 영역이 더 많이 차지하도록 */
-        padding-right: 15px; /* 이미지와 텍스트 사이에 여백 추가 */
-    }
-
-    .img-fluid {
-        width: 300px; /* 원하는 이미지 크기 지정 */
-        height: 300px;
-        border-radius: 8px; /* 이미지에 둥근 모서리 추가 (선택 사항) */
-        object-fit: cover;
-    }
-
-    .form-control:invalid {
-        border-color: #dc3545;
-    }
-
-    .form-control:invalid:focus {
-        box-shadow: 0 0 5px 1px rgba(220, 53, 69, 0.75);
-    }
-
-    .error-message {
-        color: #dc3545;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-</style>
 <body>
 <!-- 헤더 영역 -->
 <th:block th:replace="fragments/nav :: header"></th:block>
@@ -205,8 +80,10 @@
 
         <div class="form-group">
             <label>주소</label>
+            <div class="postcode-container">
             <input type="text" id="postcode" name="postcode" placeholder="우편번호" class="form-control" required>
-            <input type="button" class="btn btn-secondary mt-2" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+                <button type="button" class="btn btn-secondary" id="btn btn-secondary" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
+            </div><br>
             <input type="text" id="roadaddress" name="roadaddress" placeholder="도로명주소" class="form-control" required>
             <input type="text" id="jibunaddress" name="jibunaddress" placeholder="지번주소" class="form-control">
             <span id="guide" style="color:#999;display:none"></span><input type="text" id="detailaddress"
@@ -219,11 +96,11 @@
             <input type="text" id="resrequirement" name="resrequirement" maxlength="100" class="form-control" placeholder="없을 시 '없음'이라고 적어주세요.">
         </div>
 
-        <div class="form-group">
+        <div class="payment-buttons">
             <!--                <a th:href="@{/payment_complete}">-->
             <!-- requestCardPay -->
-            <button type="button" onclick="requestPay()" class="btn btn-warning mt-3">카카오PAY 결제하기</button>
-            <button type="button" onclick="requestCardPay()" class="btn btn-primary mt-3">신용카드 결제하기</button>
+            <button type="button" onclick="requestPay()" class="btn" id="kakao-btn">카카오PAY 결제하기</button>
+            <button type="button" onclick="requestCardPay()" class="btn" id="payment-btn">신용카드 결제하기</button>
 
         </div>
     </form>
@@ -233,5 +110,19 @@
 
 <!-- 푸터 영역 -->
 <th:block th:replace="fragments/nav :: footer"></th:block>
+<script>
+    // 폼 유효성 검사
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+        const form = event.target;
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            alert('비어있는 칸에 정보를 입력해주세요.');
+        }
+        form.classList.add('was-validated');
+    });
+</script>
+
+
 </body>
 </html>

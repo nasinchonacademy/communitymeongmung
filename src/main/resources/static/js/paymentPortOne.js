@@ -1,6 +1,6 @@
 // 포트원
-var IMP = window.IMP;
-IMP.init('imp73447046')
+// var IMP = window.IMP;
+// IMP.init('imp73447046')
 
 function requestPay() {
     var IMP = window.IMP;

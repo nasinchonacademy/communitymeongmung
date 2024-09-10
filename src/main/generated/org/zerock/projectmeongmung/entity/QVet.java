@@ -18,6 +18,8 @@ public class QVet extends EntityPathBase<Vet> {
 
     private static final long serialVersionUID = -217845284L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QVet vet = new QVet("vet");
 
     public final StringPath animalhospitlename = createString("animalhospitlename");
@@ -36,7 +38,7 @@ public class QVet extends EntityPathBase<Vet> {
 
     public final StringPath registerdate = createString("registerdate");
 
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
+    public final QUser user;
 
     public final StringPath username = createString("username");
 
@@ -49,15 +51,24 @@ public class QVet extends EntityPathBase<Vet> {
     public final DateTimePath<java.sql.Timestamp> withdrawaldate = createDateTime("withdrawaldate", java.sql.Timestamp.class);
 
     public QVet(String variable) {
-        super(Vet.class, forVariable(variable));
+        this(Vet.class, forVariable(variable), INITS);
     }
 
     public QVet(Path<? extends Vet> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QVet(PathMetadata metadata) {
-        super(Vet.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QVet(PathMetadata metadata, PathInits inits) {
+        this(Vet.class, metadata, inits);
+    }
+
+    public QVet(Class<? extends Vet> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }
