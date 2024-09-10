@@ -154,7 +154,5 @@ public class UserService {
         userRepository.save(user); // 사용자 업데이트 (포인트 변경 사항 저장)
     }
 
-    public User findUserByUid(String username) {
-        return userRepository.findByUid(username).orElseThrow(() -> new RuntimeException("User not found"));
-    }
+
 }

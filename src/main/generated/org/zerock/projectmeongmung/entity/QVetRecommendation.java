@@ -49,7 +49,7 @@ public class QVetRecommendation extends EntityPathBase<VetRecommendation> {
     public QVetRecommendation(Class<? extends VetRecommendation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
-        this.vet = inits.isInitialized("vet") ? new QVet(forProperty("vet")) : null;
+        this.vet = inits.isInitialized("vet") ? new QVet(forProperty("vet"), inits.get("vet")) : null;
     }
 
 }

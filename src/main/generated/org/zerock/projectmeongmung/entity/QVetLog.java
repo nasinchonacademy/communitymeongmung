@@ -48,7 +48,7 @@ public class QVetLog extends EntityPathBase<VetLog> {
 
     public QVetLog(Class<? extends VetLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.vet = inits.isInitialized("vet") ? new QVet(forProperty("vet")) : null;
+        this.vet = inits.isInitialized("vet") ? new QVet(forProperty("vet"), inits.get("vet")) : null;
     }
 
 }

@@ -20,9 +20,9 @@
         socket.send(JSON.stringify(enterMsg));
     }
 
-           // let socket = new WebSocket("ws://localhost:9990/ws/chat");
-           //      let socket = new WebSocket("ws://106.249.191.8:9990/ws/chat");
-    let socket = new WebSocket("ws://[2001:4860:7:50e::fe]:9990/ws/chat");
+// <!--  let socket = new WebSocket("ws://localhost:9990/ws/chat");-->
+//     <!--            let socket = new WebSocket("ws://106.249.191.8:9990/ws/chat");-->
+     let socket = new WebSocket("ws://[2001:e60:3167:51c5:7db4:1cd0:2919:b9c6]:9990/ws/chat");
 
 
     socket.onopen = function (e) {
