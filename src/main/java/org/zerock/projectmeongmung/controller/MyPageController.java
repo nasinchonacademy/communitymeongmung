@@ -37,6 +37,8 @@ public class MyPageController {
     private FileController fileController;
     @Autowired
     private MeongStoryService meongStoryService;
+    @Autowired
+    private CartService cartService;
 
 
     @GetMapping("/mypage")
@@ -62,7 +64,10 @@ public class MyPageController {
         // 작성 글 가져오기
         List<MeongStory> writtenStories = myPageService.getWrittenStories(user);
         List<List<MeongStory>> partitionedwrittenStories = partitionList(writtenStories, 5);
-        List<Cart> cartItems = myPageService.getCartItems(user);
+//        List<Cart> cartItems = myPageService.getCartItems(user);
+
+        // 장바구니 항목 가져오기
+        List<Cart> cartItems = cartService.getCartItems(user);
 
         model.addAttribute("partitionedwrittenStories", partitionedwrittenStories);
         model.addAttribute("cartItems", cartItems);  // 장바구니 리스트 추가
@@ -205,6 +210,7 @@ public class MyPageController {
 
         return "mypage/mypagelikedlist";
     }
+
 
 
 
