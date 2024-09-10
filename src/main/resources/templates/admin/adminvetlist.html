@@ -72,7 +72,8 @@
                 <a class="btn btn-warning" th:href="@{/admin/vet/edit/{vetid}(vetid=${vet.vetid})}">수정하기</a>
             </td>
             <td>
-                <form th:action="@{/admin/vet/delete/{username}(username=${vet.username})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <form th:action="@{/admin/vetdelete}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <input type="hidden" name="vetId" th:value="${vet.vetid}" />
                     <button type="submit" class="btn btn-danger">삭제하기</button>
                 </form>
             </td>

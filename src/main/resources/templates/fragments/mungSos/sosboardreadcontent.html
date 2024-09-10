@@ -98,20 +98,22 @@
                         data: { seq: seq },
                         success: function(response) {
                             const commentList = document.getElementById('commentList');
-                            commentList.innerHTML = '';  // 기존 댓글 리스트를 지움
+                            commentList.innerHTML = '';  // 기존 댓글 리스트를 초기화
 
+                            // 각 댓글 정보를 HTML로 동적으로 생성
                             response.forEach(function(comment) {
                                 let deleteButton = '';
 
                                 // 사용자가 작성한 댓글일 경우에만 삭제 버튼 노출
                                 if (userNickname === comment.nickname) {
-                                    deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${response.commentId}, ${response.seq})">X</button>`;
+                                    deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>`;
                                 }
 
                                 let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
                                 let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
 
                                 const commentItem = document.createElement('li');
+                                commentItem.setAttribute('data-comment-id', comment.commentId);  // commentId 저장
                                 commentItem.innerHTML = `
                                     <div class="comment-block">
                                         <div class="comment-left">
@@ -136,24 +138,32 @@
                     });
                 }
 
-                // 클릭 이벤트 처리
+                // 댓글 클릭 시 수의사 정보 모달 띄우기
                 document.getElementById('commentList').addEventListener('click', function(event) {
                     if (event.target.classList.contains('comment-profile-photo')) {
-                        const userId = event.target.getAttribute('data-userid');
+                        const userId = event.target.getAttribute('data-userid'); // 댓글 작성자 userId 가져오기
+                        const commentId = event.target.closest('li').getAttribute('data-comment-id'); // 댓글의 commentId 가져오기
+
                         console.log("클릭된 userId: ", userId);
-                        if (userId) {
-                            showVetModal(userId);  // userId로 모달 열기
+                        console.log("클릭된 commentId: ", commentId);
+
+                        if (userId && commentId) {
+                            showVetModal(userId, commentId);  // userId와 commentId를 함께 전달
                         } else {
-                            console.error("userId가 정의되지 않았습니다.");
+                            console.error("userId 또는 commentId가 정의되지 않았습니다.");
                         }
                     }
                 });
 
-                window.showVetModal = function(userId) {
+
+                window.showVetModal = function(userId, commentId) {
+                    console.log("Comment ID: ", commentId);  // commentId가 제대로 전달되는지 콘솔에서 확인
+
                     $.ajax({
-                        url: '/vet/byUser/' + userId, // userId를 사용하여 올바른 URL로 요청
+                        url: '/vet/byUser/' + userId, // userId로 수의사 정보 조회
                         method: 'GET',
                         success: function(data) {
+                            // 수의사 정보 모달 업데이트
                             $('#vetPhoto').attr('src', data.profilePhoto ? '/profiles/' + data.profilePhoto : '/image/default-profile.png');
                             $('#vetName').text(data.vetname);
                             $('#vetClinic').text(data.animalhospitlename);
@@ -166,29 +176,34 @@
                             // 추천 수 업데이트
                             $('#recommendationCount').text(data.recommendationCount);
 
-                            $('#vetModal').modal('show');
-
+                            // 추천 버튼 클릭 이벤트 핸들러 설정
+                            const vetId = data.vetid; // vetId 추출
                             $('#recommendBtn').off('click').on('click', function() {
+                                // commentId와 vetId, userId 모두 서버로 전송
                                 $.ajax({
                                     url: '/vet/recommend',
                                     method: 'POST',
-                                    data: { vetId: userId }, // userId를 vetId로 사용
+                                    contentType: 'application/x-www-form-urlencoded', // Content-Type 설정
+                                    data: $.param({ vetId: vetId, commentId: commentId, userId: userId }), // vetId, commentId, userId 전송
                                     success: function(response) {
-                                        alert(response);
-                                        // 추천 수 업데이트
+                                        alert('추천이 완료되었습니다.');
+                                        // 추천 수 증가
                                         $('#recommendationCount').text(parseInt($('#recommendationCount').text()) + 1);
                                     },
                                     error: function() {
-                                        alert('이미 추천이 완료되었습니다.');
+                                        alert('추천 처리 중 오류가 발생했습니다.');
                                     }
                                 });
                             });
+
+                            $('#vetModal').modal('show'); // 모달 표시
                         },
                         error: function() {
                             alert('수의사 정보를 가져오는 데 실패했습니다.');
                         }
                     });
                 };
+
 
                 // 댓글 삭제
                 document.getElementById('commentList').addEventListener('click', function(event) {
@@ -258,7 +273,8 @@
                         contentType: 'application/json',
                         data: JSON.stringify({ seq: seq }),
                         success: function(response) {
-                            $("#likecount").text(response.likecount);
+                            // 현재 버튼 안의 span.likecount 업데이트
+                            $(event.target).find('span.likecount').text(response.likecount);
                         },
                         error: function(xhr, status, error) {
                             alert("이미 좋아요를 누른 게시물입니다.");

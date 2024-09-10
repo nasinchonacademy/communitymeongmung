@@ -22,6 +22,8 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final BooleanPath active = createBoolean("active");
+
     public final BooleanPath admin = createBoolean("admin");
 
     public final SetPath<SOSboardcomment, QSOSboardcomment> comments = this.<SOSboardcomment, QSOSboardcomment>createSet("comments", SOSboardcomment.class, QSOSboardcomment.class, PathInits.DIRECT2);
@@ -94,7 +96,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.vetinfo = inits.isInitialized("vetinfo") ? new QVet(forProperty("vetinfo")) : null;
+        this.vetinfo = inits.isInitialized("vetinfo") ? new QVet(forProperty("vetinfo"), inits.get("vetinfo")) : null;
     }
 
 }

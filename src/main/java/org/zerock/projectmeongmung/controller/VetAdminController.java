@@ -1,14 +1,16 @@
 package org.zerock.projectmeongmung.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.VetDTO;
 import org.zerock.projectmeongmung.entity.Vet;
 import org.zerock.projectmeongmung.entity.VetLog;
-import org.zerock.projectmeongmung.service.FileService;
 import org.zerock.projectmeongmung.service.VetLogService;
 import org.zerock.projectmeongmung.service.VetService;
 
@@ -128,6 +130,20 @@ public class VetAdminController {
         vetLogService.saveVetLog(vet, logMessage);  // 로그 저장
         return "redirect:/admin/details/" + vetid;  // 상세보기 페이지로 리다이렉트
     }
+
+
+    // 수의사 삭제 요청
+    @PostMapping("/vetdelete")
+    public String deleteVet(@RequestParam("vetId") Long vetId, RedirectAttributes redirectAttributes) {
+        try {
+            vetService.deleteVet(vetId); // 서비스에서 수의사 삭제 처리
+            redirectAttributes.addFlashAttribute("successMessage", "수의사 삭제가 완료되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "수의사 삭제 중 오류가 발생했습니다.");
+        }
+        return "redirect:/admin/vetlist";
+    }
 }
+
 
 
