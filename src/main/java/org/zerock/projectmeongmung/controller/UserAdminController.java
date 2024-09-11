@@ -46,9 +46,4 @@ public class UserAdminController {
         return "redirect:/admin/users";
     }
 
-
-
-
-
-
 }

@@ -1,8 +1,77 @@
-<!-- fragments/header.html -->
 <header th:fragment="notice">
-    <div class="notice">
+    <div sec:authorize="isAuthenticated()" class="notice">
         <div class="notice-container">
-            <a class="noticeAtag" th:href="@{/chat/chatList}"></a>
+
+            <!-- Modal 열기 버튼 -->
+            <button class="modalOpen" th:attr="data-uid=${user.uid}">
+                <img class="bell" src="/image/main/notice.png" alt="이미지 설명" style="width: 60px; height: 60px;">
+            </button>
+
+            <!-- 모달 -->
+            <div class="modal" style="display: none;">
+                <div class="modal_body">
+                    <h1>알림 목록</h1>
+                    <ul id="noticeList">
+                        <!-- AJAX로 데이터를 가져와 여기에 동적으로 추가 -->
+                    </ul>
+                </div>
+            </div>
+
+            <script>
+                const modal = document.querySelector('.modal');
+                const modalBody = document.querySelector('.modal_body');
+                const btnOpenModal = document.querySelector('.modalOpen');
+                const noticeList = document.getElementById('noticeList');
+                const userUid = btnOpenModal.getAttribute('data-uid');  // userUid 가져오기
+
+                // 알림 목록을 서버에서 가져오는 함수
+                function loadNotices() {
+                    fetch(`/notices?uid=${userUid}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            noticeList.innerHTML = '';  // 기존 항목 제거
+
+                            data.forEach((notice) => {
+                                const li = document.createElement('li');
+                                li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">삭제</button>`;
+                                noticeList.appendChild(li);
+
+                                // 삭제 버튼에 이벤트 리스너 추가
+                                li.querySelector('.delete-notice-btn').addEventListener('click', function() {
+                                    const noticeId = this.getAttribute('data-id');
+
+                                    // 삭제 요청
+                                    fetch(`/noticeremove?id=${noticeId}&uid=${userUid}`, {
+                                        method: 'POST',
+                                    })
+                                    .then(response => response.json())
+                                    .then(() => {
+                                        // 알림 목록을 다시 불러옴
+                                        loadNotices();  // 삭제 후 알림 목록을 다시 불러옴
+                                    })
+                                    .catch(error => console.error('Error removing notice:', error));
+                                });
+                            });
+                        })
+                        .catch(error => console.error('Error fetching notices:', error));
+                }
+
+                // 모달 열기 버튼 클릭 시 모달 열고 알림 목록 불러오기
+                btnOpenModal.addEventListener("click", () => {
+                    modal.style.display = "flex";
+                    modal.classList.add('modalOpen');  // modalOpen 클래스로 애니메이션 시작
+                    loadNotices();  // 모달을 열 때 알림 목록 불러오기
+                });
+
+                // 모달 외부 클릭 시 모달 닫기
+                modal.addEventListener("click", (event) => {
+                    if (!modalBody.contains(event.target)) {  // 모달 외부를 클릭했을 때
+                        modal.style.display = "none";
+                        modal.classList.remove('modalOpen');  // modalOpen 클래스 제거로 애니메이션 종료
+                    }
+                });
+
+            </script>
         </div>
     </div>
 </header>

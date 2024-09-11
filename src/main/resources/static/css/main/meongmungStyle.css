@@ -12,12 +12,12 @@
   src: url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff2') format('woff2'), url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff') format('woff');
 }
 
-
 .content {
     display: flex;
     min-width: 1000px;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .content h6 {
@@ -487,11 +487,11 @@ div#carouselExample {
     margin-top: 30px;
 }
 
-[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+/*[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
     cursor: pointer;
     height: 282px;
     margin-top: 96px;
-}
+}*/
 
 .container {
     width: 1045px;

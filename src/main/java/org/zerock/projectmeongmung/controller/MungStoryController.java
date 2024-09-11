@@ -197,7 +197,7 @@ public class MungStoryController {
 
     public String saveBoardPhoto(MultipartFile file) throws IOException {
         // 저장할 경로 설정
-        String uploadDir = "/Users/yunakang/uploads/";
+        String uploadDir = "C:\\work\\uploads\\";
 
         // 파일명을 고유하게 하기 위해 UUID를 사용
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -434,7 +434,6 @@ public class MungStoryController {
         try {
             // 댓글 삭제 로직 호출
             serviceC.removeComment(commentId);
-
             serviceC.decrementCommentCount(seq);
 
             // 성공적으로 처리되었음을 응답
@@ -454,5 +453,4 @@ public class MungStoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

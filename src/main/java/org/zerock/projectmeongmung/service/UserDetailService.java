@@ -38,7 +38,6 @@ public class UserDetailService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + uid));
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String uid) {
         // 사용자 정보를 UID로 찾음
@@ -60,6 +59,4 @@ public class UserDetailService implements UserDetailsService {
                 authorities
         );
     }
-
-
 }
