@@ -12,12 +12,12 @@
   src: url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff2') format('woff2'), url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff') format('woff');
 }
 
-
 .content {
     display: flex;
     min-width: 1000px;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .content h6 {
