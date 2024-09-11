@@ -5,25 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        button {
+            width: 100px;
+        }
+    </style>
 </head>
 <body>
-<tr>
-    <th>회원번호</th>
-    <th>이름</th>
-    <th>이메일</th>
-    <th>닉네임</th>
-    <th>가입일</th>
-    <th>상태</th>
-    <th>관리</th>
-</tr>
+
 <div class="container mt-5">
+    <a class="navbar-brand" href="/admin/index">
+        <!-- Home 아이콘으로 index 페이지 이동 -->
+        <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Home" style="width: 30px; height: 30px;">
+    </a>
     <h2 class="mb-4">회원 목록</h2>
+
+    <!-- 검색 필드 -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" th:action="@{/admin/users}">
+                <div class="input-group" >
+                    <select class="custom-select" name="category">
+                        <option value="uid" th:selected="${category == 'uid'}">아이디</option>
+                        <option value="name" th:selected="${category == 'name'}">이름</option>
+                        <option value="email" th:selected="${category == 'email'}">이메일</option>
+                    </select>
+                    <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="검색어 입력">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">검색</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <table class="table table-bordered">
         <thead class="thead-light">
-
+        <tr>
+            <th>회원번호</th>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>닉네임</th>
+            <th>가입일</th>
+            <th>상태</th>
+            <th>관리</th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${userList}">
+            <td th:text="${user.id}" style="width:90px;"></td>
             <td th:text="${user.uid}"></td>
             <td th:text="${user.name}"></td>
             <td th:text="${user.email}"></td>
@@ -33,20 +64,20 @@
                 <span th:if="${user.active}" class="badge badge-success">활성</span>
                 <span th:if="${!user.active}" class="badge badge-danger">비활성</span>
             </td>
-            <td>
-                <form th:action="@{/admin/users/{id}(id=${user.id})}" method="post">
+            <td style="width: 120px">
+                <form th:action="@{/admin/users/{id}(id=${user.id})}" method="post" class="d-inline">
                     <input type="hidden" name="_method" value="delete"/>
                     <button class="btn btn-danger btn-sm" type="submit">삭제</button>
                 </form>
 
-                <form th:action="@{/admin/users/{id}/admin(id=${user.id})}" method="post">
+                <form th:action="@{/admin/users/{id}/admin(id=${user.id})}" method="post" class="d-inline">
                     <input type="hidden" name="_method" value="patch"/>
                     <input type="hidden" name="isAdmin" th:value="${!user.isAdmin}"/>
                     <button class="btn btn-warning btn-sm" type="submit"
                             th:text="${user.isAdmin ? '관리자 해제' : '관리자 설정'}"></button>
                 </form>
 
-                <form th:action="@{/admin/toggleActivation}" method="post">
+                <form th:action="@{/admin/toggleActivation}" method="post" class="d-inline">
                     <input type="hidden" name="uid" th:value="${user.uid}"/>
                     <input type="hidden" name="Active" th:value="${!user.isActive}"/>
                     <button class="btn btn-secondary btn-sm" type="submit"
@@ -56,7 +87,27 @@
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-primary" href="#" th:href="@{/admin/createUser}">새 회원 등록</a>
+
+    <!-- 페이징 -->
+    <nav th:if="${page.totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/users(page=${page.number - 1}, keyword=${keyword})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, page.totalPages)}"
+                th:classappend="${page.number + 1 == i} ? 'active'">
+                <a class="page-link" th:text="${i}"
+                   th:href="@{/admin/users(page=${i - 1}, keyword=${keyword})}"></a>
+            </li>
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/users(page=${page.number + 1}, keyword=${keyword})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

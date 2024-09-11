@@ -1,11 +1,10 @@
 
   <div id="sosPageContent" class="content2" >
     <!-- 검색하기 -->
-    <form method="get" id="searchForm" class="search-bar">
+    <form  action="soshospitallist"  method="get" id="searchForm" class="search-bar" style="margin-top: 40px">
       <div class="submitGroup">
         <input type="hidden" name="page" value="1">
         <input type="hidden" id="currentInput" name="current" value="radio2"> <!-- current 값을 설정 -->
-        <input type="hidden" name="type" value="tcw" />
         <div class="group-append" id="button-addon4">
           <input class="control" name="keyword" placeholder="검색어를 입력하세요" value="">
           <button class="btn-search" type="submit">검색</button>
@@ -47,7 +46,7 @@
         </tr>
 
         <!-- 일반 게시물 - 상위 3개 게시물 제외 -->
-        <tr th:each="story : ${result.dtoList}"
+        <tr th:each="story : ${result.content}"
             th:if="${#lists.contains(top3Boards, story) == false}">
           <td th:text="${story.sosboardseq}"></td>
           <td>
@@ -69,13 +68,17 @@
 
 
       <ul class="paging click">
-        <li class="page prev" th:if="${result.prev}">
+        <li class="page prev" th:if="${result.hasPrevious()}">
           <a class="page-click" th:href="@{/soshospitallist(page=${result.start - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Previous</a>
         </li>
-        <li th:class="'pagenum' + (${result.page == page} ? ' active' : '')" th:each="page : ${result.pageList}">
-          <a class="page-click" th:href="@{/soshospitallist(page=${page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">[[${page}]]</a>
+        <li th:class="'pagenum' + (${result.number + 1 == page} ? ' active' : '')"
+            th:each="page : ${#numbers.sequence(1, result.totalPages)}">
+          <a class="page-click"
+             th:href="@{/soshospitallist(page=${page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current=${current})}">
+            [[${page}]]
+          </a>
         </li>
-        <li class="page next" th:if="${result.next}">
+        <li class="page next" th:if="${result.hasNext()}">
           <a class="page-click" th:href="@{/soshospitallist(page=${result.end + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Next</a>
         </li>
       </ul>

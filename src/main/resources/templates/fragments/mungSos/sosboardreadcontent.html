@@ -88,7 +88,7 @@
             var userNickname = document.getElementById('userNicknameHidden').value;
 
             document.addEventListener('DOMContentLoaded', function() {
-                // 댓글 로드
+                // 댓글 로드 함수에서 좋아요 수를 표시
                 function loadComments() {
                     var seq = document.querySelector("input[name='seq']").value;
 
@@ -100,9 +100,14 @@
                             const commentList = document.getElementById('commentList');
                             commentList.innerHTML = '';  // 기존 댓글 리스트를 초기화
 
+                            // 추천수가 가장 높은 3개의 댓글을 골라낸다
+                            let sortedComments = response.sort((a, b) => b.likeCount - a.likeCount);
+                            let bestComments = sortedComments.slice(0, 3);
+
                             // 각 댓글 정보를 HTML로 동적으로 생성
-                            response.forEach(function(comment) {
+                            response.forEach(function(comment,index) {
                                 let deleteButton = '';
+                                let bestBadge = '';
 
                                 // 사용자가 작성한 댓글일 경우에만 삭제 버튼 노출
                                 if (userNickname === comment.nickname) {
@@ -112,23 +117,31 @@
                                 let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
                                 let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
 
+                                // 베스트 댓글 뱃지 추가 (추천수 상위 3개)
+                                if (index < 3) {
+                                    bestBadge = '<span class="badge badge-warning">베스트 댓글</span>';
+                                }
+
+
                                 const commentItem = document.createElement('li');
                                 commentItem.setAttribute('data-comment-id', comment.commentId);  // commentId 저장
                                 commentItem.innerHTML = `
-                                    <div class="comment-block">
-                                        <div class="comment-left">
-                                            <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo" width="40" height="40" data-userid="${comment.userid}" style="cursor: pointer;">
-                                            <div class="comment-info">
-                                                <span class="comment-nickname">${comment.nickname} ${vetBadge}</span>
-                                                <div class="comment-content">${comment.commentcontent}</div>
-                                            </div>
-                                        </div>
-                                        <div class="comment-right">
-                                            <span class="comment-date">${comment.regdate}</span>
-                                            ${deleteButton}
-                                        </div>
-                                    </div>
-                                    <hr>`;
+                                  <div class="comment-block">
+                            <div class="comment-left">
+                                <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo" width="40" height="40" data-userid="${comment.userid}" style="cursor: pointer;">
+                                <div class="comment-info">
+                                    <span class="comment-nickname">${comment.nickname} ${vetBadge} ${bestBadge}</span>
+                                    <div class="comment-content">${comment.commentcontent}</div>
+                                </div>
+                            </div>
+                            <div class="comment-right">
+                                <span class="comment-date">${comment.regdate}</span>
+                                ${deleteButton}
+                                <img src="/image/tool/likebutton.png" alt="Like" class="like-btn" data-comment-id="${comment.commentId}" style="cursor: pointer; width: 30px;">
+                                <span class="like-count">:<strong>${comment.likeCount}</strong></span>
+                            </div>
+                        </div>
+                        <hr>`;
                                 commentList.appendChild(commentItem);
                             });
                         },
@@ -137,6 +150,35 @@
                         }
                     });
                 }
+
+// 댓글 좋아요 처리 함수
+                function handleCommentLike(commentId, likeButton) {
+                    $.ajax({
+                        url: '/soscommentlike',  // 서버의 좋아요 처리 엔드포인트
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ commentId: commentId }),
+                        success: function(response) {
+                            // 성공 시 좋아요 카운트 업데이트
+                           // $(likeButton).find('.like-count').text(response.likeCount);
+                            // 성공 시 좋아요 카운트 업데이트
+                            const likeCountSpan = $(likeButton).siblings('.like-count').find('strong');
+                            let currentLikeCount = parseInt(likeCountSpan.text(), 10);
+                            likeCountSpan.text(currentLikeCount + 1); // 숫자 증가
+                        },
+                        error: function(xhr, status, error) {
+                            alert("이미 좋아요를 누른 댓글입니다.");
+                        }
+                    });
+                }
+
+                // 좋아요 버튼 클릭 이벤트 핸들러
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('like-btn')) {
+                        const commentId = event.target.getAttribute('data-comment-id');
+                        handleCommentLike(commentId, event.target);
+                    }
+                });
 
                 // 댓글 클릭 시 수의사 정보 모달 띄우기
                 document.getElementById('commentList').addEventListener('click', function(event) {
