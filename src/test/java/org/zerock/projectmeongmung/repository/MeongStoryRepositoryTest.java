@@ -31,7 +31,7 @@ public class MeongStoryRepositoryTest {
     @Test
     public void insertDummies() {
         // User 객체를 UID를 통해 DB에서 조회
-        Optional<User> userOptional = userRepository.findByUid("test1");
+        Optional<User> userOptional = userRepository.findByUid("ajdajd2");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -39,7 +39,7 @@ public class MeongStoryRepositoryTest {
             // MeongStory 엔터티를 생성하고 해당 사용자와 연관시켜 저장
             IntStream.rangeClosed(1, 100).forEach(i -> {
                 MeongStory meongStory = MeongStory.builder()
-                        .title("카테고리1 입니다" + i)                   // 제목 설정
+                        .title("카테고리1 입니다" + 1)                   // 제목 설정
                         .content("Content" + i)                  // 내용 설정
                         .likecount(0)                            // 좋아요 수 설정
                         .commentcount(0)                         // 댓글 수 설정

@@ -104,6 +104,7 @@ button[type="submit"]:hover {
 .product-info-text {
     flex: 1; /* 텍스트 영역이 더 많이 차지하도록 */
     padding-right: 15px; /* 이미지와 텍스트 사이에 여백 추가 */
+    font-size: 17px;
 }
 
 .img-fluid {
