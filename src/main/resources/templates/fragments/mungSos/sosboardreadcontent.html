@@ -1,5 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 보기</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
 <body>
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <div id="content">
@@ -44,7 +52,7 @@
             <!-- 댓글 등록 섹션 -->
             <div class="comment-input-section">
                 <textarea id="boardcontent" placeholder="댓글을 입력하세요"></textarea>
-                <button class="commentreg" onclick="validateAndSubmitComment()">댓글 등록</button>
+                <button class="commentreg" id="submitComment">댓글 등록</button>
             </div>
 
             <!-- 댓글 섹션 -->
@@ -89,6 +97,39 @@
 
             document.addEventListener('DOMContentLoaded', function() {
 
+                // 댓글 등록 처리 함수
+                function validateAndSubmitComment() {
+                    const content = document.getElementById("boardcontent").value.trim();
+                    if (content === "") {
+                        alert("댓글을 입력해주세요.");
+                        return;
+                    }
+
+                    var seq = document.querySelector("input[name='seq']").value;
+                    var userId = document.getElementById("userIdClass2").value;
+
+                    $.ajax({
+                        url: '/sosaddcomment',
+                        type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {
+                            seq: seq,
+                            commentcontent: content,
+                            userId: userId
+                        },
+                        success: function(response) {
+                            document.getElementById("boardcontent").value = "";  // 댓글 입력창 초기화
+                            loadComments();  // 댓글 추가 후 다시 로드
+                        },
+                        error: function(xhr, status, error) {
+                            alert("댓글을 추가하는데 문제가 발생했습니다.");
+                        }
+                    });
+                }
+
+                // 댓글 등록 버튼 이벤트 리스너
+                document.getElementById('submitComment').addEventListener('click', validateAndSubmitComment);
+
                 // 대댓글 작성 버튼 클릭 시 모달창을 띄움
                 document.getElementById('commentList').addEventListener('click', function(event) {
                     if (event.target.classList.contains('reply-btn')) {
@@ -131,7 +172,7 @@
                     });
                 });
 
-                // 댓글 로드 함수에서 좋아요 수를 표시
+                // 댓글 로드 함수에서 댓글과 대댓글을 표시
                 function loadComments() {
                     var seq = document.querySelector("input[name='seq']").value;
 
@@ -143,11 +184,7 @@
                             const commentList = document.getElementById('commentList');
                             commentList.innerHTML = '';  // 기존 댓글 리스트를 초기화
 
-                            // 최신 순으로 댓글을 정렬 (날짜 순으로 정렬, 최신이 위로 오도록)
-                            let sortedComments = response.sort((a, b) => new Date(b.regdate) - new Date(a.regdate));
-
-                            // 베스트 댓글을 먼저 생성
-                            sortedComments.forEach(function(comment) {
+                            response.forEach(function(comment) {
                                 let deleteButton = '';
                                 let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
                                 let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
@@ -168,7 +205,6 @@
                                                  <img src="/image/tool/likebutton.png" alt="Like" class="like-btn" data-comment-id="${comment.commentId}" style="cursor: pointer; width: 30px;">
                                                   <span class="like-count">:<strong>${comment.likeCount}</strong></span>
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="comment-right">
@@ -178,9 +214,7 @@
                                              <button class="btn btn-secondary reply-btn" data-comment-id="${comment.commentId}">대댓글 입력</button>
                                              </div>
                                         </div>
-
                                     </div>
-
                                     <ul class="reply-list" id="replies-${comment.commentId}"></ul>
                                     <hr>`;
                                 commentList.appendChild(commentItem);
@@ -195,9 +229,7 @@
                                                 <span> ${reply.replyUserNickname}: </span>
                                                 <span>${reply.replyContent}</span>
                                                 <span>${reply.replyRegtime}</span>
-                                            </div>
-
-                                            `;
+                                            </div>`;
                                         replyList.appendChild(replyItem);  // 대댓글을 댓글 밑에 추가
                                     });
                                 }
@@ -242,38 +274,6 @@
                 return confirm("글을 삭제하시겠습니까?");
             }
         </script>
-
-        <!-- 수의사 정보 모달 -->
-        <div id="vetModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">수의사 정보</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="vet-profile">
-                            <img id="vetPhoto" src="" alt="Veterinarian Photo" class="vet-photo">
-                            <div class="vet-info">
-                                <h6 id="vetName" class="vet-name">이름</h6>
-                                <p id="vetClinic" class="vet-clinic">동물병원</p>
-                                <div class="recommendation-count">
-                                    <span><img src="/image/tool/recommend.png" style="width: 27px; height: auto">추천 수: </span><strong id="recommendationCount">0</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="vet-description-container">
-                            <ul id="vetDescription" class="vet-description"></ul>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="recommendBtn" class="recommend-btn">수의사 추천</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- 대댓글 입력을 위한 모달 -->
         <div id="replyModal" class="modal fade" tabindex="-1" role="dialog">
