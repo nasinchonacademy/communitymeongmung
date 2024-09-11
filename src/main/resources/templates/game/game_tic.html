@@ -14,64 +14,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!--기본 css-->
     <link th:href="@{/css/basic.css}" rel="stylesheet">
+    <!--디자인 css-->
+    <link th:href="@{/css/game/tttStyle.css}" rel="stylesheet">
 </head>
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .game {
-        width: 1000px;
-        height: 600px;
-        border: 1px solid #6bb08b;
-        margin: 0 auto 30px;
-        border-radius: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .gameDetail {
-        width: 1000px;
-        height: 600px;
-        overflow: hidden;
-        margin: 0 auto;
-    }
-
-    .gameImage {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 16px;
-    }
-
-    #ttt-container{
-        text-align: center;
-    }
-
-    table {
-        border-collapse: collapse;
-    }
-
-    td {
-        border: 1px solid black;
-        width: 120px;
-        height: 120px;
-        text-align: center;
-        font-size: 40px;
-    }
-
-    .result-message {
-        font-size: 24px;
-        text-align: center;
-        margin-top: 30px;
-    }
-
-</style>
 
 <body>
 <!-- 헤더 영역 -->

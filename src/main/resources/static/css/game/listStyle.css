@@ -1,6 +1,147 @@
+/* 구글 폰트 추가 */
+@import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+
+@font-face {
+    font-family: 'HakgyoansimDunggeunmisoTTF-B';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /* 요소 크기를 보다 정확하게 설정 */
-    font-family: "IBM Plex Sans KR", sans-serif; /* 깔끔한 폰트 설정 */
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.cate {
+    display: flex;
+    flex-direction: column; /* 세로 배치를 위한 속성 */
+    align-items: center; /* 가로 축 기준으로 중앙 정렬 */
+    /*flex-wrap: wrap;*/
+    justify-content: center;
+    padding: 30px;
+    width: calc(100vw - 220px); /* 네비게이션의 너비를 뺀 값으로 설정 */
+    height: 100vh; /* 뷰포트 높이에 맞게 설정 */
+    background-image: url('/image/game/002.png'); /* 업로드된 이미지 경로로 수정 */
+    background-size: cover; /* 이미지를 화면에 꽉 차게 설정 */
+    background-position: center; /* 이미지를 중앙에 맞춤 */
+    background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+    margin-top: 90px;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*min-height: 100vh;*/
+    /*padding: 30px;*/
+    /*margin: 0 auto;*/
+    /*width: 1000px;*/
+}
+
+.cate a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-infor {
+    display: flex;
+    flex-direction: column; /* 세로 정렬을 위한 속성 */
+    justify-content: center; /* 세로 축 기준으로 중앙 정렬 */
+    align-items: center; /* 가로 축 기준으로 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin-bottom: 40px; /* 아래에 적당한 간격 추가 */
+}
+
+.game-card-wrapper {
+    display: flex;
+    justify-content: center; /* 카드들을 가로로 중앙 정렬 */
+    gap: 20px; /* 카드들 사이의 간격 */
+    flex-wrap: wrap; /* 화면 크기에 맞춰 카드들이 줄을 바꿀 수 있도록 설정 */
+}
+
+.game-infor h1 {
+    font-family: 'HakgyoansimDunggeunmisoTTF-B';
+    font-size: 2.2rem; /* h1 크기를 적절히 조정 */
+    margin-bottom: 30px; /* h1과 h6 사이 간격 추가 */
+    color: #4CB277FF;
+    letter-spacing: 10px
+}
+
+.game-infor h6 {
+    font-size: 1.2rem; /* h6 크기를 적절히 조정 */
+    color: #666; /* 텍스트 색상 설정 */
+    line-height: 1.5;
+}
+
+.game-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    margin: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #3d3d3d;
+    cursor: pointer;
+}
+
+a:link {
+    color: #ffffff;
+}
+
+.container {
+    width: 220px;
+    height: 310px;
+    transition: all 0.1s;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.overlay {
+    position: absolute;
+    width: 220px;
+    height: 310px;
+    /*background: linear-gradient(105deg, transparent 40%,*/
+    /*rgba(255, 219, 112, 0.8) 45%,*/
+    /*rgba(132, 50, 255 ,0.6) 50%, transparent 54%);*/
+    /*filter: brightness(1.1) opacity(0.8);*/
+    background-color: #ffffff;
+    /*mix-blend-mode: color-dodge;*/
+    background-size: 150% 150%;
+    background-position: 100%;
+    transition: all 0.1s;
+    border-radius: 16px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.cate a {
+    display: flex;
+    align-items: center;
+    width: 250px;
+    height: 330px;
+    /*background: linear-gradient(181deg, rgba(228, 245, 253, 0.54) 0%, rgba(233, 255, 227, 0.66) 100%);*/
+    border-radius: 16px;
+    border: 2px solid #def3db;
+    padding: 16px 24px;
+    margin: 20px auto;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.card-img-top {
+    width: 100px;
+    height: 120px;
+}
+
+.card {
+    width: 220px;
+    height: 310px;
+    background-size: cover;
+    border-radius: 16px;
+    background-position: center; /* 이미지를 중앙에 맞춤 */
+}
+
+.game-card span {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
 }
