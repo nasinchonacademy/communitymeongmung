@@ -53,8 +53,6 @@ public class SOSboard {
     @OneToMany(mappedBy = "sosboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SOSboardcomment> comments;  // 게시물에 달린 댓글들
 
-
-
     @PrePersist
     protected void onCreate() {
         this.regdate = new Date();  // 현재 날짜로 설정
@@ -66,6 +64,8 @@ public class SOSboard {
             comments.clear();  // 삭제 전에 관련 댓글 목록을 비움
         }
     }
+
+
 
 
 }

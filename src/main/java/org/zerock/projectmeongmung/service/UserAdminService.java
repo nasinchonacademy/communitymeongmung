@@ -38,11 +38,13 @@ public class UserAdminService {
         userAdminRepository.save(user);
     }
 
-    public void updateUserStatus(Long userId, boolean isActive) {
-        User user = userAdminRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-        user.setActive(isActive);
-        userAdminRepository.save(user);
+    @Transactional
+    public void toggleUserActivation(String uid, boolean Active) {
+        User user = userAdminRepository.findByUid(uid)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + uid));
+
+        user.setActive(Active);  // 계정 활성화 상태 변경
+        userAdminRepository.save(user); // 변경 사항 저장
     }
 
 

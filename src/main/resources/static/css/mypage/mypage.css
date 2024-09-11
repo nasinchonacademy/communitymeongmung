@@ -12,7 +12,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    max-width: 1200px; /* 최대 너비 설정 */
+    width: 1200px; /* 최대 너비 설정 */
     margin: 0 auto;    /* 화면 중앙에 배치 */
     padding: 20px;     /* 패딩 설정 */
 }
@@ -84,7 +84,7 @@
 
 
 .liked_story {
-    width: 600px;
+    width: 1000px;
     text-align: left;
     display: block;
 }
@@ -107,28 +107,32 @@
 
 
 .col-md-4{
-    width: 12rem;
+    width: 21rem;
+    height: 500px;
+    margin: 0 auto;
 }
 
 .carousel-control-prev-icon {
     filter: invert(1) grayscale(1) brightness(1.5); /* 어두운 흰색 톤 */
+    opacity: 30%;
 }
 
 
 .carousel-control-next-icon {
     filter: invert(1) grayscale(1) brightness(1.5); /* 어두운 흰색 톤 */
+    opacity: 30%;
 }
 
 .written_stories{
     margin-top: 70px;
-    width: 600px;
+    width: 1000px;
 
 }
 
 .written_stories_title h2 {
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 50px;
-    height: 20px;
+    height: 25px;
     display: inline;
 }
 
@@ -147,6 +151,12 @@
     border: 1px solid #ddd;
     margin-bottom: 5px;
     border-radius: 25px;
+    height: 120px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }
 
 .rank-number {
@@ -154,6 +164,11 @@
     margin-right: 10px;
     font-weight: bold;
     color: #e18348;
+}
+
+.list-group-item:last-child {
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
 }
 
 .story-content {
@@ -211,12 +226,12 @@
 
 .cart{
     margin-top: 50px;
-    width: 600px;
+    width: 1000px;
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     list-style-type: none;
     padding: 0;
@@ -309,19 +324,19 @@
 }
 
 .cart_getwritelist img{
-    width: 40%;
+    width: 10rem;
     height: auto;
     align-items: center;
     justify-items: auto;
-    margin-top: 100px;
+    padding-top: 3rem;
 }
 
 .cart_getwritelist img:hover{
-    width: 50%;
+    width: 12rem;
     height: auto;
     align-items: center;
     justify-items: auto;
-    margin-top: 90px;
+    padding-top: 2rem;
 }
 
 .cart-product-image {

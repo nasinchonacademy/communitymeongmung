@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 목록</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<tr>
+    <th>회원번호</th>
+    <th>이름</th>
+    <th>이메일</th>
+    <th>닉네임</th>
+    <th>가입일</th>
+    <th>상태</th>
+    <th>관리</th>
+</tr>
+<div class="container mt-5">
+    <h2 class="mb-4">회원 목록</h2>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+
+        </thead>
+        <tbody>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.uid}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.nickname}"></td>
+            <td th:text="${#dates.format(user.regDate, 'yyyy/MM/dd')}"></td>
+            <td>
+                <span th:if="${user.active}" class="badge badge-success">활성</span>
+                <span th:if="${!user.active}" class="badge badge-danger">비활성</span>
+            </td>
+            <td>
+                <form th:action="@{/admin/users/{id}(id=${user.id})}" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button class="btn btn-danger btn-sm" type="submit">삭제</button>
+                </form>
+
+                <form th:action="@{/admin/users/{id}/admin(id=${user.id})}" method="post">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <input type="hidden" name="isAdmin" th:value="${!user.isAdmin}"/>
+                    <button class="btn btn-warning btn-sm" type="submit"
+                            th:text="${user.isAdmin ? '관리자 해제' : '관리자 설정'}"></button>
+                </form>
+
+                <form th:action="@{/admin/toggleActivation}" method="post">
+                    <input type="hidden" name="uid" th:value="${user.uid}"/>
+                    <input type="hidden" name="Active" th:value="${!user.isActive}"/>
+                    <button class="btn btn-secondary btn-sm" type="submit"
+                            th:text="${user.isActive ? '비활성화' : '활성화'}"></button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-primary" href="#" th:href="@{/admin/createUser}">새 회원 등록</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

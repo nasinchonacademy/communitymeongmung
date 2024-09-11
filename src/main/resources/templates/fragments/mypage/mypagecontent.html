@@ -29,8 +29,8 @@
                class="carousel-item">
             <div class="row">
               <div class="col-md-4" th:each="story : ${group}">
-                <div class="card mx-auto" style="width: 11.9rem;">
-                  <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}">
+                <div class="card mx-auto" style="width: 18rem;">
+                  <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}" class="card-img-top" th:alt="${story.title}" style="height: 260px">
                   <div class="card-body p-2">
                     <h6 class="card-title">
                       <a th:text="${story.title.length() > 12 ? story.title.substring(0, 12) + '...' : story.title}"

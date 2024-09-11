@@ -9,4 +9,6 @@ import java.util.List;
 public interface SOSBoardLikeRepository extends JpaRepository<SOSboardlikecount, Long> {
     List<SOSboardlikecount> findByMember(User member);
     boolean existsByMemberAndSosboardAndLikecountupdate(User member, SOSboard sosboard, LocalDate likecountupdate);
+
+    void deleteBySosboard(SOSboard sosboard);
 }

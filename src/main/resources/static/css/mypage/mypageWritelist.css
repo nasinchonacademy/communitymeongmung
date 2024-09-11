@@ -1,16 +1,30 @@
 .container {
-    width: 60%;
+    width: 1000px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+/*.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    float: right;
+    margin-right: 15%;
+}*/
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
 .search-bar {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
     float: right;
-    margin-right: 4%;
 }
+
+
 .search-bar input {
     width: 350px;
     padding: 10px;
@@ -45,10 +59,9 @@ table th {
 }
 
 .story_count{
-    padding-left: 30px;
 }
 
-.pagination {
+.paging {
     text-align: center;
     margin-top: 20px;
 }
@@ -57,7 +70,7 @@ table th {
     text-decoration: none;
     color: #333;
 }
-.pagination a.active {
+.pagination a.pagenum {
     font-weight: bold;
     color: #4CAF50;
 }
@@ -76,7 +89,94 @@ table th {
     cursor: pointer;
 }
 
-.page-link:active{
-    background: #0f7cb8;
+.paging li {
+    display:inline;
+}
+
+.submitGroup {
+    display: flex;
+
+}
+
+
+
+
+/*--------------------*/
+.paging {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    margin-top: 37px;
+    justify-content: center;
+}
+
+.paging li {
+
+}
+
+.paging li a {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #00c292;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagenum a:hover {
+    background-color: #00c292;
+    border-color: #4fa993;
+    color: #fff;
+}
+
+.paging li.pagenumactive a {
+    background-color: #00c292;
+    color: #fff;
+    border-color: #4fa993;
+}
+
+.paging li.page.prev a,
+.paging li.page.next a {
+    font-weight: bold;
+}
+
+.paging li.page.prev a[tabindex="-1"],
+.paging li.page.next a[tabindex="-1"] {
+    color: #00c292;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.writeBtnAtag {
+    display: inline-block;
+    background-color: #6bc7a0;
+    width: 70px;
+    height: 40px;
+    border-radius: 3px;
+    text-decoration: none;
+    text-align: center;
+    line-height: 40px;
     color: white;
 }
+
+.writeBtn {
+    margin-top: 6px;
+    margin-left: 875px;
+    margin-bottom: 18px;
+    float: right;
+}
+
+.writeBtnAtag:hover {
+    background-color: #59a585; /* 마우스를 올려도 색이 변하지 않도록 설정 */
+    color: white; /* 텍스트 색상도 그대로 유지 */
+}
+
+/* 댓글 색 */
+
+span.commentcountTitle {
+    color: #939393;
+}
+

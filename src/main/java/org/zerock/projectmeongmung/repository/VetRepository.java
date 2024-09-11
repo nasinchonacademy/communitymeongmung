@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.entity.Vet;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VetRepository extends JpaRepository<Vet, Long> {
@@ -16,4 +17,6 @@ public interface VetRepository extends JpaRepository<Vet, Long> {
     @Transactional
     @Query("UPDATE User u SET u.vetinfo = null WHERE u.vetinfo.vetid = :vetId")
     void detachVetFromUser(@Param("vetId") Long vetId);
+
+    List<Vet> findTop3ByOrderByRecommendationCountDesc();
 }

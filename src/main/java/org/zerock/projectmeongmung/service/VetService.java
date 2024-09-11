@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -244,6 +245,27 @@ public class VetService {
         // 추천 카운트 증가
         vet.setRecommendationCount(vet.getRecommendationCount() + 1);
         vetRepository.save(vet); // 변경된 추천 카운트 저장
+    }
+
+    public List<Vet> getTop3VetsByRecommendation() {
+        return vetRepository.findTop3ByOrderByRecommendationCountDesc();
+    }
+
+
+    // 수의사 목록을 가져오면서 추천수와 댓글 수를 함께 가져오는 메서드
+    public List<VetDTO> getTopVetsWithCommentCounts() {
+        List<Vet> vets = vetRepository.findAll(); // 모든 수의사 조회
+
+        return vets.stream()
+                .map(vet -> VetDTO.builder()
+                        .vetid(vet.getVetid())
+                        .vetname(vet.getVetname())
+                        .animalhospitlename(vet.getAnimalhospitlename())
+                        .recommendationCount(vet.getRecommendationCount())
+                        .commentCount(vet.getCommentCount()) // 댓글 수 계산
+                        .profilePhotoPath(vet.getProfilePhoto())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

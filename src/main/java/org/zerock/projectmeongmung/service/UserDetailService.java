@@ -56,6 +56,10 @@ public class UserDetailService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUid(),
                 user.getPassword(),
+                user.isActive(), // 계정 활성화 상태를 설정
+                true, // 계정 만료 여부 (true = 만료되지 않음)
+                true, // 비밀번호 만료 여부 (true = 만료되지 않음)
+                true, // 계정 잠금 여부 (true = 잠금되지 않음)
                 authorities
         );
     }

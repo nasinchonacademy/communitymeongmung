@@ -21,10 +21,7 @@ import org.zerock.projectmeongmung.repository.SOSBoardCommentRepository;
 import org.zerock.projectmeongmung.repository.SOSboardRepository;
 import org.zerock.projectmeongmung.repository.StoryCommentRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
-import org.zerock.projectmeongmung.service.SOSBoardCommentService;
-import org.zerock.projectmeongmung.service.SOSboardService;
-import org.zerock.projectmeongmung.service.SOSlilkeService;
-import org.zerock.projectmeongmung.service.UserDetailService;
+import org.zerock.projectmeongmung.service.*;
 
 import java.io.IOException;
 import java.security.Security;
@@ -55,7 +52,7 @@ public class SOSboardController {
     private final SOSlilkeService slilkeService;
     private final SOSBoardCommentRepository sosboardCommentRepository;
     private final VetController vetController;
-
+    private final VetService vetService;
 
     @GetMapping("/soshospitallist")
     public String listContent(
@@ -79,6 +76,9 @@ public class SOSboardController {
 
         model.addAttribute("current", current);// 라디오 버튼 상태를 모델에 추가
         System.out.println(current);
+
+        List<Vet> topVets = vetService.getTop3VetsByRecommendation();
+        model.addAttribute("vets", topVets); // 모델에 추가하여 뷰로 전달
 
 
 

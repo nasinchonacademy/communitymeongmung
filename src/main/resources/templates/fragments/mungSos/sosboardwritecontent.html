@@ -1,25 +1,19 @@
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <div id="content">
-        <h1 class="mt-4">GuestBook Register Page</h1>
         <form th:action="@{/sosboardwrite}" th:method="post" enctype="multipart/form-data" th:onsubmit="return validateForm()">
 
-            <div class="form-group">
-                <label>Writer</label>
-                <input type="text" class="textarea1" name="nickname" th:placeholder="${user.nickname}" th:value="${user.nickname}" disabled>
-            </div>
 
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" class="textarea" name="title" id="title" placeholder="40byte 입력 가능">
-            </div>
-            <div class="form-group">
-                <label>Content</label>
-                <textarea class="textarea" rows="5" name="content" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="file">Attach Photo</label>
+            <div class="writegroup">
+                <input type="text" class="textarea1" name="nickname" th:placeholder="${user.nickname}" th:value="${user.nickname}" disabled>|
                 <input type="file" class="form-control-file" id="file" name="file" accept="image/*">
+            </div>
+
+            <div class="writegroup">
+                <input type="text" class="titlearea" name="title" id="title" placeholder="제목을 입력해주세요.">
+            </div>
+
+            <div class="writegroup">
+                <textarea class="contentarea" rows="5" name="content" id="boardcontent" placeholder="2500byte 입력 가능"></textarea>
             </div>
 
             <div>
@@ -29,10 +23,13 @@
                 <input type="hidden" name="uid" th:value="${user.uid}" >
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="submitgroup">
+                <button type="submit" class="commentSubmit">작성완료</button>
+            </div>
         </form>
 
         <script>
+
             function validateForm() {
                 var title = document.getElementById("title").value.trim();
                 var boardcontent = document.getElementById("boardcontent").value.trim();
@@ -53,6 +50,7 @@
 
                 return true;  // 폼 제출 허용
             }
+
         </script>
 
     </div>
