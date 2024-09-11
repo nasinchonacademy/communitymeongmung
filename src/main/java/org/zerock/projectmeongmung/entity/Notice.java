@@ -34,4 +34,8 @@ public class Notice {
         return message;
     }
 
+    public Long getID() {
+        return id;
+    }
+
 }

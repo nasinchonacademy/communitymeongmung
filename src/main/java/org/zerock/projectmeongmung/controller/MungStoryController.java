@@ -434,7 +434,6 @@ public class MungStoryController {
         try {
             // 댓글 삭제 로직 호출
             serviceC.removeComment(commentId);
-
             serviceC.decrementCommentCount(seq);
 
             // 성공적으로 처리되었음을 응답
@@ -454,5 +453,4 @@ public class MungStoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

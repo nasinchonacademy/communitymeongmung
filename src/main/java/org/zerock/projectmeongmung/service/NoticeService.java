@@ -13,11 +13,24 @@ import java.util.stream.Collectors;
 @Service
 public class NoticeService {
 
+    private final NoticeRepository noticeRepository;
+
     @Autowired
-    private NoticeRepository noticeRepository;
+    public NoticeService(NoticeRepository noticeRepository) {
+        this.noticeRepository = noticeRepository;
+    }
 
     // 특정 사용자의 알림 메시지 리스트 가져오기
     public List<String> getNoticeMessagesByUser(User user) {
         return noticeRepository.findMessagesByUser(user);
+    }
+
+    public void removeNoticeById(Long id) {
+        noticeRepository.removeNoticeById(id);  // 커스텀 쿼리를 통한 알림 삭제
+    }
+
+    // Notice 엔티티 자체를 반환하는 메서드
+    public List<Notice> getNoticesByUser(User user) {
+        return noticeRepository.findByUser(user);
     }
 }

@@ -30,10 +30,6 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-
-
-
-
 .modal {
     position: fixed; /* 화면 전체를 덮는 모달 */
     visibility: hidden; /* 처음에는 숨김 처리 */
@@ -56,6 +52,7 @@
     background-color: white;
     min-height: 500px;
     max-width: 358px;
+    min-width: 358px;
     border-radius: 5px;
     display: flex;
     text-align: center;
@@ -141,6 +138,7 @@ button.modalOpen {
     cursor: pointer;
     z-index: 50;
     transition: background-color 0.3s ease;
+    user-select: none;
 }
 
 button.modalOpen:hover {

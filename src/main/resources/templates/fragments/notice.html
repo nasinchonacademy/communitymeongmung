@@ -16,55 +16,60 @@
                     </ul>
                 </div>
             </div>
+
             <script>
                 const modal = document.querySelector('.modal');
                 const modalBody = document.querySelector('.modal_body');
                 const btnOpenModal = document.querySelector('.modalOpen');
                 const noticeList = document.getElementById('noticeList');
-                const userUid = btnOpenModal.dataset.uid;
+                const userUid = btnOpenModal.getAttribute('data-uid');  // userUid 가져오기
 
-                // 모달 열기 버튼 클릭 시 모달 창 보이기 및 AJAX 요청
-btnOpenModal.addEventListener("click", () => {
-    modal.style.display = "flex";
+                // 알림 목록을 서버에서 가져오는 함수
+                function loadNotices() {
+                    fetch(`/notices?uid=${userUid}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            noticeList.innerHTML = '';  // 기존 항목 제거
 
-    // AJAX로 서버에서 알림 데이터를 가져오기
-    fetch(`/notices?uid=${userUid}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('HTTP error! Status: ' + response.status);
-            }
-            return response.json(); // 서버에서 JSON 데이터를 파싱
-        })
-        .then(data => {
-            console.log("Fetched data:", data); // 데이터를 콘솔에 출력하여 확인
+                            data.forEach((notice) => {
+                                const li = document.createElement('li');
+                                li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">삭제</button>`;
+                                noticeList.appendChild(li);
 
-            // 알림 리스트 초기화
-            noticeList.innerHTML = '';  // 기존 항목 제거
+                                // 삭제 버튼에 이벤트 리스너 추가
+                                li.querySelector('.delete-notice-btn').addEventListener('click', function() {
+                                    const noticeId = this.getAttribute('data-id');
 
-            // 가져온 알림 데이터를 리스트에 추가
-            data.forEach(message => {
-                const li = document.createElement('li'); // <li> 태그 생성
-                li.textContent = message;  // 메시지 추가
-                noticeList.appendChild(li);  // <ul>에 <li> 추가
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching notices:', error);
-        });
-});
+                                    // 삭제 요청
+                                    fetch(`/noticeremove?id=${noticeId}&uid=${userUid}`, {
+                                        method: 'POST',
+                                    })
+                                    .then(response => response.json())
+                                    .then(() => {
+                                        // 알림 목록을 다시 불러옴
+                                        loadNotices();  // 삭제 후 알림 목록을 다시 불러옴
+                                    })
+                                    .catch(error => console.error('Error removing notice:', error));
+                                });
+                            });
+                        })
+                        .catch(error => console.error('Error fetching notices:', error));
+                }
 
+                // 모달 열기 버튼 클릭 시 모달 열고 알림 목록 불러오기
+                btnOpenModal.addEventListener("click", () => {
+                    modal.style.display = "flex";
+                    modal.classList.add('modalOpen');  // modalOpen 클래스로 애니메이션 시작
+                    loadNotices();  // 모달을 열 때 알림 목록 불러오기
+                });
 
-// 모달 열기 버튼 클릭 시 모달 열기
-btnOpenModal.addEventListener("click", () => {
-    modal.classList.add('modalOpen');  // modalOpen 클래스로 애니메이션 시작
-});
-
-// 모달 외부 클릭 시 모달 닫기
-modal.addEventListener("click", (event) => {
-    if (!modalBody.contains(event.target)) {  // 모달 외부를 클릭했을 때
-        modal.classList.remove('modalOpen');  // modalOpen 클래스 제거로 애니메이션 종료
-    }
-});
+                // 모달 외부 클릭 시 모달 닫기
+                modal.addEventListener("click", (event) => {
+                    if (!modalBody.contains(event.target)) {  // 모달 외부를 클릭했을 때
+                        modal.style.display = "none";
+                        modal.classList.remove('modalOpen');  // modalOpen 클래스 제거로 애니메이션 종료
+                    }
+                });
 
             </script>
         </div>
