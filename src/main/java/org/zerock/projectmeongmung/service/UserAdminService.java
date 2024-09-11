@@ -1,6 +1,8 @@
 package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.entity.User;
@@ -45,6 +47,22 @@ public class UserAdminService {
 
         user.setActive(Active);  // 계정 활성화 상태 변경
         userAdminRepository.save(user); // 변경 사항 저장
+    }
+
+    public Page<User> searchUsers(String keyword, String category, Pageable pageable) {
+        if (keyword != null && !keyword.isEmpty()) {
+            switch (category) {
+                case "uid":
+                    return userAdminRepository.findByUidContaining(keyword, pageable);
+                case "name":
+                    return userAdminRepository.findByNameContaining(keyword, pageable);
+                case "email":
+                    return userAdminRepository.findByEmailContaining(keyword, pageable);
+                default:
+                    return userAdminRepository.findAll(pageable);  // 기본적으로 모든 사용자를 반환
+            }
+        }
+        return userAdminRepository.findAll(pageable);
     }
 
 

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.SOSboard;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -20,5 +21,15 @@ public interface SOSboardRepository extends JpaRepository<SOSboard, Long> {
     @Transactional
     @Query("UPDATE SOSboard m SET m.likecount = m.likecount + 1 WHERE m.sosboardseq = :sosboardseq")
     void incrementLikeCount(@Param("sosboardseq") Long sosboardseq);
+
+   @Query("SELECT m FROM SOSboard m WHERE m.title LIKE %:keyword% OR m.content LIKE %:keyword% " )
+   Page<SOSboard> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    Page<SOSboard> findByTitleContainingOrContentContainingIgnoreCase(
+            String titleKeyword, String contentKeyword, Pageable pageable
+    );
+
+
+
 
 }

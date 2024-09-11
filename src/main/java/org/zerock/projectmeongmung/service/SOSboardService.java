@@ -84,13 +84,36 @@ public class SOSboardService {
     }
 
 
-    public PageResultDTO<SOSboardDTO, SOSboard> searchByKeyword(PageRequestDTO pageRequestDTO, String keyword) {
-        Pageable pageable = pageRequestDTO.getPageable(Sort.by("regdate").descending());
-        Page<SOSboard> result = repository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+//    public PageResultDTO<SOSboardDTO, SOSboard> searchByKeyword(PageRequestDTO pageRequestDTO
+//                                                                ) {
+//        Pageable pageable = pageRequestDTO.getPageable(Sort.by("regdate").descending());
+//
+//        String keyword = pageRequestDTO.getKeyword();
+//
+//        Page<SOSboard> result = repository.searchByKeyword(keyword, pageable);
+//
+//        Function<SOSboard, SOSboardDTO> fn = (entity -> entityToDTO(entity));
+//
+//        return new PageResultDTO<>(result, fn);
+//    }
 
-        Function<SOSboard, SOSboardDTO> fn = (entity -> entityToDTO(entity));
+    public Page<SOSboardDTO> searchByKeyword(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+        String keyword = pageRequestDTO.getKeyword();
 
-        return new PageResultDTO<>(result, fn);
+        // 키워드가 있을 때 검색 수행
+        Page<SOSboard> result;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            result = repository.findByTitleContainingOrContentContainingIgnoreCase(
+                    keyword, keyword, pageable
+            );
+        } else {
+            // 키워드가 없을 경우 전체 목록 반환
+            result = repository.findAll(pageable);
+        }
+
+        // SOSboard -> SOSboardDTO로 변환하여 반환
+        return result.map(this::entityToDTO);
     }
 
     public List<SOSboardDTO> getTop3BylikeCount() {

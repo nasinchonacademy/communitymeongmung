@@ -79,4 +79,24 @@ public class SOSBoardCommentService {
         SOSBoardCommentRepository.delete(comment);
     }
 
+    @Transactional
+    public int likeComment(Long commentId, String uid) {
+        SOSboardcomment comment = SOSBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        // 유저가 이미 해당 댓글에 좋아요를 눌렀는지 확인
+        if (comment.getLikedUserIds().contains(user.getId())) {
+            throw new IllegalStateException("이미 좋아요를 누른 댓글입니다.");
+        }
+
+        // 좋아요 추가
+        comment.addLike(user.getId());
+        SOSBoardCommentRepository.save(comment);  // 좋아요 정보 저장
+
+        return comment.getLikeCount();  // 업데이트된 좋아요 수 반환
+    }
+
 }

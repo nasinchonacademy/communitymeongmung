@@ -450,3 +450,28 @@ input.category {
     color: #007bff;
     font-weight: bold;
 }
+
+.like-btn{
+    border: none;
+    margin-left: 10px;
+}
+
+.like-btn img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 4px;
+}
+
+.best-badge {
+    background-color: gold;
+    color: white;
+    padding: 2px 5px;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+
+
+
+

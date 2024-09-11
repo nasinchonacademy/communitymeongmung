@@ -68,27 +68,31 @@ public class SOSboardController {
                 .keyword(keyword)
                 .build();
 
-        // 1페이지일 때만 조회수가 높은 3개 게시물을 추가로 가져옴
+        // 디버깅을 위해 키워드 로그 출력
+        System.out.println("Keyword: " + keyword);
 
+        // 1페이지일 때만 좋아요가 높은 3개의 게시물을 가져옵니다.
+        if (page == 1) {
             List<SOSboardDTO> top3Boards = sosboardService.getTop3BylikeCount();
-            model.addAttribute("top3Boards", top3Boards);  // 조회수가 높은 게시물
+            model.addAttribute("top3Boards", top3Boards);  // 좋아요가 높은 게시물
+        }
 
+        // 추천수 높은 수의사 정보 추가
+        List<Vet> topVets = vetService.getTop3VetsByRecommendation();
+        model.addAttribute("vets", topVets);  // 추천수 높은 수의사
 
-        model.addAttribute("current", current);// 라디오 버튼 상태를 모델에 추가
+        // 라디오 버튼 선택값을 모델에 추가
+        model.addAttribute("current", current);
         System.out.println(current);
 
-        List<Vet> topVets = vetService.getTop3VetsByRecommendation();
-        model.addAttribute("vets", topVets); // 모델에 추가하여 뷰로 전달
-
-
-
+        // 현재 라디오 선택에 따라 병원 리스트 또는 SOS 게시판 리스트를 처리
         if ("radio1".equals(current)) {
-            // 동물병원 리스트 페이지 처리 (soshospitallist.html)
             return "meongsoshtml/soshospitallist";  // 동물병원 리스트 페이지
         } else {
-            // SOS 상담 리스트 페이지 처리 및 페이징, 검색 처리 (soshospitallist2.html)
-            model.addAttribute("result", sosboardService.searchByKeyword(pageRequestDTO, keyword != null ? keyword : ""));
-            model.addAttribute("pageRequestDTO", pageRequestDTO);  // 검색과 페이징 정보를 전달
+            // SOS 상담 리스트 및 검색 처리
+            model.addAttribute("result", sosboardService.searchByKeyword(pageRequestDTO));
+            model.addAttribute("pageRequestDTO", pageRequestDTO);
+
             return "meongsoshtml/soshospitallist2";  // SOS 상담 리스트 페이지
         }
     }
@@ -271,6 +275,7 @@ public class SOSboardController {
             commentData.put("userid", comment.getUser().getId());
             commentData.put("profilePhoto", comment.getUser().getProfilePhoto()); // 프로필 사진 추가
             commentData.put("commentcontent", comment.getSoscommentcontent());
+            commentData.put("likeCount", comment.getLikeCount());  // 좋아요 수 추가
 
             String regdate = formatter.format(comment.getSoscommentregtime());
             String modified = comment.getSoscommentupdate() != null
@@ -362,6 +367,20 @@ public class SOSboardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PostMapping("/soscommentlike")
+    public ResponseEntity<?> likeComment(@RequestBody Map<String, Long> requestData, Authentication authentication) {
+        Long commentId = requestData.get("commentId");
+        String username = authentication.getName();  // 현재 로그인한 유저 정보
+
+        try {
+            int likeCount = commentService.likeComment(commentId, username);
+            return ResponseEntity.ok(Map.of("likeCount", likeCount));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
 
 }

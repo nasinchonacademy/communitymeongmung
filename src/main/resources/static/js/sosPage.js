@@ -41,7 +41,10 @@ $(document).ready(function() {
     });
 
     // 검색 폼 제출 시 처리
-    $('#searchForm').on('submit', function(e) {
+    $('#searchForm').on('submit', function(event) {
+        event.preventDefault(); // 폼 제출 막기
+        var formData = $(this).serialize(); // 폼 데이터 직렬화
+
         let keyword = $(this).find('input[name="keyword"]').val();
         let currentInput = getCurrentFromUrl(); // 현재 URL에서 current 값을 추출
 

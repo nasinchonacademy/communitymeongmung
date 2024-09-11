@@ -24,6 +24,10 @@ public class QSOSboardcomment extends EntityPathBase<SOSboardcomment> {
 
     public final NumberPath<Long> commentid = createNumber("commentid", Long.class);
 
+    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
+
+    public final SetPath<Long, NumberPath<Long>> likedUserIds = this.<Long, NumberPath<Long>>createSet("likedUserIds", Long.class, NumberPath.class, PathInits.DIRECT2);
+
     public final QSOSboard sosboard;
 
     public final StringPath soscommentcontent = createString("soscommentcontent");
