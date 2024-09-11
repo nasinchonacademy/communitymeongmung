@@ -88,7 +88,50 @@
             var userNickname = document.getElementById('userNicknameHidden').value;
 
             document.addEventListener('DOMContentLoaded', function() {
-                // 댓글 로드
+
+                // 대댓글 작성 버튼 클릭 시 모달창을 띄움
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('reply-btn')) {
+                        const commentId = event.target.getAttribute('data-comment-id');
+                        $('#replyModal').modal('show');
+
+                        // 대댓글 등록 버튼에 commentId 저장
+                        document.getElementById('submitReply').setAttribute('data-comment-id', commentId);
+                    }
+                });
+
+                // 대댓글 등록 처리
+                document.getElementById('submitReply').addEventListener('click', function() {
+                    const replyContent = document.getElementById('replyContent').value;
+                    const commentId = this.getAttribute('data-comment-id');
+                    const userId = document.getElementById("userIdClass2").value;
+
+                    if (replyContent.trim() === '') {
+                        alert('대댓글 내용을 입력하세요.');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/sosaddreply',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            commentId: commentId,
+                            replyContent: replyContent,
+                            userId: userId
+                        }),
+                        success: function(response) {
+                            $('#replyModal').modal('hide'); // 모달 닫기
+                            document.getElementById('replyContent').value = ''; // 입력창 초기화
+                            loadComments();  // 댓글 목록을 다시 로드하여 대댓글 표시
+                        },
+                        error: function(xhr, status, error) {
+                            alert('대댓글을 추가하는데 문제가 발생했습니다.');
+                        }
+                    });
+                });
+
+                // 댓글 로드 함수에서 좋아요 수를 표시
                 function loadComments() {
                     var seq = document.querySelector("input[name='seq']").value;
 
@@ -100,36 +143,64 @@
                             const commentList = document.getElementById('commentList');
                             commentList.innerHTML = '';  // 기존 댓글 리스트를 초기화
 
-                            // 각 댓글 정보를 HTML로 동적으로 생성
-                            response.forEach(function(comment) {
-                                let deleteButton = '';
+                            // 최신 순으로 댓글을 정렬 (날짜 순으로 정렬, 최신이 위로 오도록)
+                            let sortedComments = response.sort((a, b) => new Date(b.regdate) - new Date(a.regdate));
 
-                                // 사용자가 작성한 댓글일 경우에만 삭제 버튼 노출
+                            // 베스트 댓글을 먼저 생성
+                            sortedComments.forEach(function(comment) {
+                                let deleteButton = '';
+                                let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
+                                let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
+
                                 if (userNickname === comment.nickname) {
                                     deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>`;
                                 }
 
-                                let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
-                                let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
-
                                 const commentItem = document.createElement('li');
-                                commentItem.setAttribute('data-comment-id', comment.commentId);  // commentId 저장
+                                commentItem.setAttribute('data-comment-id', comment.commentId);
                                 commentItem.innerHTML = `
                                     <div class="comment-block">
                                         <div class="comment-left">
                                             <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo" width="40" height="40" data-userid="${comment.userid}" style="cursor: pointer;">
                                             <div class="comment-info">
                                                 <span class="comment-nickname">${comment.nickname} ${vetBadge}</span>
-                                                <div class="comment-content">${comment.commentcontent}</div>
+                                                <div class="comment-content">${comment.commentcontent}
+                                                 <img src="/image/tool/likebutton.png" alt="Like" class="like-btn" data-comment-id="${comment.commentId}" style="cursor: pointer; width: 30px;">
+                                                  <span class="like-count">:<strong>${comment.likeCount}</strong></span>
+                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="comment-right">
                                             <span class="comment-date">${comment.regdate}</span>
                                             ${deleteButton}
+                                            <div class="replybutton">
+                                             <button class="btn btn-secondary reply-btn" data-comment-id="${comment.commentId}">대댓글 입력</button>
+                                             </div>
                                         </div>
+
                                     </div>
+
+                                    <ul class="reply-list" id="replies-${comment.commentId}"></ul>
                                     <hr>`;
                                 commentList.appendChild(commentItem);
+
+                                // 대댓글이 있으면 출력
+                                if (comment.replies && comment.replies.length > 0) {
+                                    const replyList = document.getElementById(`replies-${comment.commentId}`);
+                                    comment.replies.forEach(function(reply) {
+                                        let replyItem = document.createElement('li');
+                                        replyItem.innerHTML = ` <hr>
+                                            <div class="reply-block" style="margin-left: 30px;">
+                                                <span> ${reply.replyUserNickname}: </span>
+                                                <span>${reply.replyContent}</span>
+                                                <span>${reply.replyRegtime}</span>
+                                            </div>
+
+                                            `;
+                                        replyList.appendChild(replyItem);  // 대댓글을 댓글 밑에 추가
+                                    });
+                                }
                             });
                         },
                         error: function(xhr, status, error) {
@@ -138,158 +209,34 @@
                     });
                 }
 
-                // 댓글 클릭 시 수의사 정보 모달 띄우기
-                document.getElementById('commentList').addEventListener('click', function(event) {
-                    if (event.target.classList.contains('comment-profile-photo')) {
-                        const userId = event.target.getAttribute('data-userid'); // 댓글 작성자 userId 가져오기
-                        const commentId = event.target.closest('li').getAttribute('data-comment-id'); // 댓글의 commentId 가져오기
-
-                        console.log("클릭된 userId: ", userId);
-                        console.log("클릭된 commentId: ", commentId);
-
-                        if (userId && commentId) {
-                            showVetModal(userId, commentId);  // userId와 commentId를 함께 전달
-                        } else {
-                            console.error("userId 또는 commentId가 정의되지 않았습니다.");
-                        }
-                    }
-                });
-
-
-                window.showVetModal = function(userId, commentId) {
-                    console.log("Comment ID: ", commentId);  // commentId가 제대로 전달되는지 콘솔에서 확인
-
+                // 댓글 좋아요 처리 함수
+                function handleCommentLike(commentId, likeButton) {
                     $.ajax({
-                        url: '/vet/byUser/' + userId, // userId로 수의사 정보 조회
-                        method: 'GET',
-                        success: function(data) {
-                            // 수의사 정보 모달 업데이트
-                            $('#vetPhoto').attr('src', data.profilePhoto ? '/profiles/' + data.profilePhoto : '/image/default-profile.png');
-                            $('#vetName').text(data.vetname);
-                            $('#vetClinic').text(data.animalhospitlename);
-
-                            $('#vetDescription').empty();
-                            data.description.forEach(item => {
-                                $('#vetDescription').append('<li class="list-group-item">' + item + '</li>');
-                            });
-
-                            // 추천 수 업데이트
-                            $('#recommendationCount').text(data.recommendationCount);
-
-                            // 추천 버튼 클릭 이벤트 핸들러 설정
-                            const vetId = data.vetid; // vetId 추출
-                            $('#recommendBtn').off('click').on('click', function() {
-                                // commentId와 vetId, userId 모두 서버로 전송
-                                $.ajax({
-                                    url: '/vet/recommend',
-                                    method: 'POST',
-                                    contentType: 'application/x-www-form-urlencoded', // Content-Type 설정
-                                    data: $.param({ vetId: vetId, commentId: commentId, userId: userId }), // vetId, commentId, userId 전송
-                                    success: function(response) {
-                                        alert('추천이 완료되었습니다.');
-                                        // 추천 수 증가
-                                        $('#recommendationCount').text(parseInt($('#recommendationCount').text()) + 1);
-                                    },
-                                    error: function() {
-                                        alert('추천 처리 중 오류가 발생했습니다.');
-                                    }
-                                });
-                            });
-
-                            $('#vetModal').modal('show'); // 모달 표시
-                        },
-                        error: function() {
-                            alert('수의사 정보를 가져오는 데 실패했습니다.');
-                        }
-                    });
-                };
-
-
-                // 댓글 삭제
-                document.getElementById('commentList').addEventListener('click', function(event) {
-                    if (event.target.classList.contains('commentremoveBtn')) {
-                        const commentId = event.target.getAttribute('data-comment-id');
-                        const seq = event.target.getAttribute('data-seq');
-
-                        if (confirm('댓글을 삭제하시겠습니까?')) {
-                            $.ajax({
-                                url: '/soscommentremove',  // 댓글 삭제 API URL
-                                type: 'POST',
-                                data: {  commentId: commentId, seq: seq
-                                },
-                                success: function(response) {
-                                    alert("댓글이 삭제되었습니다.");  // 삭제 성공 메시지
-                                    // 해당 댓글 삭제
-                                    event.target.closest('li').remove();
-                                },
-                                error: function(xhr, status, error) {
-                                    alert("댓글 삭제 중 오류가 발생했습니다.");
-                                }
-                            });
-                        }
-                    }
-                });
-
-
-
-
-                // 댓글 추가
-                window.validateAndSubmitComment = function() {
-                    const content = document.getElementById("boardcontent").value.trim();
-                    if (content === "") {
-                        alert("댓글을 입력해주세요.");
-                        return;
-                    }
-
-                    var seq = document.querySelector("input[name='seq']").value;
-                    var userId = document.getElementById("userIdClass2").value;
-
-                    $.ajax({
-                        url: '/sosaddcomment',
-                        type: 'POST',
-                        contentType: 'application/x-www-form-urlencoded',
-                        data: {
-                            seq: seq,
-                            commentcontent: content,
-                            userId: userId
-                        },
-                        success: function(response) {
-                            document.getElementById("boardcontent").value = "";  // 댓글 입력창 초기화
-                            loadComments();  // 댓글 추가 후 다시 로드
-                        },
-                        error: function(xhr, status, error) {
-                            alert("댓글을 추가하는데 문제가 발생했습니다.");
-                        }
-                    });
-                };
-                function handleLikeButtonClick(event) {
-                    event.preventDefault();
-
-                    var seq = $(this).attr('data-seq');
-
-                    $.ajax({
-                        url: '/sosboardlike',
+                        url: '/soscommentlike',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({ seq: seq }),
+                        data: JSON.stringify({ commentId: commentId }),
                         success: function(response) {
-                            // 현재 버튼 안의 span.likecount 업데이트
-                            $(event.target).find('span.likecount').text(response.likecount);
+                            const likeCountSpan = $(likeButton).siblings('.like-count').find('strong');
+                            let currentLikeCount = parseInt(likeCountSpan.text(), 10);
+                            likeCountSpan.text(currentLikeCount + 1);
                         },
                         error: function(xhr, status, error) {
-                            alert("이미 좋아요를 누른 게시물입니다.");
+                            alert("이미 좋아요를 누른 댓글입니다.");
                         }
                     });
                 }
 
-                var likeButton = document.getElementById('likeButton');
-                if (likeButton) {
-                    likeButton.addEventListener('click', handleLikeButtonClick);
-                }
+                // 좋아요 버튼 클릭 이벤트 핸들러
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('like-btn')) {
+                        const commentId = event.target.getAttribute('data-comment-id');
+                        handleCommentLike(commentId, event.target);
+                    }
+                });
 
                 loadComments();  // 페이지 로드 시 댓글 목록 불러오기
             });
-
 
             function confirmDelete() {
                 return confirm("글을 삭제하시겠습니까?");
@@ -318,9 +265,7 @@
                             </div>
                         </div>
                         <div class="vet-description-container">
-                            <ul id="vetDescription" class="vet-description">
-                                <!-- Description items will be added here -->
-                            </ul>
+                            <ul id="vetDescription" class="vet-description"></ul>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -329,7 +274,30 @@
                 </div>
             </div>
         </div>
+
+        <!-- 대댓글 입력을 위한 모달 -->
+        <div id="replyModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">대댓글 입력</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="replyContent" class="form-control" placeholder="대댓글을 입력하세요"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submitReply">대댓글 등록</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 </main>
 </body>
 </html>

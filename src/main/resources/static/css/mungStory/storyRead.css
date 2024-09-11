@@ -349,11 +349,12 @@ input.category {
 }
 
 .comment-content {
+    margin-right: 15px;
 }
 
 .comment-right {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-end;
     justify-items: center;
     margin-top: 5px;
@@ -450,3 +451,35 @@ input.category {
     color: #007bff;
     font-weight: bold;
 }
+
+.like-btn{
+    border: none;
+    margin-left: 10px;
+}
+
+.like-btn img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 4px;
+}
+
+.best-badge {
+    background-color: gold;
+    color: white;
+    padding: 2px 5px;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.replybutton{
+    margin-right: 10px;
+}
+
+
+
+
+
+
+
+
