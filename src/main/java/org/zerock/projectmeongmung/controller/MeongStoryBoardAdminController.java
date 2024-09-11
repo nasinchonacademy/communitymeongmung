@@ -154,12 +154,13 @@ public class MeongStoryBoardAdminController {
     @PostMapping("/remove")
     public String remove(long seq, String title, String nickname, String uid,
                          RedirectAttributes redirectAttributes,
+                         @RequestParam("reason") String reason, // 선택된 삭제 이유
                          Model model){
         // 게시글 삭제 처리
         service.remove(seq);
 
         // 알림 메시지 작성
-        String message = "[" + title + "] 게시글이 운영 위반으로 삭제되었습니다.";
+        String message = "[" + title + "] 게시글이 " + reason + "으로 삭제되었습니다.";
 
         // User 객체 가져오기 (User는 Notice와 연관됨)
         User user = userRepository.findByUid(uid)

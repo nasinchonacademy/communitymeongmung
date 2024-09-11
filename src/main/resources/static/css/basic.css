@@ -4,6 +4,9 @@
     padding: 0;
     box-sizing: border-box; /* 요소 크기를 보다 정확하게 설정 */
     font-family: 'Noto Sans KR', sans-serif; /* 깔끔한 폰트 설정 */
+}
+
+.container, .menu, .footer {
     user-select: none;
 }
 

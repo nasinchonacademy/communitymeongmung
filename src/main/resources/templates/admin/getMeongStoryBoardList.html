@@ -22,7 +22,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box; /* 요소 크기를 보다 정확하게 설정 */
-    user-select: none;
 }
 
     .container {
@@ -163,6 +162,15 @@
                           method="post"
                           style="display:inline;"
                           onsubmit="return confirmDelete()">
+                        <div>
+                            <select name="reason" class="reason">
+                                <option value="게시물 운영 위반">운영 위반</option>
+                                <option value="광고 및 불법 홍보">광고 및 불법 홍보</option>
+                                <option value="도배 및 욕설">도배 및 욕설</option>
+                                <option value="음란, 도박 관련">음란, 도박 관련</option>
+                            </select>
+                        </div>
+
                         <button type="submit" class="delete-button">삭제하기</button>
                     </form>
                 </td>

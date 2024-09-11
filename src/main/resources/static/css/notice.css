@@ -30,10 +30,6 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-
-
-
-
 .modal {
     position: fixed; /* 화면 전체를 덮는 모달 */
     visibility: hidden; /* 처음에는 숨김 처리 */
@@ -56,7 +52,8 @@
     background-color: white;
     min-height: 500px;
     max-width: 358px;
-    border-radius: 44px;
+    min-width: 358px;
+    border-radius: 5px;
     display: flex;
     text-align: center;
     padding: 20px;
@@ -69,8 +66,34 @@
     transform: translateY(20px);
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     pointer-events: none;
-    user-select: text; /* 텍스트 선택 가능 */
+    user-select: text;
+    height: 520px;
+    overflow-y: auto;
 }
+
+.modal_body .scrollable-content {
+    height: calc(100% - 20px); /* 패딩을 제외한 높이만큼 스크롤 가능 영역 */
+    overflow-y: auto; /* 내부 컨텐츠에만 스크롤 적용 */
+    width: 100%; /* 스크롤 영역 너비 */
+}
+
+/* 스크롤바 스타일링 */
+.modal_body::-webkit-scrollbar {
+    width: 7px;
+}
+
+.modal_body::-webkit-scrollbar-thumb {
+    background: rgb(89 89 89);
+    border-radius: 20px;
+    height: 30%; /* 스크롤바 길이를 30%로 줄임 */
+
+}
+
+.modal_body::-webkit-scrollbar-track {
+    background: rgb(99 99 99 / 10%);
+}
+
+
 
 .modal.modalOpen {
     visibility: visible; /* 보이도록 설정 */
@@ -115,6 +138,7 @@ button.modalOpen {
     cursor: pointer;
     z-index: 50;
     transition: background-color 0.3s ease;
+    user-select: none;
 }
 
 button.modalOpen:hover {
