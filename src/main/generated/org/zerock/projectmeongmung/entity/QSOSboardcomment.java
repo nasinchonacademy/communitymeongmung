@@ -28,6 +28,8 @@ public class QSOSboardcomment extends EntityPathBase<SOSboardcomment> {
 
     public final SetPath<Long, NumberPath<Long>> likedUserIds = this.<Long, NumberPath<Long>>createSet("likedUserIds", Long.class, NumberPath.class, PathInits.DIRECT2);
 
+    public final ListPath<Reply, QReply> replies = this.<Reply, QReply>createList("replies", Reply.class, QReply.class, PathInits.DIRECT2);
+
     public final QSOSboard sosboard;
 
     public final StringPath soscommentcontent = createString("soscommentcontent");

@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.AddUserRequest;
 import org.zerock.projectmeongmung.dto.SOSBoardCommentDto;
 import org.zerock.projectmeongmung.dto.StoryCommentDto;
-import org.zerock.projectmeongmung.entity.SOSboard;
-import org.zerock.projectmeongmung.entity.SOSboardcomment;
-import org.zerock.projectmeongmung.entity.StoryComment;
-import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.entity.*;
 import org.zerock.projectmeongmung.repository.SOSBoardCommentRepository;
 import org.zerock.projectmeongmung.repository.SOSboardRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
@@ -97,6 +94,24 @@ public class SOSBoardCommentService {
         SOSBoardCommentRepository.save(comment);  // 좋아요 정보 저장
 
         return comment.getLikeCount();  // 업데이트된 좋아요 수 반환
+    }
+
+    @Transactional
+    public void addReply(Long commentId, Long userId, String replyContent) {
+        SOSboardcomment comment =  SOSBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+
+        // 대댓글 추가
+        Reply reply = new Reply(userId, replyContent);
+        comment.addReply(reply);
+
+        SOSBoardCommentRepository.save(comment);
+    }
+
+    public List<Reply> getRepliesByCommentId(Long commentId) {
+        SOSboardcomment comment =  SOSBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+        return comment.getReplies();
     }
 
 }

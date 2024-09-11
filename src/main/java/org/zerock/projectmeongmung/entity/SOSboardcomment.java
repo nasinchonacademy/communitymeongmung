@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "sosboardcomment")
@@ -52,6 +49,14 @@ public class SOSboardcomment {
     @ColumnDefault("0")
     private int likeCount;
 
+    // 대댓글 리스트
+    @ElementCollection
+    @CollectionTable(name = "soscomment_replies", joinColumns = @JoinColumn(name = "commentid"))
+    @OrderBy("replyRegtime ASC")  // 대댓글 작성 시간 순으로 정렬
+    private List<Reply> replies = new ArrayList<>();
+
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -66,6 +71,11 @@ public class SOSboardcomment {
             likedUserIds.add(userId);
             likeCount = likedUserIds.size();
         }
+    }
+
+    // 대댓글 추가 메소드
+    public void addReply(Reply reply) {
+        replies.add(reply);
     }
 
 }

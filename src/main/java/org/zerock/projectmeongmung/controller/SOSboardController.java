@@ -285,6 +285,22 @@ public class SOSboardController {
             commentData.put("regdate", regdate);
             commentData.put("modified", modified);
 
+
+
+            // 대댓글 정보를 추가
+            List<Map<String, Object>> repliesData = comment.getReplies().stream().map(reply -> {
+                Map<String, Object> replyData = new HashMap<>();
+                User replyUser = userRepository.findById(reply.getUserId())
+                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                replyData.put("replyContent", reply.getReplyContent());  // 대댓글 내용
+                replyData.put("replyUserId", reply.getUserId());  // 대댓글 작성자 ID
+                replyData.put("replyUserNickname", replyUser.getNickname());  // 대댓글 작성자 닉네임 추가
+                replyData.put("replyRegtime", formatter.format(reply.getReplyRegtime()));  // 대댓글 작성 시간
+                return replyData;
+            }).collect(Collectors.toList());
+
+            commentData.put("replies", repliesData);  // 댓글에 대댓글 리스트 추가
+
             return commentData;
         }).collect(Collectors.toList());
 
@@ -381,6 +397,21 @@ public class SOSboardController {
         }
     }
 
+    @PostMapping("/sosaddreply")
+    public ResponseEntity<?> addReply(@RequestBody Map<String, Object> payload) {
+        Long commentId = Long.parseLong(payload.get("commentId").toString());
+        Long userId = Long.parseLong(payload.get("userId").toString());
+        String replyContent = payload.get("replyContent").toString();
+
+        commentService.addReply(commentId, userId, replyContent);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{commentId}/replies")
+    public ResponseEntity<List<Reply>> getReplies(@PathVariable Long commentId) {
+        List<Reply> replies = commentService.getRepliesByCommentId(commentId);
+        return ResponseEntity.ok(replies);
+    }
 
 
 }

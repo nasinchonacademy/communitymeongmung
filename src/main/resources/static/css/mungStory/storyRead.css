@@ -349,11 +349,12 @@ input.category {
 }
 
 .comment-content {
+    margin-right: 15px;
 }
 
 .comment-right {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-end;
     justify-items: center;
     margin-top: 5px;
@@ -470,6 +471,13 @@ input.category {
     border-radius: 5px;
     font-weight: bold;
 }
+
+.replybutton{
+    margin-right: 10px;
+}
+
+
+
 
 
 
