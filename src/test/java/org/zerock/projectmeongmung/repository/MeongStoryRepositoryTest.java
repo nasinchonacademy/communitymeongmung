@@ -37,9 +37,9 @@ public class MeongStoryRepositoryTest {
             User user = userOptional.get();
 
             // MeongStory 엔터티를 생성하고 해당 사용자와 연관시켜 저장
-            IntStream.rangeClosed(1, 100).forEach(i -> {
+            IntStream.rangeClosed(101, 190).forEach(i -> {
                 MeongStory meongStory = MeongStory.builder()
-                        .title("카테고리1 입니다" + 1)                   // 제목 설정
+                        .title("카테고리2 입니다" + 2)                   // 제목 설정
                         .content("Content" + i)                  // 내용 설정
                         .likecount(0)                            // 좋아요 수 설정
                         .commentcount(0)                         // 댓글 수 설정
@@ -88,4 +88,6 @@ public class MeongStoryRepositoryTest {
             System.out.println("User not found");
         }
     }
+
+
 }
