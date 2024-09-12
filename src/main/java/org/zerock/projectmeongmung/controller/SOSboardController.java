@@ -58,38 +58,30 @@ public class SOSboardController {
             @RequestParam(value = "keyword", required = false) String keyword,
             Model model
     ) {
+        // PageRequestDTO 설정
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(page)
                 .size(size)
                 .keyword(keyword)
                 .build();
 
-        // 디버깅을 위해 키워드 로그 출력
+        // 디버깅용 로그
         System.out.println("Keyword: " + keyword);
-
-        // 1페이지일 때만 좋아요가 높은 3개의 게시물을 가져옵니다.
-        if (page == 1) {
-            List<SOSboardDTO> top3Boards = sosboardService.getTop3BylikeCount();
-            model.addAttribute("top3Boards", top3Boards);  // 좋아요가 높은 게시물
-        }
-
-
 
         // 추천수 높은 수의사 정보 추가
         List<Vet> topVets = vetService.getTop3VetsByRecommendation();
-        model.addAttribute("vets", topVets);  // 추천수 높은 수의사
+        model.addAttribute("vets", topVets);
 
         // 라디오 버튼 선택값을 모델에 추가
         model.addAttribute("current", current);
-        System.out.println(current);
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
 
-        // 현재 라디오 선택에 따라 병원 리스트 또는 SOS 게시판 리스트를 처리
+        // 현재 라디오 버튼 선택에 따라 병원 리스트 또는 SOS 게시판 리스트 처리
         if ("radio1".equals(current)) {
             return "meongsoshtml/soshospitallist";  // 동물병원 리스트 페이지
         } else {
-            // SOS 상담 리스트 및 검색 처리
+            // SOS 상담 리스트 및 검색 결과 처리
             model.addAttribute("result", sosboardService.searchByKeyword(pageRequestDTO));
-            model.addAttribute("pageRequestDTO", pageRequestDTO);
 
             return "meongsoshtml/soshospitallist2";  // SOS 상담 리스트 페이지
         }
