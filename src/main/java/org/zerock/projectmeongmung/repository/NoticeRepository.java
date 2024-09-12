@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-    // 특정 사용자의 알림 메시지 리스트만 가져오기
-    @Query("SELECT n.message FROM Notice n WHERE n.user = :user")
-    List<String> findMessagesByUser(@Param("user") User user);
+    // 특정 사용자의 알림 메시지 리스트만 가져오기 (내림차순 정렬)
+    @Query("SELECT n.message FROM Notice n WHERE n.user = :user ORDER BY n.user.id ASC")
+    List<String> findMessagesByOrderByUserIdAsc(@Param("user") User user);
 
     // 특정 알림 삭제
     @Modifying

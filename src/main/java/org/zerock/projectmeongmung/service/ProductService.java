@@ -45,7 +45,6 @@ public class ProductService {
         return productRepository.findByPcategory(category);
     }
 
-
     // 제품 업데이트
     public void updateProduct(Long productId, String productphoto, String pname, int pprice, String pcategory, String pdescription, String pcompany, int pstock) {
         Product product = productRepository.findById(productId)

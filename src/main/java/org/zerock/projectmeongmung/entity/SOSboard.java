@@ -39,12 +39,15 @@ public class SOSboard {
     private String picture;
 
     @Column(nullable = false)
+    @Builder.Default
     private int commentcount=0;
 
     @Column(nullable = false)
+    @Builder.Default
     private int likecount=0;
 
     @Column(nullable = false)
+    @Builder.Default
     private int viewcount=0;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -64,8 +67,4 @@ public class SOSboard {
             comments.clear();  // 삭제 전에 관련 댓글 목록을 비움
         }
     }
-
-
-
-
 }

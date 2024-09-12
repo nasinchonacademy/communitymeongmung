@@ -235,6 +235,7 @@
     margin-bottom: 10px;
     color: #6BC7A0;
     font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
+    text-align: right;
 }
 
 .highlight-text {
@@ -565,4 +566,14 @@ img.footerpng2-image {
     font-size: 24px;
     color: #6e6e6e;
 
+}
+
+button.carousel-control-next {
+    margin-top: 95px;
+    height: 285px;
+}
+
+button.carousel-control-prev {
+    margin-top: 95px;
+    height: 285px;
 }

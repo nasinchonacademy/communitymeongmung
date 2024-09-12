@@ -55,6 +55,7 @@ public class Vet implements UserDetails {
     @ElementCollection
     @CollectionTable(name = "vet_description", joinColumns = @JoinColumn(name = "vetid"))
     @Column(name = "description")
+    @Builder.Default
     private List<String> description = new ArrayList<>();  // 소개 필드
 
     @Column(nullable = false)
@@ -74,7 +75,7 @@ public class Vet implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;  // 수의사 이메일 추가
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "vet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VetLog> vetLogs = new ArrayList<>();  // VetLog와의 연관 관계 추가
 

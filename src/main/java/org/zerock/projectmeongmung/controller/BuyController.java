@@ -1,5 +1,6 @@
 package org.zerock.projectmeongmung.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,12 +9,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.ProductDTO;
 import org.zerock.projectmeongmung.entity.Buy;
+import org.zerock.projectmeongmung.entity.Notice;
 import org.zerock.projectmeongmung.entity.Product;
 import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.repository.NoticeRepository;
+import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.service.BuyService;
 import org.zerock.projectmeongmung.service.ProductService;
+import org.zerock.projectmeongmung.service.UserDetailService;
 import org.zerock.projectmeongmung.service.UserService;
 
 import org.slf4j.Logger;
@@ -23,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class BuyController {
 
     private static final Logger logger = LoggerFactory.getLogger(BuyController.class);
@@ -35,6 +42,11 @@ public class BuyController {
 
     @Autowired
     private UserService userService; // 사용자 정보 가져오기
+
+
+    private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
+
 
     @GetMapping("/get_order_list")
     public String getOderList(Authentication authentication, Model model) {
@@ -94,7 +106,10 @@ public class BuyController {
                               @RequestParam("resrequirement") String resrequirement,
                               @RequestParam("totalprice") int totalprice,
                               Authentication authentication,
+                              RedirectAttributes redirectAttributes,
                               Model model) {
+
+
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
@@ -127,6 +142,19 @@ public class BuyController {
         // 주문 생성 후 반환되는 주문 번호
         Buy buy = buyService.createBuy(productId, user, resname, resphone, postcode,
                 roadaddress, jibunaddress, detailaddress, extraaddress, resrequirement, totalprice);
+
+
+        // User 객체 가져오기 (User는 Notice와 연관됨)
+
+
+
+        String message = "<a href='/get_order_list'>" + "[" + product.getPname() + "] <br> " + "상품이 주문되었습니다.</a>";
+        Notice notice = new Notice(message, user);
+        noticeRepository.save(notice);  // Notice 테이블에 저장, user_id 참조
+        redirectAttributes.addFlashAttribute("message", message);
+
+
+
 
         // 주문 정보 모델에 추가
         // model.addAttribute("buy", buy);

@@ -64,6 +64,8 @@ public class SOSboardService {
                 .deldate(sosboard.getDeldate())
                 .nickname(sosboard.getUser().getNickname())
                 .likecount(sosboard.getLikecount())
+                .userId(sosboard.getUser().getId())
+                .uid(sosboard.getUser().getUid())
                 .build();
     }
 

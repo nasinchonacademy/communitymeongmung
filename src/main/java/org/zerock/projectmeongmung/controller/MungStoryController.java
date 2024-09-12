@@ -15,9 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.*;
 import org.zerock.projectmeongmung.entity.MeongStory;
+import org.zerock.projectmeongmung.entity.Notice;
 import org.zerock.projectmeongmung.entity.StoryComment;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
+import org.zerock.projectmeongmung.repository.NoticeRepository;
 import org.zerock.projectmeongmung.repository.StoryCommentRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.service.*;
@@ -47,6 +49,8 @@ public class MungStoryController {
     private final StoryLikeService storyLikeService;
     private final UserRepository userRepository;
     private final StoryCommentRepository storyCommentRepository;
+    private final NoticeRepository noticeRepository;
+
 
 
     // 기본적으로 초기 데이터를 로드하여 전달
@@ -394,12 +398,13 @@ public class MungStoryController {
         return ResponseEntity.ok(commentDataList);
     }
 
-
-
     @PostMapping("/addcomment")
     public ResponseEntity<Map<String, Object>> addComment(@RequestParam("seq") Long seq,
                                                           @RequestParam("commentcontent") String commentContent,
-                                                          @RequestParam("userId") Long userId) {
+                                                          @RequestParam("userId") Long userId,
+                                                          @RequestParam("uid") String uid,
+                                                          @RequestParam("title") String title,
+                                                          RedirectAttributes redirectAttributes) {
 
         log.info("Adding comment to story seq: " + seq);
 
@@ -412,6 +417,8 @@ public class MungStoryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Story not found"));
         }
 
+
+
         // 댓글 생성 및 저장
         StoryComment storyComment = StoryComment.builder()
                 .commentcontent(commentContent)
@@ -422,8 +429,30 @@ public class MungStoryController {
 
         storyCommentRepository.save(storyComment); // 댓글 저장
 
+
+        // User 객체 가져오기 (User는 Notice와 연관됨)
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+//        String message = "[" + title + "] 게시글에<br> " + "새로운 댓글이 달렸습니다.";
+
+
+
+        String message = "<a href='/mungstory/storyread?page=1&type=&keyword=&current=1&seq=" + seq + "'>"
+                + "[" + title + "]" +"<br>게시글에 새로운 댓글이 달렸습니다.</a>";
+        Notice notice = new Notice(message, user);
+        noticeRepository.save(notice);  // Notice 테이블에 저장, user_id 참조
+        redirectAttributes.addFlashAttribute("message", message);
+
+        storyCommentRepository.save(storyComment); // 댓글 저장
+
         // 날짜 포맷팅 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+
+
+
+
 
         // 댓글 저장 후 응답으로 날짜 정보 포함
         return ResponseEntity.ok(Map.of(
@@ -433,6 +462,10 @@ public class MungStoryController {
                 "modified", storyComment.getModified() != null ? storyComment.getModified().format(formatter) : "수정되지 않음"  // 포맷팅된 수정일
         ));
     }
+
+
+
+
 
     @PostMapping("/commentremove")
     public ResponseEntity<Map<String, Object>> removeComment(

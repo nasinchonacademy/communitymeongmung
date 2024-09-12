@@ -38,6 +38,9 @@
   <div class="commentButton">
     <input type="hidden" name="seq" value="${dto.seq}">
     <input type="hidden" name="userId" value="${userId}"> <!-- 사용자 ID 추가 -->
+
+    <div>
+
     <div>
       <textarea class="textbox" name="commentcontent" id="boardcontent" placeholder="댓글을 입력하세요"></textarea>
       <button type="button" class="commentreg" onclick="validateAndSubmitComment()">등록</button>

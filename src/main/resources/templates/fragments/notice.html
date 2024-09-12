@@ -25,36 +25,38 @@
                 const userUid = btnOpenModal.getAttribute('data-uid');  // userUid 가져오기
 
                 // 알림 목록을 서버에서 가져오는 함수
-                function loadNotices() {
-                    fetch(`/notices?uid=${userUid}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            noticeList.innerHTML = '';  // 기존 항목 제거
+                    function loadNotices() {
+                        fetch(`/notices?uid=${userUid}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                noticeList.innerHTML = '';  // 기존 항목 제거
 
-                            data.forEach((notice) => {
-                                const li = document.createElement('li');
-                                li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">X</button>`;
-                                noticeList.appendChild(li);
+                                data.forEach((notice) => {
+                                    const li = document.createElement('li');
+                                    li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">X</button>`;
 
-                                // 삭제 버튼에 이벤트 리스너 추가
-                                li.querySelector('.delete-notice-btn').addEventListener('click', function() {
-                                    const noticeId = this.getAttribute('data-id');
+                                    // noticeList의 첫 번째 자식 앞에 li 요소를 삽입
+                                    noticeList.insertBefore(li, noticeList.firstChild);
 
-                                    // 삭제 요청
-                                    fetch(`/noticeremove?id=${noticeId}&uid=${userUid}`, {
-                                        method: 'POST',
-                                    })
-                                    .then(response => response.json())
-                                    .then(() => {
-                                        // 알림 목록을 다시 불러옴
-                                        loadNotices();  // 삭제 후 알림 목록을 다시 불러옴
-                                    })
-                                    .catch(error => console.error('Error removing notice:', error));
+                                    // 삭제 버튼에 이벤트 리스너 추가
+                                    li.querySelector('.delete-notice-btn').addEventListener('click', function() {
+                                        const noticeId = this.getAttribute('data-id');
+
+                                        // 삭제 요청
+                                        fetch(`/noticeremove?id=${noticeId}&uid=${userUid}`, {
+                                            method: 'POST',
+                                        })
+                                        .then(response => response.json())
+                                        .then(() => {
+                                            // 알림 목록을 다시 불러옴
+                                            loadNotices();  // 삭제 후 알림 목록을 다시 불러옴
+                                        })
+                                        .catch(error => console.error('Error removing notice:', error));
+                                    });
                                 });
-                            });
-                        })
-                        .catch(error => console.error('Error fetching notices:', error));
-                }
+                            })
+                            .catch(error => console.error('Error fetching notices:', error));
+                    }
 
                 // 모달 열기 버튼 클릭 시 모달 열고 알림 목록 불러오기
                 btnOpenModal.addEventListener("click", () => {
