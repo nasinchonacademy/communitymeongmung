@@ -368,15 +368,29 @@ input.category {
     margin-right: 10px;
 }
 
+.replyremoveBtn {
+    background-color: transparent;
+    border: none;
+    color: black;
+    cursor: pointer;
+    margin-left: 5px;
+    background-color: #d5cfcf;
+    width: 25px;
+    height: auto;
+    border-radius: 5px;
+    text-align: center;
+}
+
 .commentremoveBtn {
     background-color: transparent;
     border: none;
     color: red;
     cursor: pointer;
+
 }
 
 #boardcontent{
-    height: 50px;
+    min-height:50px;
 }
 
 /* 수의사 뱃지 스타일 */

@@ -133,19 +133,6 @@ public class SOSboardService {
         repository.save(soSboard);
     }
 
-    public int increaseLikeCount(Long sosboardseq) {
-        Optional<SOSboard> result = repository.findById(sosboardseq);
-
-        if(result.isPresent()) {
-            SOSboard soSboard = result.get();
-            soSboard.setLikecount(soSboard.getLikecount() + 1);
-            repository.save(soSboard);
-            return soSboard.getLikecount();
-        }else {
-            throw new IllegalArgumentException("존재하지 않는 게시물입니다.");
-        }
-
-    }
 
     public void remove(Long sosboardseq) {
         SOSboard sosboard = repository.findById(sosboardseq)

@@ -142,14 +142,14 @@
                    alt="상품 이미지" class="cart-product-image"/>
               <!-- 상품명 -->
               <a th:href="@{'/product/view/' + ${cartItems.product.pid}}"
-                 th:text="'상품명: '+${cartItems.product.pname.length() > 10 ? cartItems.product.pname.substring(0,15)+'...' : cartItems.product.pname}"
+                 th:text="'상품명: '+${cartItems.product.pname.length() > 10 ? cartItems.product.pname.substring(0,10)+'...' : cartItems.product.pname}"
                  class="cart_titlebox">상품 없음</a>
               <!-- 수량 -->
-<!--              <a th:text="'수량: ' + ${cartItems.amount}" class="cart_titlebox">수량 없음</a>-->
+              <!--              <a th:text="'수량: ' + ${cartItems.amount}" class="cart_titlebox">수량 없음</a>-->
               <!-- 가격 -->
               <p th:text="'가격: ' + ${cartItems.price}" class="cart_titlebox">가격 없음</p>
               <!-- 총 가격 (수량 * 가격) -->
-<!--              <a th:text="'총 가격: ' + ${cartItems.amount * cartItems.price}" class="cart_count">총 가격 없음</a>-->
+              <!--              <a th:text="'총 가격: ' + ${cartItems.amount * cartItems.price}" class="cart_count">총 가격 없음</a>-->
             </div>
             <div class="cart_content_linkbox">
               <!-- 삭제 링크 -->

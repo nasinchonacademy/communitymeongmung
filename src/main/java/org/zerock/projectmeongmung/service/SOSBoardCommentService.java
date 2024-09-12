@@ -114,4 +114,17 @@ public class SOSBoardCommentService {
         return comment.getReplies();
     }
 
+    public void deleteReply(Long commentId, String replyId) {
+        SOSboardcomment comment = SOSBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        // 해당 대댓글을 ID로 찾고 리스트에서 제거
+        List<Reply> replies = comment.getReplies();
+        replies.removeIf(reply -> reply.getId().equals(replyId));
+
+        // 변경된 댓글을 다시 저장
+        comment.setReplies(replies);
+        SOSBoardCommentRepository.save(comment);
+    }
+
 }

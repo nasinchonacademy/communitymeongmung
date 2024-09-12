@@ -28,11 +28,13 @@
                 <img id="mungstory" th:src="@{/image/main/free-icon-pawprints-685005.png}" alt="멍스토리">
                 <div class="text">멍 스토리</div>
             </a>
-            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();" class="text-link" id="meongSosId">
+            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist(current='radio2', page=1)}"
+               th:onclick="return checkLogin();" class="text-link" id="meongSosId">
                 <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
                 <div class="text">SOS 상담</div>
             </a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist}" class="text-link" id="meongSosId">
+            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist(current='radio2', page=1)}"
+               class="text-link" id="meongSosId">
                 <img id="meongSos" th:src="@{/image/main/free-icon-animal-hospital-12639548.png}" alt="멍SOS">
                 <div class="text">SOS 상담</div>
             </a>
@@ -44,12 +46,12 @@
                 <img id="hospital" th:src="@{/image/main/free-icon-veterinary-clinic-16326535.png}" alt="지역별 동물병원">
                 <div class="text">지역별 동물병원</div>
             </a>
-            <a sec:authorize="isAnonymous()" th:href="@{/soshospitallist(isRadio2Selected=true)}" th:onclick="return checkLogin();" class="text-link" id="sosTalkId">
-                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
+            <a sec:authorize="isAnonymous()" th:href="@{/vet/list}" th:onclick="return checkLogin();" class="text-link" id="sosTalkId">
+                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="멍뭉 전문가">
                 <div class="text">멍뭉전문가</div>
             </a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist(isRadio2Selected=true)}" class="text-link" id="sosTalkId">
-                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="SOS 상담">
+            <a sec:authorize="isAuthenticated()" th:href="@{/vet/list}" class="text-link" id="sosTalkId">
+                <img id="sosTalk" th:src="@{/image/main/free-icon-veterinarian-2364991.png}" alt="멍뭉 전문가">
                 <div class="text">멍뭉전문가</div>
             </a>
             <a sec:authorize="isAnonymous()" th:href="@{/game_list}" th:onclick="return checkLogin();" class="text-link" id="jellyQuestId">

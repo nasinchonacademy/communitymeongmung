@@ -54,6 +54,8 @@ public class QVet extends EntityPathBase<Vet> {
 
     public final NumberPath<Long> vetid = createNumber("vetid", Long.class);
 
+    public final ListPath<VetLog, QVetLog> vetLogs = this.<VetLog, QVetLog>createList("vetLogs", VetLog.class, QVetLog.class, PathInits.DIRECT2);
+
     public final StringPath vetname = createString("vetname");
 
     public final BooleanPath visibility = createBoolean("visibility");

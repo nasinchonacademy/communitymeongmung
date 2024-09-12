@@ -91,6 +91,20 @@
             var userNickname = document.getElementById('userNicknameHidden').value;
 
             document.addEventListener('DOMContentLoaded', function() {
+
+                const textarea = document.querySelector('textarea.content');
+
+                if (textarea) {
+                    textarea.style.height = 'auto';  // 초기 높이 설정
+                    textarea.style.height = (textarea.scrollHeight) + 'px';  // 내용에 따라 높이 설정
+
+                    textarea.addEventListener('input', function () {
+                        this.style.height = 'auto';  // 높이를 초기화
+                        this.style.height = (this.scrollHeight) + 'px';  // 내용에 따라 높이 설정
+                    });
+                }
+
+
                 let isFirstLoad = true;
 
                 // 댓글 로드
