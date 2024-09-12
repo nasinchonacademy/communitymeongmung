@@ -6,20 +6,20 @@
             <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
             <h2>회원가입</h2>
             <div class="form-group">
-                <label for="uid">아이디</label>
+                <label for="uid" id="singup-infor">아이디</label>
                 <input type="text" id="uid" name="uid" placeholder="아이디" >
                 <a href="#" class="duplicate-check" onclick="checkDuplicate()">중복확인</a>
             </div>
             <div class="form-group">
-                <label for="password">비밀번호</label>
+                <label for="password"id="singup-infor" >비밀번호</label>
                 <input type="password" id="password" name="password" placeholder="비밀번호" >
             </div>
             <div class="form-group">
-                <label for="name">이름</label>
+                <label for="name" id="singup-infor">이름</label>
                 <input type="text" id="name" name="name" placeholder="이름" >
             </div>
             <div class="form-group">
-                <label for="email">이메일 주소</label>
+                <label for="email" id="singup-infor">이메일 주소</label>
                 <input type="email" id="email" name="email" placeholder="이메일 주소" >
             </div>
 

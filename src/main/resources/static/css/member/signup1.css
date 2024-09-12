@@ -10,8 +10,8 @@ h2 {
     text-align: left;
     float: left;
     color: #666;
-    margin-bottom:20px;
-    padding-right: 430px;
+    margin-bottom:40px;
+    padding-right: 400px;
 }
 
 .signup{
@@ -28,6 +28,7 @@ h2 {
     margin-bottom: -44.5px;
     margin-top: 5rem;
 }
+
 .form-group {
     text-align: left;
     margin-bottom: 15px;
@@ -37,8 +38,7 @@ h2 {
 }
 .signup-container label {
     display: block;
-    margin: 0 auto;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     font-weight: bold;
     color: #555;
 }
@@ -129,14 +129,20 @@ h2 {
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 50%;
     border-radius: 10px;
     max-height: 80vh;
     overflow-y: auto;
+    text-align: center;
+}
+
+label {
+    text-align: left;
 }
 
 .modal-content h3 {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 
