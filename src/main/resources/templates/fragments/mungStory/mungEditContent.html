@@ -1,6 +1,6 @@
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <div id="content">
-        <form th:action="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()">
+        <form th:action="@{/mungstory/storyedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()" enctype="multipart/form-data">
 
             <input type="hidden" name="page" th:value="${requestDTO.page}">
             <input type="hidden" name="type" th:value="${requestDTO.type}">
@@ -29,6 +29,11 @@
                 <textarea class="contentarea" rows="5" name="content" >[[${dto.content}]]</textarea>
             </div>
 
+            <!-- 이미지 업로드 필드 -->
+            <div class="form-group" style="margin-bottom: 20px">
+                <label for="file" style="margin-bottom: 10px">이미지 업로드</label>
+                <input type="file" id="file" name="file" accept="image/*" class="form-control">
+            </div>
 
             <div class="form-group">
                 <input type="hidden" class="form-control" th:value="${#temporals.format(dto.regdate,'yyyy/MM/dd HH:mm:ss')}" readonly>

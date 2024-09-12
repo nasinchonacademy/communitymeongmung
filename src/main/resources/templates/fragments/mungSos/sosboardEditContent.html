@@ -1,6 +1,6 @@
 <main class="mainContent" th:fragment="mainContent" id="mainContent">
     <div id="content">
-        <form th:action="@{/sosboardedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()">
+        <form th:action="@{/sosboardedit(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword}, current=${current})}" th:method="post" th:onsubmit="return validateForm()" enctype="multipart/form-data">
             <input type="hidden" name="page" th:value="${requestDTO.page}" />
             <input type="hidden" name="size" th:value="${requestDTO.size}" />
             <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" />
@@ -8,9 +8,11 @@
             <input type="hidden" name="current" th:value="${current}" />
             <input type="hidden" name="likecount" th:value="${dto.likecount}">
             <input type="hidden" name="commentcount" th:value="${dto.commentcount}">
+            <input type="hidden" name="picture" th:value="${dto.picture}">
             <input type="hidden" name="viewcount" th:value="${dto.viewcount}">
             <input type="hidden" name="id" th:value="${user.id}">
 
+            <!-- 기존 사진 표시 -->
 
             <div class="form-group">
                 <input type="hidden" class="form-control" name="sosboardseq" th:value="${dto.sosboardseq}" readonly>
@@ -24,8 +26,20 @@
                 <input type="text" class="titlearea" name="title" th:value="${dto.title}" >
             </div>
 
+<!--            <div class="form-group">-->
+<!--                <label for="currentPhoto">현재 사진</label>-->
+<!--                <img id="currentPhoto" th:src="${dto.picture != null && !#strings.isEmpty(dto.picture) ? '/uploads/' + dto.picture : '/image/tool/storydefault.PNG'}"  alt="현재 사진" style="max-width: 200px;">-->
+<!--            </div>-->
+<!--            <hr style="margin-top: 20px; margin-bottom: 20px">-->
             <div class="writegroup">
                 <textarea class="contentarea" rows="5" name="content" >[[${dto.content}]]</textarea>
+            </div>
+
+
+            <!-- 이미지 업로드 필드 -->
+            <div class="form-group">
+                <label for="file">이미지 업로드</label>
+                <input type="file" id="file" name="file" accept="image/*" class="form-control">
             </div>
 
 
@@ -81,6 +95,8 @@
                     }
                 });
             });
+
+
         </script>
 
 
