@@ -74,6 +74,10 @@ public class Vet implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;  // 수의사 이메일 추가
 
+
+    @OneToMany(mappedBy = "vet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VetLog> vetLogs = new ArrayList<>();  // VetLog와의 연관 관계 추가
+
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "userid", nullable = false)
     @JsonIgnore

@@ -93,9 +93,33 @@
         <input type="hidden" class="userIdClass2" id="userNicknameHidden" th:value="${user.nickname}" />
 
         <script type="text/javascript">
+
             var userNickname = document.getElementById('userNicknameHidden').value;
 
             document.addEventListener('DOMContentLoaded', function() {
+
+                window.deleteReply = function(commentId, replyId ) {
+                    if (!confirm('대댓글을 삭제하시겠습니까?')) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/sosreplydelete',  // 대댓글 삭제를 처리하는 서버 엔드포인트
+                        type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {
+                            replyId: replyId,  // 삭제할 대댓글 ID
+                            commentId: commentId  // 대댓글이 속한 댓글 ID
+                        },
+                        success: function(response) {
+                            alert('대댓글이 삭제되었습니다.');
+                            loadComments();  // 대댓글 삭제 후 댓글 목록을 다시 로드하여 반영
+                        },
+                        error: function(xhr, status, error) {
+                            alert('대댓글을 삭제하는데 문제가 발생했습니다.');
+                        }
+                    });
+                };
 
                 // 댓글 등록 처리 함수
                 function validateAndSubmitComment() {
@@ -184,10 +208,23 @@
                             const commentList = document.getElementById('commentList');
                             commentList.innerHTML = '';  // 기존 댓글 리스트를 초기화
 
-                            response.forEach(function(comment) {
+                            // 댓글을 추천수 순으로 정렬하여 상위 3개의 댓글을 베스트로 설정
+                            let sortedComments = response.sort((a, b) => b.likeCount - a.likeCount);
+                            let bestComments = sortedComments.slice(0, 3);
+
+                            // 댓글을 다시 최신 순으로 정렬
+                            sortedComments = response.sort((a, b) => new Date(b.regdate) - new Date(a.regdate));
+
+                            sortedComments.forEach(function(comment) {
                                 let deleteButton = '';
                                 let profilePhoto = comment.profilePhoto ? `/profiles/${comment.profilePhoto}` : '/image/default-profile.png';
                                 let vetBadge = comment.isVet ? '<span class="vet-badge">수의사</span>' : '';
+                                let bestBadge = '';
+
+                                // 베스트 댓글 뱃지 추가
+                                if (bestComments.some(best => best.commentId === comment.commentId)) {
+                                    bestBadge = '<span class="badge badge-warning">베스트 댓글</span>';
+                                }
 
                                 if (userNickname === comment.nickname) {
                                     deleteButton = `<button class="commentremoveBtn" data-comment-id="${comment.commentId}" data-seq="${comment.seq}" onclick="deleteComment(${comment.commentId}, ${comment.seq})">X</button>`;
@@ -200,39 +237,52 @@
                                         <div class="comment-left">
                                             <img src="${profilePhoto}" alt="Profile Photo" class="comment-profile-photo" width="40" height="40" data-userid="${comment.userid}" style="cursor: pointer;">
                                             <div class="comment-info">
-                                                <span class="comment-nickname">${comment.nickname} ${vetBadge}</span>
-                                                <div class="comment-content">${comment.commentcontent}
+                                                <span class="comment-nickname">${comment.nickname} ${vetBadge} ${bestBadge}</span>
+                                                <div class="comment-content">${comment.commentcontent} &nbsp;
+                                                   ${deleteButton}
                                                  <img src="/image/tool/likebutton.png" alt="Like" class="like-btn" data-comment-id="${comment.commentId}" style="cursor: pointer; width: 30px;">
                                                   <span class="like-count">:<strong>${comment.likeCount}</strong></span>
+
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="comment-right">
                                             <span class="comment-date">${comment.regdate}</span>
-                                            ${deleteButton}
+
                                             <div class="replybutton">
                                              <button class="btn btn-secondary reply-btn" data-comment-id="${comment.commentId}">대댓글 입력</button>
                                              </div>
                                         </div>
                                     </div>
+
                                     <ul class="reply-list" id="replies-${comment.commentId}"></ul>
                                     <hr>`;
                                 commentList.appendChild(commentItem);
+
+
 
                                 // 대댓글이 있으면 출력
                                 if (comment.replies && comment.replies.length > 0) {
                                     const replyList = document.getElementById(`replies-${comment.commentId}`);
                                     comment.replies.forEach(function(reply) {
+                                        let deleteReplyButton = '';
+                                        if (userNickname === reply.replyUserNickname) {  // 대댓글 작성자와 로그인한 사용자의 닉네임 비교
+                                            deleteReplyButton = `<button class="replyremoveBtn" data-reply-id="${reply.id}" data-comment-id="${comment.commentId}" onclick="deleteReply(${comment.commentId}, '${reply.id}')">X</button>`;
+                                        }
+
                                         let replyItem = document.createElement('li');
                                         replyItem.innerHTML = ` <hr>
                                             <div class="reply-block" style="margin-left: 30px;">
                                                 <span> ${reply.replyUserNickname}: </span>
                                                 <span>${reply.replyContent}</span>
                                                 <span>${reply.replyRegtime}</span>
+                                                 ${deleteReplyButton}
                                             </div>`;
                                         replyList.appendChild(replyItem);  // 대댓글을 댓글 밑에 추가
                                     });
                                 }
+
                             });
                         },
                         error: function(xhr, status, error) {
@@ -240,6 +290,128 @@
                         }
                     });
                 }
+
+
+                // 댓글 클릭 시 수의사 정보 모달 띄우기
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('comment-profile-photo')) {
+                        const userId = event.target.getAttribute('data-userid'); // 댓글 작성자 userId 가져오기
+                        const commentId = event.target.closest('li').getAttribute('data-comment-id'); // 댓글의 commentId 가져오기
+
+                        console.log("클릭된 userId: ", userId);
+                        console.log("클릭된 commentId: ", commentId);
+
+                        if (userId && commentId) {
+                            showVetModal(userId, commentId);  // userId와 commentId를 함께 전달
+                        } else {
+                            console.error("userId 또는 commentId가 정의되지 않았습니다.");
+                        }
+                    }
+                });
+
+                window.showVetModal = function(userId, commentId) {
+                    console.log("Comment ID: ", commentId);  // commentId가 제대로 전달되는지 콘솔에서 확인
+
+                    $.ajax({
+                        url: '/vet/byUser/' + userId, // userId로 수의사 정보 조회
+                        method: 'GET',
+                        success: function(data) {
+                            // 수의사 정보 모달 업데이트
+                            $('#vetPhoto').attr('src', data.profilePhoto ? '/profiles/' + data.profilePhoto : '/image/default-profile.png');
+                            $('#vetName').text(data.vetname);
+                            $('#vetClinic').text(data.animalhospitlename);
+
+                            $('#vetDescription').empty();
+                            data.description.forEach(item => {
+                                $('#vetDescription').append('<li class="list-group-item">' + item + '</li>');
+                            });
+
+                            // 추천 수 업데이트
+                            $('#recommendationCount').text(data.recommendationCount);
+
+                            // 추천 버튼 클릭 이벤트 핸들러 설정
+                            const vetId = data.vetid; // vetId 추출
+                            $('#recommendBtn').off('click').on('click', function() {
+                                // commentId와 vetId, userId 모두 서버로 전송
+                                $.ajax({
+                                    url: '/vet/recommend',
+                                    method: 'POST',
+                                    contentType: 'application/x-www-form-urlencoded', // Content-Type 설정
+                                    data: $.param({ vetId: vetId, commentId: commentId, userId: userId }), // vetId, commentId, userId 전송
+                                    success: function(response) {
+                                        alert('추천이 완료되었습니다.');
+                                        // 추천 수 증가
+                                        $('#recommendationCount').text(parseInt($('#recommendationCount').text()) + 1);
+                                    },
+                                    error: function() {
+                                        alert('추천 처리 중 오류가 발생했습니다.');
+                                    }
+                                });
+                            });
+
+                            $('#vetModal').modal('show'); // 모달 표시
+                        },
+                        error: function() {
+                            alert('수의사 정보를 가져오는 데 실패했습니다.');
+                        }
+                    });
+                };
+
+                document.getElementById('commentList').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('commentremoveBtn')) {
+                        const commentId = event.target.getAttribute('data-comment-id');
+                        const seq = event.target.getAttribute('data-seq');
+
+                        if (confirm('댓글을 삭제하시겠습니까?')) {
+                            $.ajax({
+                                url: '/soscommentremove',  // 댓글 삭제 API URL
+                                type: 'POST',
+                                data: {  commentId: commentId, seq: seq
+                                },
+                                success: function(response) {
+                                    alert("댓글이 삭제되었습니다.");  // 삭제 성공 메시지
+                                    // 해당 댓글 삭제
+                                    event.target.closest('li').remove();
+                                },
+                                error: function(xhr, status, error) {
+                                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                                }
+                            });
+                        }
+                    }
+                });
+
+                var commentButton = document.querySelector('.commentreg');
+                if (commentButton) {
+                    commentButton.addEventListener('click', validateAndSubmitComment);
+                }
+
+                function handleLikeButtonClick(event) {
+                    event.preventDefault();
+
+                    var seq = $(this).attr('data-seq');
+                    var likeCountElement = $(this).find('.likecount');  // 같은 버튼 안의 좋아요 수 요소 선택
+
+
+                    $.ajax({
+                        url: '/sosboardlike',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ seq: seq }),
+                        success: function(response) {
+                            likeCountElement.text(response.likecount);  // 해당 버튼의 좋아요 수만 업데이트
+                        },
+                        error: function(xhr, status, error) {
+                            alert("이미 좋아요를 누른 게시물입니다.");
+                        }
+                    });
+                }
+
+                var likeButton = document.getElementById('likeButton');
+                if (likeButton) {
+                    likeButton.addEventListener('click', handleLikeButtonClick);
+                }
+
 
                 // 댓글 좋아요 처리 함수
                 function handleCommentLike(commentId, likeButton) {
@@ -274,6 +446,41 @@
                 return confirm("글을 삭제하시겠습니까?");
             }
         </script>
+
+        <!-- 수의사 정보 모달 -->
+        <div id="vetModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">수의사 정보</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="vet-profile">
+                            <img id="vetPhoto" src="" alt="Veterinarian Photo" class="vet-photo">
+                            <div class="vet-info">
+                                <h6 id="vetName" class="vet-name">이름</h6>
+                                <p id="vetClinic" class="vet-clinic">동물병원</p>
+                                <div class="recommendation-count">
+                                    <span><img src="/image/tool/recommend.png" style="width: 27px; height: auto">추천 수: </span><strong id="recommendationCount">0</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vet-description-container">
+                            <ul id="vetDescription" class="vet-description">
+                                <!-- Description items will be added here -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="recommendBtn" class="recommend-btn">수의사 추천</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- 대댓글 입력을 위한 모달 -->
         <div id="replyModal" class="modal fade" tabindex="-1" role="dialog">

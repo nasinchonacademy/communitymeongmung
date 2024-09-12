@@ -19,7 +19,7 @@ public class VetLog {
     @Column(name = "logid")
     private Long logid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "vetid", nullable = false)
     private Vet vet;  // 수의사와 연관된 로그
 

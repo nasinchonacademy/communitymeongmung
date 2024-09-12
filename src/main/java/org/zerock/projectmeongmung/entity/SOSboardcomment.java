@@ -51,7 +51,7 @@ public class SOSboardcomment {
 
     // 대댓글 리스트
     @ElementCollection
-    @CollectionTable(name = "soscomment_replies", joinColumns = @JoinColumn(name = "commentid"))
+    @CollectionTable(name = "soscomment_replies", joinColumns = @JoinColumn(name = "commentid") )
     @OrderBy("replyRegtime ASC")  // 대댓글 작성 시간 순으로 정렬
     private List<Reply> replies = new ArrayList<>();
 
