@@ -50,7 +50,7 @@
 }
 
 .btn {
-    width: 198px;
+    width: 199px;
     height: 59.9px;
     padding-top: 15px;
     border-radius: 50px;
@@ -61,4 +61,13 @@
 .btn-outline-light {
     color: #f8f9fa;
     border-color: #6BC7A0;
+}
+
+.highlight-text {
+    color: #ffffff;
+    background-color: #6bc7a0;
+    width: 80px;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 38px;
 }

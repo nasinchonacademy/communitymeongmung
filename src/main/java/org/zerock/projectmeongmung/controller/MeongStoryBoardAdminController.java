@@ -160,7 +160,7 @@ public class MeongStoryBoardAdminController {
         service.remove(seq);
 
         // 알림 메시지 작성
-        String message = "[" + title + "] 게시글이 " + reason + "으로 삭제되었습니다.";
+        String message = "[" + title + "] 게시글이<br> " + "[" + reason + "]" + "으로 삭제되었습니다.";
 
         // User 객체 가져오기 (User는 Notice와 연관됨)
         User user = userRepository.findByUid(uid)

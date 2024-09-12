@@ -10,7 +10,7 @@
             <!-- 모달 -->
             <div class="modal" style="display: none;">
                 <div class="modal_body">
-                    <h1>알림 목록</h1>
+                    <h1 class="noticeListUitle">알림 목록</h1>
                     <ul id="noticeList">
                         <!-- AJAX로 데이터를 가져와 여기에 동적으로 추가 -->
                     </ul>
@@ -33,7 +33,7 @@
 
                             data.forEach((notice) => {
                                 const li = document.createElement('li');
-                                li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">삭제</button>`;
+                                li.innerHTML = `${notice.message} <button class="delete-notice-btn" data-id="${notice.id}">X</button>`;
                                 noticeList.appendChild(li);
 
                                 // 삭제 버튼에 이벤트 리스너 추가
@@ -58,7 +58,9 @@
 
                 // 모달 열기 버튼 클릭 시 모달 열고 알림 목록 불러오기
                 btnOpenModal.addEventListener("click", () => {
-                    modal.style.display = "flex";
+                    modal.style.display = "flex";  // 모달을 화면에 표시
+                    modal.style.opacity = "1";     // 투명도 100%로 설정
+                    modal.style.visibility = "visible";  // 모달을 보이도록 설정
                     modal.classList.add('modalOpen');  // modalOpen 클래스로 애니메이션 시작
                     loadNotices();  // 모달을 열 때 알림 목록 불러오기
                 });
@@ -66,8 +68,14 @@
                 // 모달 외부 클릭 시 모달 닫기
                 modal.addEventListener("click", (event) => {
                     if (!modalBody.contains(event.target)) {  // 모달 외부를 클릭했을 때
-                        modal.style.display = "none";
+                        modal.style.opacity = "0";  // 투명도를 0으로 설정하여 페이드아웃
+                        modal.style.visibility = "hidden";  // 모달을 안 보이도록 설정 (페이드아웃 후)
                         modal.classList.remove('modalOpen');  // modalOpen 클래스 제거로 애니메이션 종료
+
+                        // 애니메이션 종료 후 display 속성을 none으로 변경
+                        setTimeout(() => {
+                            modal.style.display = "none";  // 모달 완전히 숨기기
+                        }, 500);  // 트랜지션 지속 시간에 맞춰 0.5초 대기
                     }
                 });
 
