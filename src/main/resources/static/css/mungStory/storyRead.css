@@ -387,7 +387,7 @@ input.category {
 }
 
 #boardcontent{
-    height: 50px;
+    min-height:50px;
 }
 
 /* 수의사 뱃지 스타일 */

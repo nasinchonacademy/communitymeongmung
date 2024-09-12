@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +18,9 @@ import org.zerock.projectmeongmung.dto.SOSboardDTO;
 import org.zerock.projectmeongmung.entity.*;
 import org.zerock.projectmeongmung.repository.SOSBoardCommentRepository;
 import org.zerock.projectmeongmung.repository.SOSboardRepository;
-import org.zerock.projectmeongmung.repository.StoryCommentRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
 import org.zerock.projectmeongmung.service.*;
-
 import java.io.IOException;
-import java.security.Security;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,6 +72,8 @@ public class SOSboardController {
             List<SOSboardDTO> top3Boards = sosboardService.getTop3BylikeCount();
             model.addAttribute("top3Boards", top3Boards);  // 좋아요가 높은 게시물
         }
+
+
 
         // 추천수 높은 수의사 정보 추가
         List<Vet> topVets = vetService.getTop3VetsByRecommendation();
@@ -180,7 +178,8 @@ public class SOSboardController {
     public String modifySosboard(Model model, SOSboardDTO dto,
                                  @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
                                  Authentication authentication, RedirectAttributes redirectAttributes,
-                                 @RequestParam("current") String current) {
+                                 @RequestParam("current") String current,
+                                 @RequestParam(value = "file", required = false) MultipartFile file) {
 
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
@@ -188,6 +187,18 @@ public class SOSboardController {
 
         log.info("post modify...");
         log.info("dto: " + dto);
+
+        // 파일 처리 로직
+        if (file != null && !file.isEmpty()) {
+            try {
+                // FileController의 파일 저장 메서드 사용
+                FileController fileController = new FileController();
+                String savedFileName = fileController.saveProfilePhoto(file);
+                dto.setPicture(savedFileName);  // 파일명을 DTO에 설정 (DB에 저장할 수 있도록)
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         sosboardService.modify(dto);
 

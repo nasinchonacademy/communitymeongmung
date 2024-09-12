@@ -29,7 +29,8 @@
         <tbody>
 
         <!-- 상위 3개의 게시물 (페이지가 1일 때만 표시) -->
-        <tr th:if="${top3Boards != null} and ${pageRequestDTO.page == 1}" th:each="story1 : ${top3Boards}" class="best_sosboard">
+        <tr th:if="${top3Boards != null} and ${not #lists.isEmpty(top3Boards)} and ${pageRequestDTO.page == 1}"
+            th:each="story1 : ${top3Boards}" class="best_sosboard">
           <td th:text="${story1.sosboardseq}"></td>
           <td>
             <img th:src="${story1.picture != null ? '/profiles/' + story1.picture : '/image/tool/storydefault.PNG'}"
@@ -46,8 +47,9 @@
         </tr>
 
         <!-- 일반 게시물 - 상위 3개 게시물 제외 -->
-        <tr th:each="story : ${result.content}"
-            th:if="${#lists.contains(top3Boards, story) == false}">
+        <tr th:if="${top3Boards != null} and ${not #lists.isEmpty(top3Boards)}"
+            th:each="story : ${result.content}"
+            th:unless="${#lists.contains(top3Boards, story)}">
           <td th:text="${story.sosboardseq}"></td>
           <td>
             <img th:src="${story.picture != null ? '/profiles/' + story.picture : '/image/tool/storydefault.PNG'}"
@@ -56,7 +58,6 @@
           <td>
             <a th:href="@{/sosboardread(seq=${story.sosboardseq}, page=${pageRequestDTO.page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword}, current='radio2')}"
                th:text="${story.title}"></a>
-
           </td>
           <td th:text="${story.nickname}"></td>
           <td th:text="${#dates.format(story.regdate, 'yyyy-MM-dd')}"></td>
@@ -69,7 +70,7 @@
 
       <ul class="paging click">
         <li class="page prev" th:if="${result.hasPrevious()}">
-          <a class="page-click" th:href="@{/soshospitallist(page=${result.start - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Previous</a>
+          <a class="page-click" th:href="@{/soshospitallist(page=${result.number - 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Previous</a>
         </li>
         <li th:class="'pagenum' + (${result.number + 1 == page} ? ' active' : '')"
             th:each="page : ${#numbers.sequence(1, result.totalPages)}">
@@ -79,7 +80,7 @@
           </a>
         </li>
         <li class="page next" th:if="${result.hasNext()}">
-          <a class="page-click" th:href="@{/soshospitallist(page=${result.end + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Next</a>
+          <a class="page-click" th:href="@{/soshospitallist(page=${result.number + 1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword},current=${current})}">Next</a>
         </li>
       </ul>
     </div>

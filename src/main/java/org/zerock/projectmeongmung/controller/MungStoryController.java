@@ -43,12 +43,9 @@ public class MungStoryController {
 
     private final MeongStoryService service;
     private final MeongStoryCommentService serviceC;
-    private final MeongStoryService meongStoryService;
-    private final MeongStoryService getCommentsByStorySeq;
     private final MeongStoryRepository meongStoryRepository;
     private final StoryLikeService storyLikeService;
     private final UserRepository userRepository;
-    private final FileController fileController;
     private final StoryCommentRepository storyCommentRepository;
 
 
@@ -197,7 +194,7 @@ public class MungStoryController {
 
     public String saveBoardPhoto(MultipartFile file) throws IOException {
         // 저장할 경로 설정
-        String uploadDir = "/Users/yunakang/uploads/";
+        String uploadDir = "C:\\work\\uploads\\";
 
         // 파일명을 고유하게 하기 위해 UUID를 사용
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -275,7 +272,8 @@ public class MungStoryController {
                          Authentication authentication,
                          Model model,
                          RedirectAttributes redirectAttributes,
-                         @RequestParam("current") int current){
+                         @RequestParam("current") int current,
+                         @RequestParam(value = "file", required = false) MultipartFile file){
 
 
         String username = authentication.getName();
@@ -284,6 +282,18 @@ public class MungStoryController {
 
         log.info("post modify...");
         log.info("dto: " + dto);
+
+        // 파일 처리 로직
+        if (file != null && !file.isEmpty()) {
+            try {
+                // FileController의 파일 저장 메서드 사용
+                FileController fileController = new FileController();
+                String savedFileName = fileController.saveProfilePhoto(file);
+                dto.setPicture(savedFileName);  // 파일명을 DTO에 설정 (DB에 저장할 수 있도록)
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         service.modify(dto);
 
