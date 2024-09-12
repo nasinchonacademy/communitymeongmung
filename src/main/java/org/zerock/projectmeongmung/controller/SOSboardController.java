@@ -99,7 +99,7 @@ public class SOSboardController {
 
     @GetMapping("/sosboardwrite")
     public String sosBoardWrite(Model model, Authentication authentication,
-                                @RequestParam(value = "current", defaultValue = "radio2") String current ){
+                                @RequestParam(value = "current", defaultValue = "radio2") String current) {
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
         model.addAttribute("user", user);
@@ -110,7 +110,7 @@ public class SOSboardController {
 
     @PostMapping("/sosboardwrite")
     public String sosBoardWrite(Model model, SOSboardDTO sosboardDTO,
-                                @RequestParam("file") MultipartFile file){
+                                @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
             try {
@@ -131,7 +131,7 @@ public class SOSboardController {
     @GetMapping("/sosboardread")
     public String sosboardread(@RequestParam("seq") long seq,
                                @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
-                               Model model,@RequestParam("current") String current,
+                               Model model, @RequestParam("current") String current,
                                RedirectAttributes redirectAttributes) {
 
         // 조회수 증가
@@ -140,20 +140,20 @@ public class SOSboardController {
         SOSboardDTO sosdto = sosboardService.read(seq);
 
         //현재 로그인한 사용자 닉네임을 model에 추가
-        User user =(User)model.getAttribute("user");
-        if(user != null){
+        User user = (User) model.getAttribute("user");
+        if (user != null) {
             model.addAttribute("userNickname", user.getNickname());
-        }else {
+        } else {
             model.addAttribute("userNickname", "Guest");
         }
         model.addAttribute("current", current);
         model.addAttribute("sosdto", sosdto);
 
         //댓글 목록 로드
-        List<SOSBoardCommentDto>  commentDtoList = commentService.getCommentsByBoardId(seq);
+        List<SOSBoardCommentDto> commentDtoList = commentService.getCommentsByBoardId(seq);
         if (commentDtoList != null || commentDtoList.isEmpty()) {
             model.addAttribute("error", "No comments found for this story");
-        }else{
+        } else {
             model.addAttribute("commentDtoList", commentDtoList);
         }
 
@@ -179,8 +179,8 @@ public class SOSboardController {
     @PostMapping("/sosboardedit")
     public String modifySosboard(Model model, SOSboardDTO dto,
                                  @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
-                                 Authentication authentication,  RedirectAttributes redirectAttributes,
-                                 @RequestParam("current") String current){
+                                 Authentication authentication, RedirectAttributes redirectAttributes,
+                                 @RequestParam("current") String current) {
 
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
@@ -191,15 +191,14 @@ public class SOSboardController {
 
         sosboardService.modify(dto);
 
-        redirectAttributes.addAttribute("page",requestDTO.getPage());
-        redirectAttributes.addAttribute("type",requestDTO.getType());
-        redirectAttributes.addAttribute("keyword",requestDTO.getKeyword());
+        redirectAttributes.addAttribute("page", requestDTO.getPage());
+        redirectAttributes.addAttribute("type", requestDTO.getType());
+        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
         redirectAttributes.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
         redirectAttributes.addAttribute("seq", dto.getSosboardseq());
 
         return "redirect:/sosboardread";
     }
-
 
 
     @PostMapping("/sosboardlike")
@@ -238,7 +237,7 @@ public class SOSboardController {
     public String remove(long seq,
                          RedirectAttributes redirectAttributes,
                          Model model,
-                         @RequestParam("current") String current){
+                         @RequestParam("current") String current) {
         log.info("seq: " + seq);
 
         sosboardService.remove(seq);
@@ -286,7 +285,6 @@ public class SOSboardController {
             commentData.put("modified", modified);
 
 
-
             // 대댓글 정보를 추가
             List<Map<String, Object>> repliesData = comment.getReplies().stream().map(reply -> {
                 Map<String, Object> replyData = new HashMap<>();
@@ -296,6 +294,7 @@ public class SOSboardController {
                 replyData.put("replyUserId", reply.getUserId());  // 대댓글 작성자 ID
                 replyData.put("replyUserNickname", replyUser.getNickname());  // 대댓글 작성자 닉네임 추가
                 replyData.put("replyRegtime", formatter.format(reply.getReplyRegtime()));  // 대댓글 작성 시간
+                replyData.put("id",reply.getId());
                 return replyData;
             }).collect(Collectors.toList());
 
@@ -306,7 +305,6 @@ public class SOSboardController {
 
         return ResponseEntity.ok(commentDataList);
     }
-
 
 
     @PostMapping("/sosaddcomment")
@@ -413,5 +411,13 @@ public class SOSboardController {
         return ResponseEntity.ok(replies);
     }
 
-
+    @PostMapping("/sosreplydelete")
+    public ResponseEntity<?> deleteReply(@RequestParam Long commentId, @RequestParam String replyId) {
+        try {
+            commentService.deleteReply(commentId, replyId);
+            return ResponseEntity.ok().body("대댓글이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("대댓글 삭제에 실패했습니다.");
+        }
+    }
 }

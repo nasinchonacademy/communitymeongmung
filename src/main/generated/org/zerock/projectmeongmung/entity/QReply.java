@@ -19,6 +19,8 @@ public class QReply extends BeanPath<Reply> {
 
     public static final QReply reply = new QReply("reply");
 
+    public final StringPath id = createString("id");
+
     public final StringPath replyContent = createString("replyContent");
 
     public final DateTimePath<java.util.Date> replyRegtime = createDateTime("replyRegtime", java.util.Date.class);
