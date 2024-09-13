@@ -103,46 +103,6 @@ public class MungStoryController {
         return "mungStoryHtml/storyboard";
     }
 
-
-    // AJAX 요청을 처리하는 메서드
-    @GetMapping("/mungstoryAll")
-    public String mungstoryAll(@RequestParam("current") int current,
-                               @RequestParam("page") int page,
-                               PageRequestDTO pageRequestDTO, Model model) {
-
-        pageRequestDTO.setPage(page);
-
-        PageResultDTO<MeongStoryDTO, MeongStory> result;
-
-        switch (current) {
-            case 1:
-                result = service.getList(pageRequestDTO);
-                break;
-            case 2:
-                result = service.getPetFriendlyLocations(pageRequestDTO);
-                break;
-            case 3:
-                result = service.getDailyItems(pageRequestDTO);
-                break;
-            default:
-                result = new PageResultDTO<>(Page.empty(pageRequestDTO.getPageable()), this::entityToDto);
-                break;
-        }
-
-        model.addAttribute("result", result);
-        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
-
-        return "fragments/mungStory/mainContent :: content";
-    }
-
-/*    // 글 상세보기
-    @GetMapping("/storylist")
-    public void storylist(long seq, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
-        log.info(seq);
-        MeongStoryDTO dto = service.read(seq);
-        model.addAttribute("dto", dto);
-    }*/
-
     // 추가된 메서드: Entity를 DTO로 변환하는 메서드
     private MeongStoryDTO entityToDto(MeongStory entity) {
         return MeongStoryDTO.builder()
