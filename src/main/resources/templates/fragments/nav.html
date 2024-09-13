@@ -33,7 +33,7 @@
                     <li><a sec:authorize="isAnonymous()" th:href="@{/soshospitallist}" th:onclick="return checkLogin();">지역별 동물병원</a></li>
                     <li><a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist}">지역별 동물병원</a></li>
                     <li><a sec:authorize="isAnonymous()" th:href="@{/soshospitallist(isRadio2Selected=true)}" th:onclick="return checkLogin();">SOS 상담</a></li>
-                    <li><a sec:authorize="isAuthenticated()" th:href="@{/soshospitallist(isRadio2Selected=true)}">SOS 상담</a></li>
+                    <li><a sec:authorize="isAuthenticated()" th:href=" @{/soshospitallist(current='radio2', page=1)}">SOS 상담</a></li>
                 </ul>
             </li>
 

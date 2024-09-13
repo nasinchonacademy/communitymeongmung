@@ -46,7 +46,6 @@ public class User implements UserDetails {
     @Column(name="Profilephoto")
     private String profilePhoto;
 
-
     @Column(name="dogbirthday")
     private Date dogbirthday;
 

@@ -142,6 +142,9 @@ public class SOSboardController {
         model.addAttribute("current", current);
         model.addAttribute("sosdto", sosdto);
 
+        System.out.println("uid===================================="+sosdto.getUserId());
+        System.out.println("uid===================================="+sosdto.getUid());
+
         //댓글 목록 로드
         List<SOSBoardCommentDto> commentDtoList = commentService.getCommentsByBoardId(seq);
         if (commentDtoList != null || commentDtoList.isEmpty()) {
@@ -334,6 +337,8 @@ public class SOSboardController {
             log.error("soSboard not found with seq: " + seq);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Story not found"));
         }
+
+        System.out.println("==============================================================="+userId);
 
         // 댓글 생성 및 저장
         SOSboardcomment sosboardcomment = SOSboardcomment.builder()
