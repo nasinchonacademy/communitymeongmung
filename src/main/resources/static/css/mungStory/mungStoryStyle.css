@@ -17,6 +17,21 @@
     margin-bottom: 30px;
 }
 
+.highlight-text {
+    color: #ffffff;
+    background-color: #6bc7a0;
+    width: 80px;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 38px;
+}
 
+input.regdate {
+    width: 160px;
+}
+
+input.writer {
+    width: 170px;
+}
 
 /*  */

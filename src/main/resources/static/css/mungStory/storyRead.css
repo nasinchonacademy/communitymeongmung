@@ -493,6 +493,14 @@ input.category {
     margin-right: 10px;
 }
 
+input.regdate {
+    width: 160px;
+}
+
+input.writer {
+    width: 170px;
+}
+
 
 
 
