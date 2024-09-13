@@ -146,7 +146,7 @@
                 </td>
 
                 <!-- 제목 (제목을 클릭하면 해당 스토리의 상세 페이지로 이동) -->
-                <td><a th:href="@{/admin/storyread(page=${result.page}, seq=${story.seq})}" th:text="${story.title}"></a></td>
+                <td><a th:href="@{/admin/storyread(page=${result.page}, seq=${story.seq}, title=${story.title}, nickname=${story.nickname}, uid=${story.uid})}" th:text="${story.title}"></a></td>
                 <!--작성자-->
                 <td th:text="${story.nickname}" class="story_count"></td>
                 <!-- 작성일 (날짜 형식 변경) -->

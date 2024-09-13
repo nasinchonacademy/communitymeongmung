@@ -16,6 +16,7 @@ import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.SOSBoardCommentDto;
 import org.zerock.projectmeongmung.dto.SOSboardDTO;
 import org.zerock.projectmeongmung.entity.*;
+import org.zerock.projectmeongmung.repository.NoticeRepository;
 import org.zerock.projectmeongmung.repository.SOSBoardCommentRepository;
 import org.zerock.projectmeongmung.repository.SOSboardRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
@@ -49,6 +50,8 @@ public class SOSboardController {
     private final SOSBoardCommentRepository sosboardCommentRepository;
     private final VetController vetController;
     private final VetService vetService;
+    private final NoticeRepository noticeRepository;
+
 
     @GetMapping("/soshospitallist")
     public String listContent(
@@ -313,7 +316,15 @@ public class SOSboardController {
     @PostMapping("/sosaddcomment")
     public ResponseEntity<Map<String, Object>> addComment(@RequestParam("seq") Long seq,
                                                           @RequestParam("commentcontent") String commentContent,
-                                                          @RequestParam("userId") Long userId) {
+                                                          @RequestParam("userId") Long userId
+
+            ,
+                                                          @RequestParam("uid") String uid,
+                                                          @RequestParam("title") String title,
+                                                          RedirectAttributes redirectAttributes
+
+
+    ) {
 
         log.info("Adding comment to story seq: " + seq);
 
@@ -346,6 +357,18 @@ public class SOSboardController {
         String modified = sosboardcomment.getSoscommentupdate() != null
                 ? LocalDateTime.ofInstant(sosboardcomment.getSoscommentupdate().toInstant(), ZoneId.systemDefault()).format(formatter)
                 : "수정되지 않음";
+
+        System.out.println("udi=====================================" + uid);
+
+        // User 객체 가져오기 (User는 Notice와 연관됨)
+        User user2 = userRepository.findByUid(uid)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String message = "<a href='/sosboardread?seq=" + seq + "&page=1&type=&keyword=&current=radio2'>"
+                + "[" + title + "]" +"<br>게시글에 새로운 댓글이 달렸습니다.</a>";
+        Notice notice = new Notice(message, user2);
+        noticeRepository.save(notice);  // Notice 테이블에 저장, user_id 참조
+        redirectAttributes.addFlashAttribute("message", message);
 
         // 댓글 저장 후 응답으로 날짜 정보 포함
         return ResponseEntity.ok(Map.of(

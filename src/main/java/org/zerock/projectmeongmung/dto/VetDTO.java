@@ -25,6 +25,7 @@ public class VetDTO {
     private String username;                // 수의사 로그인 아이디
     private String password;        // 수의사 로그인 비밀번호 (암호화되기 전의 원본 비밀번호)
     private String email;
+    @Builder.Default
     private List<String> description = new ArrayList<>();
     private int recommendationCount;
     private int commentCount;
@@ -32,4 +33,3 @@ public class VetDTO {
     public VetDTO(Vet vet) {
     }
 }
-

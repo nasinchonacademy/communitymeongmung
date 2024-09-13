@@ -1,10 +1,3 @@
-/*.notice {
-    position: fixed;
-    right: calc(3%);
-    bottom: 50px;
-    border-radius: 50px;
-}*/
-
 .btn-open-modal {
     width: 80px;
     height: 80px;
@@ -22,7 +15,6 @@
     line-height: 100px; /* 텍스트 수직 정렬을 위한 설정 */
     color: white;
     font-size: 16px;
-    text-decoration: none;
     background-color: transparent;
 }
 
@@ -47,8 +39,8 @@
 
 .modal_body {
     position: fixed;
-    right: calc(3%);
-    bottom: calc(50px + 100px);
+    right: calc(10%);
+    bottom: calc(26px + 80px + 30px);
     background-color: white;
     min-height: 500px;
     max-width: 358px;
@@ -57,14 +49,14 @@
     display: flex;
     text-align: center;
     padding: 20px;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     z-index: 100;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
     user-select: text;
     height: 520px;
@@ -95,10 +87,11 @@
 
 
 
-.modal.modalOpen {
+.modalOpen {
     visibility: visible; /* 보이도록 설정 */
     opacity: 1; /* 투명도 100% */
     transition: opacity 0.5s ease; /* 투명도 애니메이션 */
+
 }
 
 /* 모달이 열릴 때 애니메이션 */
@@ -111,17 +104,22 @@
 .modal_body > ul > li {
     font-size: 14px;
     margin-bottom: 10px;
+    text-align: left;
+    width: 300px;
 }
 
 
-
-
-
-
-
-
-
-
+button.delete-notice-btn {
+    margin-top: -17px;
+    margin-right: -18px;
+    float: right;
+    border-radius: 50px;
+    width: 12px;
+    height: 12px;
+    border: none;
+    font-size: 7px;
+    text-align: center;
+}
 
 button.modalOpen {
     position: fixed;
@@ -153,4 +151,14 @@ li {
     background: none;
     color: inherit;
     font: inherit;
+}
+
+h1.noticeListUitle {
+    font-size: 17px;
+    margin-bottom: 15px;
+    font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
+}
+
+ul#noticeList {
+    margin-bottom: -7px;
 }

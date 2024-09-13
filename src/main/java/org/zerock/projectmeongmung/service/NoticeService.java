@@ -22,7 +22,7 @@ public class NoticeService {
 
     // 특정 사용자의 알림 메시지 리스트 가져오기
     public List<String> getNoticeMessagesByUser(User user) {
-        return noticeRepository.findMessagesByUser(user);
+        return noticeRepository.findMessagesByOrderByUserIdAsc(user);
     }
 
     public void removeNoticeById(Long id) {

@@ -92,6 +92,9 @@
         <input type="hidden" class="userIdClass2" id="userIdClass2" th:value="${user.Id}" />
         <input type="hidden" class="userIdClass2" id="userNicknameHidden" th:value="${user.nickname}" />
 
+        <input type="hidden" class="userIdClass2" id="uidHidden" th:value="${sosdto.uid}"/>
+        <input type="hidden" class="userIdClass2" id="titleHidden" th:value="${sosdto.title}"/>
+
         <script type="text/javascript">
 
             var userNickname = document.getElementById('userNicknameHidden').value;
@@ -144,6 +147,8 @@
 
                     var seq = document.querySelector("input[name='seq']").value;
                     var userId = document.getElementById("userIdClass2").value;
+                    var uid = document.getElementById("uidHidden").value;
+                    var title = document.getElementById("titleHidden").value;
 
                     $.ajax({
                         url: '/sosaddcomment',
@@ -153,6 +158,13 @@
                             seq: seq,
                             commentcontent: content,
                             userId: userId
+
+                            ,
+                            uid : uid,
+                            title : title
+
+
+
                         },
                         success: function(response) {
                             document.getElementById("boardcontent").value = "";  // 댓글 입력창 초기화

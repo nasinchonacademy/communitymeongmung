@@ -38,10 +38,11 @@ public class SOSboardcomment {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date soscommentdelete;
-//
+    //
     @ElementCollection
     @CollectionTable(name = "soscomment_likes", joinColumns = @JoinColumn(name = "commentid"))
     @Column(name = "userid")
+    @Builder.Default
     private Set<Long> likedUserIds = new HashSet<>();
 
     // 좋아요 수
@@ -53,6 +54,7 @@ public class SOSboardcomment {
     @ElementCollection
     @CollectionTable(name = "soscomment_replies", joinColumns = @JoinColumn(name = "commentid") )
     @OrderBy("replyRegtime ASC")  // 대댓글 작성 시간 순으로 정렬
+    @Builder.Default
     private List<Reply> replies = new ArrayList<>();
 
 
