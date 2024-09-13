@@ -141,7 +141,7 @@
               <img th:src="${cartItems.product.productphoto != null ? '/image/product/' + cartItems.product.productphoto : '/image/tool/storydefault.png'}"
                    alt="상품 이미지" class="cart-product-image"/>
               <!-- 상품명 -->
-              <a th:href="@{'/product/view/' + ${cartItems.product.pid}}"
+              <a th:href="@{#${cartItems.product.pid}}"
                  th:text="'상품명: '+${cartItems.product.pname.length() > 10 ? cartItems.product.pname.substring(0,10)+'...' : cartItems.product.pname}"
                  class="cart_titlebox">상품 없음</a>
               <!-- 수량 -->
