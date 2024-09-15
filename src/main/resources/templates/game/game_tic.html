@@ -48,6 +48,7 @@
 
     $result.classList.add('result-message');
 
+    // 승리 여부를 확인하는 함수
     const checkWinner = () => {
         for (let i = 0; i < 3; i++) {
             if (
@@ -82,10 +83,12 @@
         return false;
     };
 
+    // 무승부 여부를 확인하는 함수
     const checkDraw = () => {
         return rows.flat().every(cell => cell.textContent);
     };
 
+    // AI의 최선의 움직임을 찾는 함수
     const findWinningMove = (player) => {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -102,6 +105,7 @@
         return null;
     };
 
+    // AI의 다음 수를 결정하는 함수
     const aiMove = () => {
         let move = findWinningMove('X'); // 컴퓨터가 이기는 수
 
@@ -128,18 +132,52 @@
             $result.textContent = `아쉽네요. 다음 기회에 또 도전해보세요!`;
             $table.removeEventListener('click', callback);
             savePlayTime();
+            // 포인트 적립 AJAX 호출 (패배 시 0점 기록)
+            $.ajax({
+                url: '/game_list/update_jelly_points',
+                method: 'POST',
+                data: {
+                    points: 0, // 패배 시 0점 기록
+                    uid: uid, // 사용자 ID
+                    gameType: 'ttt'
+                },
+                success: function (response) {
+                    console.log('패배 기록 성공!');
+                },
+                error: function (xhr, status, error) {
+                    console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                }
+            });
         } else if (checkDraw()) {
             $result.textContent = `무승부입니다!`;
             savePlayTime();
+            // 무승부인 경우 0점 기록
+            $.ajax({
+                url: '/game_list/update_jelly_points',
+                method: 'POST',
+                data: {
+                    points: 0, // 무승부 시 0점 기록
+                    uid: uid,
+                    gameType: 'ttt'
+                },
+                success: function (response) {
+                    console.log('무승부 기록 성공!');
+                },
+                error: function (xhr, status, error) {
+                    console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                }
+            });
         } else {
             turn = 'O';
         }
     };
 
+    // 게임 플레이 시간을 저장하는 함수
     const savePlayTime = () => {
         localStorage.setItem(`lastPlayedDateRSP_${uid}`, Date.now());
     }
 
+    // 오늘 게임을 할 수 있는지 확인하는 함수
     const canPlayToday = () => {
         const lastPlayed = localStorage.getItem(`lastPlayedDateRSP_${uid}`);
         if (!lastPlayed) return true;
@@ -148,6 +186,7 @@
         return today.toDateString() != lastPlayedDate.toDateString();
     }
 
+    // 게임의 클릭 콜백 함수
     const callback = (event) => {
         if (event.target.textContent !== '') {
             return;
@@ -157,7 +196,7 @@
             if (checkWinner()) {
                 $result.textContent = `축하합니다. 젤리 50개를 획득했어요!`;
                 savePlayTime();
-                // 포인트 적립 AJAX 호출
+                // 포인트 적립 AJAX 호출 (이긴 경우)
                 $.ajax({
                     url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
                     method: 'POST',
@@ -177,6 +216,22 @@
             } else if (checkDraw()) {
                 $result.textContent = `무승부입니다!`;
                 savePlayTime();
+                // 포인트 적립 AJAX 호출 (무승부인 경우 0점)
+                $.ajax({
+                    url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
+                    method: 'POST',
+                    data: {
+                        points: 0, // 무승부 시 0점 기록
+                        uid: uid, // 사용자 ID
+                        gameType: 'ttt'
+                    },
+                    success: function (response) {
+                        console.log('무승부 기록 성공!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('포인트 적립 중 오류가 발생했습니다.', error);
+                    }
+                });
             } else {
                 turn = 'X';
                 setTimeout(aiMove, 500);
@@ -184,6 +239,7 @@
         }
     };
 
+    // 게임을 처음 시작할 때 오늘 게임을 할 수 있는지 확인 후, 판을 그립니다.
     if (canPlayToday()) {
         for (let i = 0; i < 3; i++) {
             const $tr = document.createElement('tr');

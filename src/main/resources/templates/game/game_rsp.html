@@ -75,6 +75,7 @@
     function rps(userName, userChoice, computer) {
         const resultDisplay = document.querySelector('.result-display');
         let result = '';
+        let points = 0; // 기본적으로 0점으로 설정
 
         if (userChoice === 's' && computer === 'p'
             || userChoice === 'r' && computer === 's'
@@ -82,23 +83,7 @@
             result = '승리! 젤리 30개가 적립되었어요.';
             win += 1;
             score += 1;
-
-            // 젤리 포인트 서버로 전송
-            $.ajax({
-                url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
-                method: 'POST',
-                data: {
-                    points: 30, // 이기면 얻는 젤리
-                    uid: uid, // 동적 할당된 사용자 ID
-                    gameType: 'rsp' // 가위바위보 게임임을 명시
-                },
-                success: function (response) {
-                    console.log('젤리 적립 성공!');
-                },
-                error: function (xhr, status, error) {
-                    console.error('포인트 적립 중 오류가 발생했습니다.', error);
-                }
-            });
+            points = 30; // 이긴 경우 30점을 적립
 
         } else if (userChoice === "s" && computer === 'r'
             || userChoice === "r" && computer === 'p'
@@ -106,27 +91,47 @@
             result = '아쉽네요. 다음에 또 도전해보세요!';
             lose += 1;
             score -= 1;
+            points = 0; // 패배한 경우 0점 적립
+
         } else {
             result = '무승부';
+            points = 0; // 무승부인 경우도 0점 적립
         }
+
+        // 젤리 포인트 서버로 전송 (승리, 패배, 무승부 모두 0점 또는 포인트 전송)
+        $.ajax({
+            url: '/game_list/update_jelly_points', // 서버의 젤리 포인트 업데이트
+            method: 'POST',
+            data: {
+                points: points, // 얻은 젤리 포인트, 무승부 또는 패배는 0
+                uid: uid, // 동적 할당된 사용자 ID
+                gameType: 'rsp' // 가위바위보 게임임을 명시
+            },
+            success: function (response) {
+                console.log('젤리 적립 성공!');
+            },
+            error: function (xhr, status, error) {
+                console.error('포인트 적립 중 오류가 발생했습니다.', error);
+            }
+        });
 
         resultDisplay.textContent = `결과: ${result}`;
     }
 
     // 게임 하루에 한번만 하게 해주는 로직
-    function checkIfGamePlayedToday() {
+    function checkIfGamePlayedToday(gameType) {
         const today = new Date().toISOString().slice(0, 10);
-        const lastPlayedDate = localStorage.getItem(`lastPlayedDateRSP_${uid}`); // uid를 추가해 기록
+        const lastPlayedDate = localStorage.getItem(`lastPlayedDate_${gameType}_${uid}`); // 게임별로 키를 구분
         return today === lastPlayedDate;
     }
 
-    function setGamePlayedToday() {
+    function setGamePlayedToday(gameType) {
         const today = new Date().toISOString().slice(0, 10);
-        localStorage.setItem(`lastPlayedDateRSP_${uid}`, today);
+        localStorage.setItem(`lastPlayedDate_${gameType}_${uid}`, today); // 게임별로 키를 구분
     }
 
-    function initializeGame() {
-        if (checkIfGamePlayedToday()) {
+    function initializeGame(gameType) {
+        if (checkIfGamePlayedToday(gameType)) {
             disableButtons();
             document.querySelector('.result-display').textContent = "오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.";
         }
@@ -153,7 +158,7 @@
 
     const sbtn = document.querySelector('#sbtn');
     sbtn.addEventListener('click', function () {
-        if (checkIfGamePlayedToday()) {
+        if (checkIfGamePlayedToday('rsp')) { // 가위바위보 실행 여부 확인
             alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
             return;
         }
@@ -168,13 +173,13 @@
 
         rps('유나', 's', rspArr[computer]);
 
-        setGamePlayedToday();
+        setGamePlayedToday('rsp'); // 가위바위보 실행 기록 저장
         disableButtons();
     });
 
     const rbtn = document.querySelector('#rbtn');
     rbtn.addEventListener('click', function () {
-        if (checkIfGamePlayedToday()) {
+        if (checkIfGamePlayedToday('rsp')) {
             alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
             return;
         }
@@ -189,13 +194,13 @@
 
         rps('유나', 'r', rspArr[computer]);
 
-        setGamePlayedToday();
+        setGamePlayedToday('rsp');
         disableButtons();
     });
 
     const pbtn = document.querySelector('#pbtn');
     pbtn.addEventListener('click', function () {
-        if (checkIfGamePlayedToday()) {
+        if (checkIfGamePlayedToday('rsp')) {
             alert("오늘은 이미 게임을 하셨군요! 내일 또 시도해주세요.");
             return;
         }
@@ -210,12 +215,12 @@
 
         rps('유나', 'p', rspArr[computer]);
 
-        setGamePlayedToday();
+        setGamePlayedToday('rsp');
         disableButtons();
     });
 
     // Initialize game status on page load
-    initializeGame();
+    initializeGame('rsp'); // 가위바위보 게임 타입 지정
 
 </script>
 </body>

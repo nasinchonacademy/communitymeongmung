@@ -13,6 +13,7 @@ import org.zerock.projectmeongmung.repository.UserRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
@@ -134,24 +135,21 @@ public class UserService {
     }
 
     // 추가: 게임 후 게임 기록을 업데이트하는 메서드
-    @Transactional
-    public void updateGamePoints(String uid, String gameType, int points, int restCount) {
-        User user = findByUid(uid);
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    public void updateGamePoints(String uid, String gameType, int points, int jellyCount) {
+        // Optional을 통해 유저를 조회하고 없으면 예외를 던짐
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new RuntimeException("User not found with UID: " + uid));
 
-        // 젤리 포인트 추가
-        user.addJellyPoints(points);
-
+        // 새로운 게임 포인트 기록 추가 (0점이어도 기록)
         GamePoints gamePoints = GamePoints.builder()
                 .user(user)
                 .gameType(gameType)
-                .point(points)
-                .timePlayed(currentTime)
-                .restCount(restCount)
+                .point(points) // 0점이어도 기록
+                .timePlayed(Timestamp.valueOf(LocalDateTime.now())) // 현재 시간으로 기록
+                .restCount(jellyCount)
                 .build();
 
-        gamePointsRepository.save(gamePoints); // 새로운 게임 기록 저장
-        userRepository.save(user); // 사용자 업데이트 (포인트 변경 사항 저장)
+        gamePointsRepository.save(gamePoints);
     }
 
 

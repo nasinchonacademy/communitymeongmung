@@ -61,8 +61,8 @@
     width: 65px;
     height: 65px;
     background: conic-gradient(
-            #00c292 0% 0%,  /* 시작과 끝의 진행률 */
-            #e0e0e0 0% 100% /* 회색으로 남은 부분 */
+            #e0e0e0 0deg,
+            #e0e0e0 360deg
     );
     border-radius: 50%;
     display: flex;
@@ -70,14 +70,9 @@
     align-items: center;
     font-weight: bold;
     color: black;
-    float: inline-end;
+    position: relative;
     margin-left: 90px;
-}
-
-.progress-circle::before {
-    content: attr(data-progress) '%';
-    position: absolute;
-    font-size: 14px;
+    font-size: 14px; /* 텍스트 크기 설정 */
 }
 
 .jellylist{
@@ -141,4 +136,9 @@
     padding-top: 20px;
     padding-left: 20px;
     display: inline-flex;
+}
+
+.jellyinfo li{
+    margin-left: 20px;
+    width: 100%;
 }

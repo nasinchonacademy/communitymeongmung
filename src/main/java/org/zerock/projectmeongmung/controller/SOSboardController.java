@@ -103,7 +103,8 @@ public class SOSboardController {
 
     @PostMapping("/sosboardwrite")
     public String sosBoardWrite(Model model, SOSboardDTO sosboardDTO,
-                                @RequestParam("file") MultipartFile file) {
+                                @RequestParam("file") MultipartFile file,
+                                RedirectAttributes redirectAttributes) {
 
         if (!file.isEmpty()) {
             try {
@@ -117,6 +118,9 @@ public class SOSboardController {
         }
 
         sosboardService.saveSOSboard(sosboardDTO);
+
+        // 리다이렉트 시 current=radio2 전달
+        redirectAttributes.addAttribute("current", "radio2");
 
         return "redirect:/soshospitallist";
     }
@@ -142,8 +146,6 @@ public class SOSboardController {
         model.addAttribute("current", current);
         model.addAttribute("sosdto", sosdto);
 
-        System.out.println("uid===================================="+sosdto.getUserId());
-        System.out.println("uid===================================="+sosdto.getUid());
 
         //댓글 목록 로드
         List<SOSBoardCommentDto> commentDtoList = commentService.getCommentsByBoardId(seq);
@@ -196,13 +198,17 @@ public class SOSboardController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else {
+            // 새로운 파일이 없을 경우 기존 이미지 유지
+            SOSboard existingStory = sosboardService.readEntity(dto.getSosboardseq());
+            dto.setPicture(existingStory.getPicture());
         }
 
         sosboardService.modify(dto);
 
         redirectAttributes.addAttribute("page", requestDTO.getPage());
-        redirectAttributes.addAttribute("type", requestDTO.getType());
-        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
+        redirectAttributes.addAttribute("type", requestDTO.getType() != null ? requestDTO.getType() : "");
+        redirectAttributes.addAttribute("keyword",  "");
         redirectAttributes.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
         redirectAttributes.addAttribute("seq", dto.getSosboardseq());
 
@@ -252,7 +258,9 @@ public class SOSboardController {
         sosboardService.remove(seq);
 
         redirectAttributes.addFlashAttribute("seq", seq);
-        model.addAttribute("current", current); // 현재 선택된 라디오 버튼 값 추가
+        redirectAttributes.addAttribute("current", current);
+
+
 
         return "redirect:/soshospitallist";
     }

@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projectmeongmung.dto.*;
-import org.zerock.projectmeongmung.entity.MeongStory;
-import org.zerock.projectmeongmung.entity.Notice;
-import org.zerock.projectmeongmung.entity.StoryComment;
-import org.zerock.projectmeongmung.entity.User;
+import org.zerock.projectmeongmung.entity.*;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.NoticeRepository;
 import org.zerock.projectmeongmung.repository.StoryCommentRepository;
@@ -28,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -257,6 +255,10 @@ public class MungStoryController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else {
+            // 새로운 파일이 없을 경우 기존 이미지 유지
+            MeongStory existingStory = service.readEntity(dto.getSeq());
+            dto.setPicture(existingStory.getPicture());
         }
 
         service.modify(dto);
@@ -340,6 +342,7 @@ public class MungStoryController {
             commentData.put("commentId", comment.getCommentid());  // 댓글 ID 추가
             commentData.put("seq", seq);  // 게시글 ID 추가
             commentData.put("nickname", comment.getUser().getNickname());
+            commentData.put("likecount", comment.getLikeCount());
             commentData.put("profilePhoto", comment.getUser().getProfilePhoto()); // 프로필 사진 추가
             commentData.put("commentcontent", comment.getCommentcontent());
 
@@ -351,6 +354,22 @@ public class MungStoryController {
 
             commentData.put("regdate", regdate);  // 포맷된 등록일
             commentData.put("modified", modified);  // 포맷된 수정일
+
+            // 대댓글 정보를 추가
+            List<Map<String, Object>> repliesData = comment.getReplies().stream().map(reply -> {
+                Map<String, Object> replyData = new HashMap<>();
+                User replyUser = userRepository.findById(reply.getUserId())
+                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                replyData.put("replyContent", reply.getReplyContent());  // 대댓글 내용
+                replyData.put("replyUserId", reply.getUserId());  // 대댓글 작성자 ID
+                replyData.put("replyUserNickname", replyUser.getNickname());  // 대댓글 작성자 닉네임 추가
+                replyData.put("replyRegtime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(reply.getReplyRegtime()));  // 대댓글 작성 시간
+                replyData.put("id",reply.getId());
+                return replyData;
+            }).collect(Collectors.toList());
+
+            commentData.put("replies", repliesData);  // 댓글에 대댓글 리스트 추가
+
 
             return commentData;
         }).collect(Collectors.toList());
@@ -454,6 +473,45 @@ public class MungStoryController {
             response.put("status", "error");
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/commentlike")
+    public ResponseEntity<?> likeComment(@RequestBody Map<String, Long> requestData, Authentication authentication) {
+        Long commentId = requestData.get("commentId");
+        String username = authentication.getName();  // 현재 로그인한 유저 정보
+
+        try {
+            int likeCount =  serviceC.likeComment(commentId, username);
+            return ResponseEntity.ok(Map.of("likeCount", likeCount));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/addreply")
+    public ResponseEntity<?> addReply(@RequestBody Map<String, Object> payload) {
+        Long commentId = Long.parseLong(payload.get("commentId").toString());
+        Long userId = Long.parseLong(payload.get("userId").toString());
+        String replyContent = payload.get("replyContent").toString();
+
+        serviceC.addReply(commentId, userId, replyContent);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{commentId}/replies")
+    public ResponseEntity<List<StoryReply>> getReplies(@PathVariable Long commentId) {
+        List<StoryReply> replies = serviceC.getRepliesByCommentId(commentId);
+        return ResponseEntity.ok(replies);
+    }
+
+    @PostMapping("/replydelete")
+    public ResponseEntity<?> deleteReply(@RequestParam Long commentId, @RequestParam String replyId) {
+        try {
+            serviceC.deleteReply(commentId, replyId);
+            return ResponseEntity.ok().body("대댓글이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("대댓글 삭제에 실패했습니다.");
         }
     }
 }

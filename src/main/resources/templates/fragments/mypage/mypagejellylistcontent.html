@@ -7,7 +7,9 @@
                 <a href="/game_list/rsp" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
             </div>
             <div class="jelly_right">
-                <div class="progress-circle" data-progress="0"></div>
+                <div class="progress-circle"
+                     th:attr="data-progress=${gamePlayedTodayMap['rsp'] != null && gamePlayedTodayMap['rsp'] ? 100 : 0}">
+                </div>
             </div>
         </div>
 
@@ -18,7 +20,9 @@
                 <a href="/game_list/tic" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
             </div>
             <div class="jelly_right">
-                <div class="progress-circle" data-progress="0"></div>
+                <div class="progress-circle"
+                     th:attr="data-progress=${gamePlayedTodayMap['ttt'] != null && gamePlayedTodayMap['ttt'] ? 100 : 0}">
+                </div>
             </div>
         </div>
 
@@ -29,19 +33,42 @@
                 <a href="/game_list/rollet" class="jelly_link">젤리 하나 <span> 받기 > </span></a>
             </div>
             <div class="jelly_right">
-                <div class="progress-circle" data-progress="0"></div>
-            </div>
+                <div class="progress-circle"
+                     th:attr="data-progress=${gamePlayedTodayMap['roulett'] != null && gamePlayedTodayMap['roulett'] ? 100 : 0}">
+                </div>
         </div>
     </div>
 
-    <div class="get_jelly_list">
-        <h3 class="order-massage">받은 젤리 내역</h3>
-        <div class="jellyinfo" th:each="gamepoints : ${gamePoints}">
-            <ul >
-                <li th:text="${gamepoints.gameType}"></li>
-                <li  th:text="${#dates.format(gamepoints.timePlayed, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></li>
-            </ul>
-            <a th:text="'+'+${gamepoints.point}"></a>
+        <div class="get_jelly_list">
+            <h3 class="order-massage">받은 젤리 내역</h3>
+            <div class="jellyinfo" th:each="gamepoints : ${gamePoints}" th:if="${gamepoints.point != 0}">
+                <ul>
+                    <li th:text="
+                        ${gamepoints.gameType == 'rsp' ? '가위바위보' :
+                        (gamepoints.gameType == 'ttt' ? '틱택톡' :
+                        (gamepoints.gameType == 'roulett' ? '룰렛' : '알 수 없는 게임'))}">
+                    </li>
+                    <li th:text="${#dates.format(gamepoints.timePlayed, 'yyyy년 MM월 dd일 HH시 mm분')}"></li>
+                </ul>
+                <a th:text="'+'+${gamepoints.point}" style="margin-right: 10px;"></a>
+            </div>
         </div>
-    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Progress circle script is running');
+        const progressCircles = document.querySelectorAll('.progress-circle');
+        progressCircles.forEach(function(circle) {
+            const progress = parseInt(circle.getAttribute('data-progress'));
+            console.log('Progress for circle:', progress);
+            const angle = progress * 3.6; // 퍼센트를 각도로 변환
+            circle.style.background = `conic-gradient(
+                #00c292 0deg ${angle}deg,
+                #e0e0e0 ${angle}deg 360deg
+            )`;
+            // 원 안의 퍼센트 텍스트 업데이트
+            circle.textContent = progress + '%';
+        });
+    });
+</script>

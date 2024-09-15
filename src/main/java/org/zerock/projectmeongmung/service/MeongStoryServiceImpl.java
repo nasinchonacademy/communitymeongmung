@@ -16,6 +16,7 @@ import org.zerock.projectmeongmung.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -259,6 +260,11 @@ public class MeongStoryServiceImpl implements MeongStoryService {
         } else {
             return title;
         }
+    }
+
+    public MeongStory readEntity(Long seq) {
+        return meongStoryRepository.findById(seq)
+                .orElseThrow(() -> new NoSuchElementException("게시글을 찾을 수 없습니다."));
     }
 
 }
