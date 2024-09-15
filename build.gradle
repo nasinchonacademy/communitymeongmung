@@ -43,6 +43,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     // 스프링 시큐리티를 테스트하기 위한 의존성 추가
     testImplementation 'org.springframework.security:spring-security-test'
+    //메일발송 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'

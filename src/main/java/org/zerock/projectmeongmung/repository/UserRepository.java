@@ -29,5 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     @Param("dogbirthday") Date dogbirthday);
 
 
+    Optional<User> findByResetToken(String token);  // 비밀번호 재설정 토큰으로 유저 조회
+
+
 
 }

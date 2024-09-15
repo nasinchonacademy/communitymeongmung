@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung",
                                 "/mungstory","/mungstory/storyread/**", "/mungstory/mungstoryAll", "/",
                                 "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**","/mungstory/comments",
-                                "/api/check-duplicate", "/read-csv","/profiles/**","/ws/**", "/chat/**"  ) // 여기서 /read-csv를 추가합니다
+                                "/api/check-duplicate", "/read-csv","/profiles/**","/ws/**", "/chat/**","/reset-password","/find-id","/request-reset-password"  )
                         .permitAll()
                         .requestMatchers("/cart/**").authenticated()  // 장바구니 접근은 인증된 사용자만 가능
                         .requestMatchers("/admin/**").hasRole("ADMIN")
