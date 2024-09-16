@@ -141,7 +141,7 @@ public class UserService {
     }
 
     // 추가: 게임 후 게임 기록을 업데이트하는 메서드
-    public void updateGamePoints(String uid, String gameType, int points, int jellyCount) {
+    public void updateGamePoints(String uid, String gameType, int points, int restCount) {
         // Optional을 통해 유저를 조회하고 없으면 예외를 던짐
         User user = userRepository.findByUid(uid)
                 .orElseThrow(() -> new RuntimeException("User not found with UID: " + uid));
@@ -152,9 +152,12 @@ public class UserService {
                 .gameType(gameType)
                 .point(points) // 0점이어도 기록
                 .timePlayed(Timestamp.valueOf(LocalDateTime.now())) // 현재 시간으로 기록
-                .restCount(jellyCount)
+                .restCount(restCount)
                 .build();
 
+        user.addJellyPoints(points); // 젤리 포인트 추가
+        // 사용자 정보 저장
+        userRepository.save(user);
         gamePointsRepository.save(gamePoints);
     }
 
