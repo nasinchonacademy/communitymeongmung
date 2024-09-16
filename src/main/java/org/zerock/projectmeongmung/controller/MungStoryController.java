@@ -198,7 +198,7 @@ public class MungStoryController {
 
     public String saveBoardPhoto(MultipartFile file) throws IOException {
         // 저장할 경로 설정
-        String uploadDir = "C:\\work\\uploads\\";
+        String uploadDir = "/Users/yunakang/uploads/";
 
         // 파일명을 고유하게 하기 위해 UUID를 사용
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();

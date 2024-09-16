@@ -28,7 +28,7 @@ public class WebSecurityConfig {
 
     //스프링 시큐리티 기능 비활성화 *여기 꼭 다시 확인해보기*
     @Bean
-    public WebSecurityCustomizer configure(){
+    public WebSecurityCustomizer configure() {
         return (web) ->
                 web
                         .ignoring()
@@ -42,13 +42,14 @@ public class WebSecurityConfig {
         return http
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/login", "/signup1", "/signup2", "/user", "/meongmung",
-                                "/mungstory","/mungstory/storyread/**", "/mungstory/mungstoryAll", "/",
-                                "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**","/mungstory/comments",
-                                "/api/check-duplicate", "/read-csv","/profiles/**","/ws/**", "/chat/**"  ) // 여기서 /read-csv를 추가합니다
+                                "/mungstory", "/mungstory/storyread/**", "/mungstory/mungstoryAll", "/",
+                                "/api/check-duplicate/nickname", "/css/**", "/image/**", "/js/**", "/mungstory/comments",
+                                "/api/check-duplicate", "/read-csv", "/profiles/**", "/ws/**", "/chat/**") // 여기서 /read-csv를 추가합니다
                         .permitAll()
                         .requestMatchers("/cart/**").authenticated()  // 장바구니 접근은 인증된 사용자만 가능
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
+//                .oauth2Login(Customizer.withDefaults())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .defaultSuccessUrl("/meongmung", true)
@@ -65,8 +66,8 @@ public class WebSecurityConfig {
     //인증 관리자 관련 설정
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
-                                                       BCryptPasswordEncoder bCryptPasswordEncoder,UserDetailsService userDetailsService)
-            throws Exception  {
+                                                       BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService)
+            throws Exception {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService); // 사용자 정보 서비스 설정
         // 이때 설정하는 서비스 클래스는 반드시 UserDetailsService를 상속받는 클래스여야한다.
