@@ -353,6 +353,7 @@ input.category {
 
 .comment-content {
     margin-right: 15px;
+    margin-top: 6px;
 }
 
 .comment-right {
@@ -493,6 +494,20 @@ input.category {
     margin-right: 10px;
 }
 
+input.regdate {
+    width: 160px;
+}
+
+input.writer {
+    width: 170px;
+}
+
+.rightcomment{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    margin-right:12px;
+}
 
 
 

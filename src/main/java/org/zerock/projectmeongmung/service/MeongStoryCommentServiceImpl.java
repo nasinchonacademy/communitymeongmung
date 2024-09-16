@@ -2,9 +2,9 @@ package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.dto.StoryCommentDto;
-import org.zerock.projectmeongmung.entity.MeongStory;
-import org.zerock.projectmeongmung.entity.StoryComment;
+import org.zerock.projectmeongmung.entity.*;
 import org.zerock.projectmeongmung.repository.MeongStoryRepository;
 import org.zerock.projectmeongmung.repository.StoryCommentRepository;
 import org.zerock.projectmeongmung.repository.UserRepository;
@@ -80,6 +80,57 @@ public class MeongStoryCommentServiceImpl implements MeongStoryCommentService {
                 .orElseThrow(() -> new RuntimeException("Story not found with seq: " + seq));
         story.setCommentcount(story.getCommentcount() - 1); // viewcount 증가
         meongStoryRepository.save(story); // 업데이트
+    }
+
+    @Transactional
+    public int likeComment(Long commentId, String uid) {
+        StoryComment comment = storyCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        // 유저가 이미 해당 댓글에 좋아요를 눌렀는지 확인
+        if (comment.getLikedUserIds().contains(user.getId())) {
+            throw new IllegalStateException("이미 좋아요를 누른 댓글입니다.");
+        }
+
+        // 좋아요 추가
+        comment.addLike(user.getId());
+        storyCommentRepository.save(comment);  // 좋아요 정보 저장
+
+        return comment.getLikeCount();  // 업데이트된 좋아요 수 반환
+    }
+
+    @Transactional
+    public void addReply(Long commentId, Long userId, String replyContent) {
+        StoryComment comment =  storyCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+
+        // 대댓글 추가
+        StoryReply storyreply = new StoryReply(userId,replyContent);
+        comment.addReply(storyreply);
+
+        storyCommentRepository.save(comment);
+    }
+
+    public List<StoryReply> getRepliesByCommentId(Long commentId) {
+        StoryComment comment =  storyCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+        return comment.getReplies();
+    }
+
+    public void deleteReply(Long commentId, String replyId) {
+        StoryComment comment =storyCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        // 해당 대댓글을 ID로 찾고 리스트에서 제거
+        List<StoryReply> replies = comment.getReplies();
+        replies.removeIf(reply -> reply.getId().equals(replyId));
+
+        // 변경된 댓글을 다시 저장
+        comment.setReplies(replies);
+        storyCommentRepository.save(comment);
     }
 
 

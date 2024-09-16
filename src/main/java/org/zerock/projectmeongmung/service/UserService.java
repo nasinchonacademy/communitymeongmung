@@ -2,6 +2,8 @@ package org.zerock.projectmeongmung.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +15,10 @@ import org.zerock.projectmeongmung.repository.UserRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final GamePointsRepository gamePointsRepository;  // GamePointsRepository 주입
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     // 회원 정보 저장
     public Long save(AddUserRequest dto) {
@@ -83,10 +90,10 @@ public class UserService {
     }
 
     // 이메일을 통해 User 엔티티 조회
-    public User findByEmail(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        return userOptional.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    }
+//    public User findByEmail(String email) {
+//        Optional<User> userOptional = userRepository.findByEmail(email);
+//        return userOptional.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+//    }
 
     // uid로 사용자 정보 조회
     public User findByUid(String uid) {
@@ -134,25 +141,123 @@ public class UserService {
     }
 
     // 추가: 게임 후 게임 기록을 업데이트하는 메서드
-    @Transactional
-    public void updateGamePoints(String uid, String gameType, int points, int restCount) {
-        User user = findByUid(uid);
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    public void updateGamePoints(String uid, String gameType, int points, int jellyCount) {
+        // Optional을 통해 유저를 조회하고 없으면 예외를 던짐
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new RuntimeException("User not found with UID: " + uid));
 
-        // 젤리 포인트 추가
-        user.addJellyPoints(points);
-
+        // 새로운 게임 포인트 기록 추가 (0점이어도 기록)
         GamePoints gamePoints = GamePoints.builder()
                 .user(user)
                 .gameType(gameType)
-                .point(points)
-                .timePlayed(currentTime)
-                .restCount(restCount)
+                .point(points) // 0점이어도 기록
+                .timePlayed(Timestamp.valueOf(LocalDateTime.now())) // 현재 시간으로 기록
+                .restCount(jellyCount)
                 .build();
 
-        gamePointsRepository.save(gamePoints); // 새로운 게임 기록 저장
-        userRepository.save(user); // 사용자 업데이트 (포인트 변경 사항 저장)
+        gamePointsRepository.save(gamePoints);
     }
 
+    /**
+     * 이메일을 통해 유저 정보를 찾습니다.
+     * @param email
+     * @return Optional<User>
+     */
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    /**
+     * 유저의 아이디를 이메일로 전송합니다.
+     * @param email
+     * @param userId
+     */
+    public void sendIdToEmail(String email, String userId) {
+        String subject = "아이디 찾기 안내";
+        String text = "안녕하세요, 요청하신 아이디는 다음과 같습니다: " + userId;
+
+        sendEmail(email, subject, text);
+    }
+
+    /**
+     * 비밀번호 재설정 링크를 이메일로 전송합니다.
+     * @param email
+     */
+    // 이름과 이메일을 통해 사용자 확인 후 비밀번호 재설정 링크 전송
+    public void sendPasswordResetLink(String name, String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            User u = user.get();
+            if (u.getName().equals(name)) {
+                String resetToken = UUID.randomUUID().toString();
+                String subject = "비밀번호 재설정 안내";
+                String text = "비밀번호를 재설정하시려면 다음 링크를 클릭해주세요: " +
+                        "http://localhost:9990/reset-password?token=" + resetToken;
+
+                sendEmail(email, subject, text);
+
+                u.setResetToken(resetToken);
+                userRepository.save(u);
+            } else {
+                throw new IllegalArgumentException("이름이 일치하지 않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("해당 이메일로 가입된 사용자가 없습니다.");
+        }
+    }
+
+
+    /**
+     * 비밀번호 재설정 로직
+     * @param token
+     * @param newPassword
+     */
+    // 비밀번호 재설정 로직
+    public void resetPassword(String token, String newPassword) {
+        Optional<User> user = userRepository.findByResetToken(token);
+        if (user.isPresent()) {
+            User u = user.get();
+            u.setPassword(bCryptPasswordEncoder.encode(newPassword));  // 비밀번호는 BCrypt로 암호화
+            u.setResetToken(null); // 토큰을 비움
+            userRepository.save(u);
+        }
+    }
+
+    /**
+     * 이메일 전송 로직
+     * @param to
+     * @param subject
+     * @param text
+     */
+    private void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
+    // 이메일로 uid 찾기
+    public String findUserUidByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getUid)  // User 객체에서 uid를 추출
+                .orElseThrow(() -> new RuntimeException("해당 이메일로 가입된 사용자가 없습니다."));
+    }
+
+    // 인증코드 생성 및 전송
+    public String sendVerificationCode(String email) {
+        String verificationCode = UUID.randomUUID().toString().substring(0, 6); // 6자리 코드 생성
+        String subject = "본인 인증 코드";
+        String text = "인증 코드: " + verificationCode;
+
+        sendEmail(email, subject, text);
+
+        return verificationCode; // 인증 코드를 반환하여 세션 등에 저장 가능
+    }
+
+    // 비밀번호 재설정 시 본인 인증 처리
+    public boolean verifyCode(String enteredCode, String actualCode) {
+        return enteredCode.equals(actualCode); // 입력한 코드와 실제 발송된 코드 비교
+    }
 
 }

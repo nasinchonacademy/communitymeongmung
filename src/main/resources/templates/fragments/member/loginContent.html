@@ -16,5 +16,77 @@
         </div>
         <button type="submit" class="login-btn">로그인</button>
         <a th:href="@{/signup1}"><button type="button" class="signup-btn">회원가입</button></a>
+        <div class="find-links">
+            <button type="button" class="find-id-btn" onclick="openModal('idModal')" style="margin-right: 2px">아이디 찾기</button>
+            <button type="button" class="find-password-btn" onclick="openModal('passwordModal')" style="margin-left: 2px">비밀번호 찾기</button>
+        </div>
     </form>
 </div>
+
+
+<!-- 아이디 찾기 모달 -->
+<div id="idModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('idModal')">&times;</span>
+        <h2>아이디 찾기</h2>
+        <form id="findIdForm" action="/find-id" method="post">
+            <label for="email">가입한 이메일 주소를 입력해주세요</label>
+            <input type="email" id="email" name="email" required>
+            <button type="submit" class="submit-btn">아이디 찾기</button>
+
+        </form>
+    </div>
+</div>
+
+
+<!--&lt;!&ndash; 비밀번호 찾기 모달 &ndash;&gt;-->
+<!--<div id="passwordModal" class="modal" style="display:none;">-->
+<!--    <div class="modal-content">-->
+<!--        <span class="close" onclick="closeModal('passwordModal')">&times;</span>-->
+<!--        <h2>비밀번호 찾기</h2>-->
+<!--        <form id="passwordResetForm" action="/request-reset-password" method="post" >-->
+<!--            <label for="reset-email">가입한 이메일 주소를 입력해주세요</label>-->
+<!--            <input type="email" id="reset-email" name="email" required>-->
+<!--            <button type="submit" class="submit-btn">비밀번호 찾기</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-- 비밀번호 찾기 모달 -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('passwordModal')">&times;</span>
+        <h2>비밀번호 찾기</h2>
+        <form id="passwordResetForm"  action="/request-reset-password" method="post">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name"  style="margin-bottom: 15px" required>
+            <label for="reset-email">가입한 이메일 주소를 입력해주세요</label>
+            <input type="email" id="reset-email" name="email" required>
+            <button type="submit" class="submit-btn">비밀번호 찾기</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- 아이디 찾기 결과 모달 -->
+<div id="idResultModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('idResultModal')">&times;</span>
+        <h2>아이디 찾기 결과</h2>
+        <p id="idResultMessage"></p>  <!-- uid를 표시하는 영역 -->
+        <!-- 비밀번호 찾기 버튼 추가 -->
+        <button onclick="switchToPasswordModal()" class="submit-btn">비밀번호 찾기</button>
+    </div>
+</div>
+
+<!-- 비밀번호 찾기 결과 모달 -->
+<div id="resetPasswordResultModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('resetPasswordResultModal')">&times;</span>
+        <h2>비밀번호 찾기 결과</h2>
+        <p id="resetPasswordResultMessage"></p>  <!-- 결과 메시지가 표시될 영역 -->
+    </div>
+</div>
+
+
+

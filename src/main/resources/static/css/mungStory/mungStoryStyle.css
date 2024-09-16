@@ -26,6 +26,12 @@
     line-height: 38px;
 }
 
+input.regdate {
+    width: 160px;
+}
 
+input.writer {
+    width: 170px;
+}
 
 /*  */

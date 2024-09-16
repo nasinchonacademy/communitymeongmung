@@ -21,6 +21,7 @@ import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.service.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,34 +140,38 @@ public class MyPageController {
         return "redirect:/mypage?uid=" + username;
     }
 
-    private String saveProfilePhoto(MultipartFile file) throws IOException {
-        // 저장할 경로 설정
-        String uploadDir = "C:\\work\\uploads\\";
 
-        // 파일명을 고유하게 하기 위해 UUID를 사용하거나 다른 로직을 사용할 수 있습니다.
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-
-        // 전체 경로 생성
-        String filePath = uploadDir + fileName;
-
-        // 파일을 저장할 경로로 전송
-        file.transferTo(new java.io.File(filePath));
-
-        // 저장된 파일의 경로 반환 (웹에서 접근 가능한 경로로 변환)
-        return  fileName;
-    }
-
-    // 사용자 정보 수정 페이지를 표시하는 메서드
     @GetMapping("/mypagejellylist")
-    public String showjellylistPage(Model model,Authentication authentication) {
+    public String showJellyListPage(Model model, Authentication authentication) {
         String username = authentication.getName();
         User user = userDetailService.findUserByUid(username);
 
+        LocalDate today = LocalDate.now();
+
+        // 게임 목록 정의 (게임 타입과 이름 매핑)
+        Map<String, String> games = new LinkedHashMap<>();
+        games.put("rsp", "가위바위보");
+        games.put("ttt", "틱택톡");
+        games.put("roulett", "룰렛");
+
+        // 사용자가 오늘 플레이한 게임 타입 목록 가져오기
+        List<String> playedGamesToday = gameService.getPlayedGamesToday(user.getId(), today);
+
+        // 각 게임에 대해 오늘 플레이 여부를 맵에 저장
+        Map<String, Boolean> gamePlayedTodayMap = new HashMap<>();
+        for (String gameType : games.keySet()) {
+            boolean playedToday = playedGamesToday.contains(gameType);
+            gamePlayedTodayMap.put(gameType, playedToday);
+        }
+
+        model.addAttribute("gamePlayedTodayMap", gamePlayedTodayMap);
+        model.addAttribute("games", games);
+
+        // 받은 젤리 내역 추가
         List<GamePoints> gamePoints = gameService.getGamePoints(user);
         model.addAttribute("gamePoints", gamePoints);
 
         return "mypage/mypagejellylist";
-
     }
 
     @GetMapping("/mypapeWritelist")

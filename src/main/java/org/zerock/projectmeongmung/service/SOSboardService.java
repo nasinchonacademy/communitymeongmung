@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.zerock.projectmeongmung.dto.PageRequestDTO;
 import org.zerock.projectmeongmung.dto.PageResultDTO;
 import org.zerock.projectmeongmung.dto.SOSboardDTO;
+import org.zerock.projectmeongmung.entity.MeongStory;
 import org.zerock.projectmeongmung.entity.SOSboard;
 import org.zerock.projectmeongmung.entity.User;
 import org.zerock.projectmeongmung.repository.SOSBoardLikeRepository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projectmeongmung.repository.UserRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -151,8 +153,6 @@ public class SOSboardService {
 
         entity.setTitle(dto.getTitle());
         entity.setContent(dto.getContent());
-        entity.setRegdate(dto.getRegdate());
-        entity.setModdate(dto.getModdate());
         entity.setPicture(dto.getPicture());
         entity.setCommentcount(dto.getCommentcount());
         entity.setViewcount(dto.getViewcount());
@@ -160,6 +160,11 @@ public class SOSboardService {
         entity.setViewcount(dto.getViewcount());
 
         repository.save(entity);
+    }
+
+    public SOSboard readEntity(Long seq) {
+        return repository.findById(seq)
+                .orElseThrow(() -> new NoSuchElementException("게시글을 찾을 수 없습니다."));
     }
 
 }

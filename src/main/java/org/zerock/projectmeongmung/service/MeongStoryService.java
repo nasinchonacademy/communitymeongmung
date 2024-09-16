@@ -50,5 +50,7 @@ public interface MeongStoryService {
     List<MeongStoryDTO> getTop5StoriesByLikeCount();
 
     String trimTitle(String title);
+
+    MeongStory readEntity(Long seq);
 }
 

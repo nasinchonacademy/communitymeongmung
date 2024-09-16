@@ -46,7 +46,6 @@ public class User implements UserDetails {
     @Column(name="Profilephoto")
     private String profilePhoto;
 
-
     @Column(name="dogbirthday")
     private Date dogbirthday;
 
@@ -77,6 +76,9 @@ public class User implements UserDetails {
 
     @Column(name = "isvet", nullable = false)
     private boolean vet = false;
+
+    @Column(name = "reset_token")
+    private String resetToken;  // 비밀번호 재설정 토큰
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "regdate", nullable = false, updatable = false)
